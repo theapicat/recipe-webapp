@@ -229,7 +229,7 @@ export default function AboutPage() {
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
             <Card
               component={Link}
-              href="/terms"
+              href="/legal/terms"
               withBorder
               padding="md"
               radius="md"
@@ -255,7 +255,7 @@ export default function AboutPage() {
 
             <Card
               component={Link}
-              href="/privacy"
+              href="/legal/privacy"
               withBorder
               padding="md"
               radius="md"
@@ -281,7 +281,7 @@ export default function AboutPage() {
 
             <Card
               component={Link}
-              href="/cookies"
+              href="/legal/cookies"
               withBorder
               padding="md"
               radius="md"
@@ -307,7 +307,7 @@ export default function AboutPage() {
 
             <Card
               component={Link}
-              href="/accessibility"
+              href="/legal/accessibility"
               withBorder
               padding="md"
               radius="md"

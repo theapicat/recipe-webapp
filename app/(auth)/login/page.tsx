@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Alert, Anchor, Button, Divider, Paper, Stack, Text } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { LoginForm } from "@/components/forms/auth/LoginForm";
 import { GoogleLogin } from "@/components/forms/auth/GoogleLogin";
 import { agentInternal } from "@/lib/agent/agentInternal";
@@ -20,6 +21,26 @@ const LoginPage = () => {
   const searchParams = useSearchParams();
 
   const hasExpired = searchParams.get("expired") === "true";
+  const errorCode = searchParams.get("error");
+
+  // Hjelpefunksjon for å oversette OAuth/Google feilkoder til norsk
+  const googleErrorMessage = useMemo(() => {
+    if (!errorCode) return null;
+
+    switch (errorCode) {
+      case "account_locked":
+      case "locked":
+        return "Google-kontoen din er knyttet til en sperret brukerkonto på Kjøkkenhylla. Ta kontakt med support.";
+      case "blacklisted":
+        return "Denne e-postadressen eller domenet er utestengt fra Kjøkkenhylla.";
+      case "access_denied":
+        return "Innlugging med Google ble avbrutt.";
+      case "google_failed":
+      case "oauth_failed":
+      default:
+        return "Det oppstod en feil under innlogging med Google. Vennligst prøv igjen eller logg inn med e-post.";
+    }
+  }, [errorCode]);
 
   const handleStaticLogin = async (credentials: LoginRequest) => {
     try {
@@ -54,9 +75,23 @@ const LoginPage = () => {
   return (
     <AsyncMainContainer size={420} py={40} loading={isRedirecting}>
       <Stack gap="md">
+        {/* VARSEL: Utløpt økt */}
         {hasExpired && (
           <Alert color="orange" title="Økten har utløpt" variant="light" radius="md">
             Du må logge inn på nytt for å fortsette.
+          </Alert>
+        )}
+
+        {/* VARSEL: Feil under Google-pålogging */}
+        {googleErrorMessage && (
+          <Alert
+            color="red"
+            title="Påloggingsfeil"
+            variant="light"
+            radius="md"
+            icon={<IconAlertCircle size={18} />}
+          >
+            {googleErrorMessage}
           </Alert>
         )}
 

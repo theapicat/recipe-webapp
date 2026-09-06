@@ -3,9 +3,9 @@ import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionMa
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/user/:path*',
-    '/admin/:path*',
+    "/dashboard/:path*",
+    "/user/:path*",
+    "/admin/:path*",
   ],
 };
 
@@ -23,10 +23,15 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
 
   // 2. Token utløpt og ingen refresh token -> slett sesjon og omdiriger
   if (exp < 0 && !refreshToken) {
-    await sessionManager.removeSession();
     const loginUrl = new URL("/login?expired=true", req.url);
-    return NextResponse.redirect(loginUrl);
+    const res = NextResponse.redirect(loginUrl);
+    res.cookies.delete("token");
+    res.cookies.delete("refreshToken");
+    res.cookies.delete("user_data");
+    return res;
   }
+
+  const response = NextResponse.next();
 
   // 3. Forny token dersom det gjenstår mindre enn 5 minutter (300 sekunder)
   if (exp < 300 && refreshToken) {
@@ -38,7 +43,7 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
       bodyParams.append("refresh_token", refreshToken);
       bodyParams.append("client_id", "recipe-web-app");
 
-      const response = await fetch(refreshUrl, {
+      const refreshRes = await fetch(refreshUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -46,31 +51,48 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
         body: bodyParams.toString(),
       });
 
-      if (response.ok) {
-        const body: OpenIddictTokenResponse = await response.json();
+      if (refreshRes.ok) {
+        const body: OpenIddictTokenResponse = await refreshRes.json();
+        const isProd = process.env.NODE_ENV === "production";
 
-        // Oppdater access_token og eventuell ny refresh_token ved token-rotasjon
-        await sessionManager.setToken(body.access_token, body.expires_in);
+        response.cookies.set("token", body.access_token, {
+          httpOnly: true,
+          secure: isProd,
+          maxAge: body.expires_in || 3600,
+          sameSite: "lax",
+          path: "/",
+        });
+
         if (body.refresh_token) {
-          await sessionManager.setRefreshToken(body.refresh_token);
+          response.cookies.set("refreshToken", body.refresh_token, {
+            httpOnly: true,
+            secure: isProd,
+            maxAge: 60 * 60 * 24 * 14,
+            sameSite: "lax",
+            path: "/",
+          });
         }
       } else {
-        // Ugyldig eller utløpt refresh_token (f.eks. invalid_grant)
-        await sessionManager.removeSession();
         const loginUrl = new URL("/login?expired=true", req.url);
-        return NextResponse.redirect(loginUrl);
+        const redirectRes = NextResponse.redirect(loginUrl);
+        redirectRes.cookies.delete("token");
+        redirectRes.cookies.delete("refreshToken");
+        redirectRes.cookies.delete("user_data");
+        return redirectRes;
       }
     } catch {
-      await sessionManager.removeSession();
       const loginUrl = new URL("/login?expired=true", req.url);
-      return NextResponse.redirect(loginUrl);
+      const redirectRes = NextResponse.redirect(loginUrl);
+      redirectRes.cookies.delete("token");
+      redirectRes.cookies.delete("refreshToken");
+      redirectRes.cookies.delete("user_data");
+      return redirectRes;
     }
   }
 
-// 4. Rolleretningslinjer for admin-ruter
+  // 4. Sjekk roller for admin-ruter
   if (req.nextUrl.pathname.startsWith("/admin")) {
-    const userData = await sessionManager.getUserData();
-    const role = userData?.role;
+    const role = sessionManager.getUserRole(token);
 
     if (role?.toLowerCase() !== "admin") {
       const newUrl = new URL("/404", req.url);
@@ -78,7 +100,7 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
     }
   }
 
-  return NextResponse.next();
+  return response;
 };
 
 export default proxy;
