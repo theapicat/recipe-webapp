@@ -20,6 +20,7 @@ import {
   IconKey,
   IconTrash,
   IconAlertTriangle,
+  IconUserOff,
 } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
@@ -35,7 +36,12 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
 
   const [lockModalOpen, setLockModalOpen] = useState(false);
   const [lockReason, setLockReason] = useState("");
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const [blacklistModalOpen, setBlacklistModalOpen] = useState(false);
+  const [blacklistReason, setBlacklistReason] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   // --- LÅS BRUKER ---
@@ -86,7 +92,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
       if (res.ok) {
         notifications.show({
           title: "Konto gjenåpnet",
-          message: `Sperren for ${user.email} er fjeret.`,
+          message: `Sperren for ${user.email} er fjernet.`,
           color: "teal",
         });
         onRefreshNeeded();
@@ -244,6 +250,41 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
     }
   };
 
+  // --- SLETT OG SVARTELIST BRUKER ---
+  const handleDeleteAndBlacklist = async () => {
+    setLoading(true);
+    try {
+      const res = await agentInternal.post("/api/admin/users/delete-and-blacklist", {
+        userId: user.userId,
+        reason: blacklistReason || "Slettet og svartelistet av administrator pga. brudd på brukervilkår.",
+      });
+
+      if (res.ok) {
+        notifications.show({
+          title: "Bruker slettet og svartelistet",
+          message: `Brukeren ${user.email} ble slettet og e-posten er svartelistet.`,
+          color: "red",
+        });
+        router.push("/admin/users");
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        notifications.show({
+          title: "Handling mislyktes",
+          message: errorData.message || "Kunne ikke slette og svarteliste brukeren.",
+          color: "red",
+        });
+      }
+    } catch {
+      notifications.show({
+        title: "Nettverksfeil",
+        message: "Kunne ikke koble til serveren.",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Paper p="lg" radius="md" withBorder shadow="xs">
       <Stack gap="md">
@@ -312,24 +353,35 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
 
         <Divider my="xs" />
 
-        <Group justify="space-between" align="center">
+        <Group justify="space-between" align="center" wrap="wrap">
           <div>
             <Text fw={600} size="sm" c="red">
               Faresone
             </Text>
             <Text size="xs" c="dimmed">
-              Sletting av denne brukeren fjerner kontoen permanent.
+              Sletting fjerner kontoen permanent. Svartelisting forhindrer også ny registrering.
             </Text>
           </div>
 
-          <Button
-            color="red"
-            variant="light"
-            leftSection={<IconTrash size={16} />}
-            onClick={() => setDeleteModalOpen(true)}
-          >
-            Slett bruker
-          </Button>
+          <Group gap="sm">
+            <Button
+              color="red"
+              variant="light"
+              leftSection={<IconTrash size={16} />}
+              onClick={() => setDeleteModalOpen(true)}
+            >
+              Slett bruker
+            </Button>
+
+            <Button
+              color="red"
+              variant="filled"
+              leftSection={<IconUserOff size={16} />}
+              onClick={() => setBlacklistModalOpen(true)}
+            >
+              Slett & Svartelist
+            </Button>
+          </Group>
         </Group>
       </Stack>
 
@@ -387,6 +439,42 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
             </Button>
             <Button color="red" onClick={handleDelete} loading={loading}>
               Slett bruker
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* MODAL: SLETT OG SVARTELIST BRUKER */}
+      <Modal
+        opened={blacklistModalOpen}
+        onClose={() => setBlacklistModalOpen(false)}
+        title="Bekreft sletting og svartelisting"
+        centered
+      >
+        <Stack gap="md">
+          <Group gap="xs" c="red">
+            <IconAlertTriangle size={24} />
+            <Text fw={600}>Advarsel: Sletting og utestengelse!</Text>
+          </Group>
+
+          <Text size="sm">
+            Er du sikker på at du vil slette kontoen til <b>{user.email}</b> permanent OG legge e-postadressen inn i svartelisten? Brukeren vil bli varslet via e-post og utestengt fra å registrere seg på nytt.
+          </Text>
+
+          <Textarea
+            label="Begrunnelse for svartelisting (valgfri)"
+            placeholder="Skriv inn årsaken for vedtaket..."
+            value={blacklistReason}
+            onChange={(e) => setBlacklistReason(e.currentTarget.value)}
+            rows={3}
+          />
+
+          <Group justify="flex-end" mt="sm">
+            <Button variant="default" onClick={() => setBlacklistModalOpen(false)}>
+              Avbryt
+            </Button>
+            <Button color="red" onClick={handleDeleteAndBlacklist} loading={loading}>
+              Slett & Svartelist
             </Button>
           </Group>
         </Stack>

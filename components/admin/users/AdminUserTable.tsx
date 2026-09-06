@@ -26,10 +26,11 @@ import {
   IconMailCheck,
   IconUser,
   IconAlertTriangle,
+  IconUserOff,
 } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
-import {AdminUserListItem} from "@/lib/models/admin/users/AdminUserListItem";
+import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 
 interface Props {
   users: AdminUserListItem[];
@@ -43,6 +44,8 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
   const [lockTarget, setLockTarget] = useState<AdminUserListItem | null>(null);
   const [lockReason, setLockReason] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<AdminUserListItem | null>(null);
+  const [blacklistTarget, setBlacklistTarget] = useState<AdminUserListItem | null>(null);
+  const [blacklistReason, setBlacklistReason] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
 
   // Formatteringshjelper for dato
@@ -223,6 +226,45 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
+  // --- HANDLER: SLETT OG SVARTELIST BRUKER ---
+  const handleDeleteAndBlacklistUser = async () => {
+    if (!blacklistTarget) return;
+    setActionLoading(true);
+
+    try {
+      const res = await agentInternal.post("/api/admin/users/delete-and-blacklist", {
+        userId: blacklistTarget.userId,
+        reason: blacklistReason || "Slettet og svartelistet av administrator.",
+      });
+
+      if (res.ok) {
+        notifications.show({
+          title: "Bruker slettet og svartelistet",
+          message: `Brukeren ${blacklistTarget.email} er slettet og e-posten er svartelistet.`,
+          color: "red",
+        });
+        setBlacklistTarget(null);
+        setBlacklistReason("");
+        onRefreshNeeded();
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        notifications.show({
+          title: "Handling mislyktes",
+          message: errorData.message || "Kunne ikke slette og svarteliste brukeren.",
+          color: "red",
+        });
+      }
+    } catch {
+      notifications.show({
+        title: "Nettverksfeil",
+        message: "Kunne ikke koble til serveren.",
+        color: "red",
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   return (
     <>
       <Table highlightOnHover verticalSpacing="sm">
@@ -384,6 +426,14 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
                       >
                         Slett bruker
                       </Menu.Item>
+
+                      <Menu.Item
+                        leftSection={<IconUserOff size={14} />}
+                        color="red"
+                        onClick={() => setBlacklistTarget(user)}
+                      >
+                        Slett & Svartelist
+                      </Menu.Item>
                     </Menu.Dropdown>
                   </Menu>
                 </Table.Td>
@@ -458,6 +508,47 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
               loading={actionLoading}
             >
               Slett bruker
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* MODAL: SLETT OG SVARTELIST BRUKER */}
+      <Modal
+        opened={!!blacklistTarget}
+        onClose={() => setBlacklistTarget(null)}
+        title="Bekreft sletting og svartelisting"
+        centered
+      >
+        <Stack gap="md">
+          <Group gap="xs" c="red">
+            <IconAlertTriangle size={24} />
+            <Text fw={600}>Advarsel: Sletting og permanent utestengelse!</Text>
+          </Group>
+
+          <Text size="sm">
+            Er du sikker på at du vil slette kontoen til <b>{blacklistTarget?.email}</b> OG legge e-posten inn i svartelisten?
+          </Text>
+
+          <Textarea
+            label="Begrunnelse for svartelisting (valgfri)"
+            placeholder="Skriv inn årsaken for vedtaket..."
+            value={blacklistReason}
+            onChange={(e) => setBlacklistReason(e.currentTarget.value)}
+            rows={3}
+          />
+
+          <Group justify="flex-end" mt="sm">
+            <Button variant="default" onClick={() => setBlacklistTarget(null)}>
+              Avbryt
+            </Button>
+
+            <Button
+              color="red"
+              onClick={handleDeleteAndBlacklistUser}
+              loading={actionLoading}
+            >
+              Slett & Svartelist
             </Button>
           </Group>
         </Stack>
