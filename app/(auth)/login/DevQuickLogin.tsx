@@ -1,7 +1,11 @@
 import { Menu, Button, Text } from "@mantine/core";
-import {DEV_USERS} from "@/app/(auth)/login/userData";
+import { DEV_USERS } from "@/app/(auth)/login/userData";
 
-export const DevQuickLogin = ({ onSelect }: { onSelect: (email: string, password?: string) => void }) => {
+interface DevQuickLoginProps {
+  onSelect: (email: string, password?: string) => void;
+}
+
+export const DevQuickLogin = ({ onSelect }: DevQuickLoginProps) => {
   if (process.env.NODE_ENV !== "development") return null;
 
   return (
