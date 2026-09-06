@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Title,
   Text,
@@ -11,8 +12,20 @@ import {
   Pagination,
   Select,
   Tabs,
+  Button,
+  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
-import { IconSearch, IconFilter, IconUsers, IconBan } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconFilter,
+  IconFilterOff,
+  IconUsers,
+  IconBan,
+  IconMail,
+  IconSortAscending,
+  IconSortDescending,
+} from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserStatsCards } from "@/components/admin/users/AdminUserStatsCards";
@@ -21,17 +34,25 @@ import { AdminBlacklistTable } from "@/components/admin/users/AdminBlacklistTabl
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 
 export default function AdminUsersPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [allUsers, setAllUsers] = useState<AdminUserListItem[]>([]);
   const [activeTab, setActiveTab] = useState<string | null>("users");
 
-  // Filter- og pagineringstilstander
+  // --- OPPDELEDE FILTRE ---
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [accountStatusFilter, setAccountStatusFilter] = useState<string>("all"); // "all", "active", "locked"
+  const [emailStatusFilter, setEmailStatusFilter] = useState<string>("all");     // "all", "confirmed", "unconfirmed"
+  const [lifecycleFilter, setLifecycleFilter] = useState<string>("all");         // "all", "unconfirmed_7d", "unconfirmed_14d", "inactive_6m", "inactive_1y"
+
+  // --- SORTERING ---
+  const [sortBy, setSortBy] = useState<string>("createdAt"); // "name", "email", "createdAt"
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  // Paginering
   const [page, setPage] = useState(1);
   const pageSize = 15;
 
-  // Henter HELE brukerlisten fra API-et
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -54,7 +75,40 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // --- FILTRERING I HENHOLD TIL BRUKERVILKÅRENE ---
+  // Sjekk om noen filtre eller sorteringer avviker fra standard
+  const isFiltered = useMemo(() => {
+    return (
+      search.trim() !== "" ||
+      accountStatusFilter !== "all" ||
+      emailStatusFilter !== "all" ||
+      lifecycleFilter !== "all" ||
+      sortBy !== "createdAt" ||
+      sortOrder !== "desc"
+    );
+  }, [search, accountStatusFilter, emailStatusFilter, lifecycleFilter, sortBy, sortOrder]);
+
+  // Tilbakestill alle filtre
+  const handleResetFilters = () => {
+    setSearch("");
+    setAccountStatusFilter("all");
+    setEmailStatusFilter("all");
+    setLifecycleFilter("all");
+    setSortBy("createdAt");
+    setSortOrder("desc");
+    setPage(1);
+  };
+
+  // Sorteringsveksler dersom man klikker på kolonneoverskrift
+  const handleSortChange = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
+
+  // --- KLIENT-SIDE FILTRERING & SORTERING ---
   const filteredUsers = useMemo(() => {
     const now = new Date();
     const daysAgo = (days: number) => new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
@@ -64,37 +118,35 @@ export default function AdminUsersPage() {
       return d;
     };
 
-    return allUsers.filter((u) => {
+    let result = allUsers.filter((u) => {
       const createdAt = new Date(u.createdAt);
       const lastLoginAt = u.lastLoginAt ? new Date(u.lastLoginAt) : null;
 
-      // 1. Status- og Vilkårsfiltrering
-      if (statusFilter === "locked" && !u.isLocked) return false;
-      if (statusFilter === "unconfirmed" && u.isEmailConfirmed) return false;
+      // 1. Kontostatus (Aktiv / Låst)
+      if (accountStatusFilter === "active" && u.isLocked) return false;
+      if (accountStatusFilter === "locked" && !u.isLocked) return false;
 
-      // Vilkår: 7 dagers påminnelse for ubekreftet e-post
-      if (statusFilter === "unconfirmed_7d") {
+      // 2. E-poststatus (Bekreftet / Ubekreftet)
+      if (emailStatusFilter === "confirmed" && !u.isEmailConfirmed) return false;
+      if (emailStatusFilter === "unconfirmed" && u.isEmailConfirmed) return false;
+
+      // 3. Livssyklus / Vilkår
+      if (lifecycleFilter === "unconfirmed_7d") {
         if (u.isEmailConfirmed || createdAt > daysAgo(7)) return false;
       }
-
-      // Vilkår: 14 dagers sperring for ubekreftet e-post
-      if (statusFilter === "unconfirmed_14d") {
+      if (lifecycleFilter === "unconfirmed_14d") {
         if (u.isEmailConfirmed || createdAt > daysAgo(14)) return false;
       }
-
-      // Vilkår: 6 måneders inaktivitetsvarsel
-      if (statusFilter === "inactive_6m") {
+      if (lifecycleFilter === "inactive_6m") {
         const checkDate = lastLoginAt || createdAt;
         if (checkDate >= monthsAgo(6)) return false;
       }
-
-      // Vilkår: 1 års inaktivitetssperring / slettekandidat
-      if (statusFilter === "inactive_1y") {
+      if (lifecycleFilter === "inactive_1y") {
         const checkDate = lastLoginAt || createdAt;
         if (checkDate >= monthsAgo(12)) return false;
       }
 
-      // 2. Søk på navn eller e-post
+      // 4. Tekstsøk
       if (search.trim()) {
         const q = search.trim().toLowerCase();
         const matchesEmail = u.email?.toLowerCase().includes(q);
@@ -109,44 +161,76 @@ export default function AdminUsersPage() {
 
       return true;
     });
-  }, [allUsers, search, statusFilter]);
 
-  // --- KLIENT-SIDE PAGINERING ---
+    // 5. Sortering
+    result.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "name") {
+        const nameA = (a.fullName || a.email).toLowerCase();
+        const nameB = (b.fullName || b.email).toLowerCase();
+        comparison = nameA.localeCompare(nameB);
+      } else if (sortBy === "email") {
+        comparison = a.email.toLowerCase().localeCompare(b.email.toLowerCase());
+      } else if (sortBy === "createdAt") {
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+
+    return result;
+  }, [allUsers, search, accountStatusFilter, emailStatusFilter, lifecycleFilter, sortBy, sortOrder]);
+
+  // Paginerte rader
   const totalPages = Math.ceil(filteredUsers.length / pageSize) || 1;
-
   const paginatedUsers = useMemo(() => {
     const start = (page - 1) * pageSize;
     return filteredUsers.slice(start, start + pageSize);
   }, [filteredUsers, page, pageSize]);
 
-  const handleSearchChange = (val: string) => {
-    setSearch(val);
-    setPage(1);
-  };
-
-  const handleFilterChange = (val: string | null) => {
-    setStatusFilter(val || "all");
-    setPage(1);
-  };
+  // Tekstlig oppsummering til statistikkortet
+  const activeFilterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (accountStatusFilter !== "all") {
+      parts.push(accountStatusFilter === "active" ? "Aktive" : "Låste");
+    }
+    if (emailStatusFilter !== "all") {
+      parts.push(emailStatusFilter === "confirmed" ? "Bekreftet e-post" : "Ubekreftet e-post");
+    }
+    if (lifecycleFilter !== "all") {
+      parts.push("Vilkårsregel");
+    }
+    return parts.length > 0 ? parts.join(" • ") : "Alle brukere";
+  }, [accountStatusFilter, emailStatusFilter, lifecycleFilter]);
 
   return (
     <AsyncMainContainer size="lg" py={30} loading={loading}>
       <Stack gap="lg">
-        {/* Overskrift */}
-        <div>
-          <Title order={2}>👥 Brukeradministrasjon</Title>
-          <Text c="dimmed" size="sm">
-            Oversikt og styring av registrerte brukerkontoer, kontolivssyklus og svartelister i Kjøkkenhylla
-          </Text>
-        </div>
+        {/* Overskrift & Topphandling */}
+        <Group justify="space-between" align="flex-start" wrap="wrap">
+          <div>
+            <Title order={2}>👥 Brukeradministrasjon</Title>
+            <Text c="dimmed" size="sm">
+              Oversikt og styring av registrerte brukerkontoer, kontolivssyklus og svartelister
+            </Text>
+          </div>
+
+          <Button
+            leftSection={<IconMail size={18} />}
+            color="teal"
+            onClick={() => router.push("/admin/users/email")}
+          >
+            Skriv e-post
+          </Button>
+        </Group>
 
         {/* Nøkkeltall / Statistikkbrikker */}
         <AdminUserStatsCards
           totalItems={filteredUsers.length}
-          activeFilter={statusFilter}
+          activeFilterSummary={activeFilterSummary}
         />
 
-        {/* Hovedvisning med Faneinndeling (Brukere vs Svarteliste) */}
+        {/* Faneinndeling (Brukere vs Svarteliste) */}
         <Tabs value={activeTab} onChange={setActiveTab} color="teal" variant="outline">
           <Tabs.List mb="md">
             <Tabs.Tab value="users" leftSection={<IconUsers size={16} />}>
@@ -161,42 +245,129 @@ export default function AdminUsersPage() {
           <Tabs.Panel value="users">
             <Paper p="md" radius="md" withBorder shadow="xs">
               <Stack gap="md">
+                {/* RAD 1: SØK & TEKSTINFO */}
                 <Group justify="space-between" align="center" wrap="wrap">
-                  <Group gap="sm">
-                    <TextInput
-                      placeholder="Søk på navn eller e-post..."
-                      leftSection={<IconSearch size={16} />}
-                      value={search}
-                      onChange={(e) => handleSearchChange(e.currentTarget.value)}
-                      style={{ width: 280 }}
-                    />
-
-                    <Select
-                      value={statusFilter}
-                      onChange={handleFilterChange}
-                      leftSection={<IconFilter size={16} />}
-                      data={[
-                        { value: "all", label: "Alle brukere" },
-                        { value: "locked", label: "Kun låste kontoer" },
-                        { value: "unconfirmed", label: "Ubekreftet e-post (alle)" },
-                        { value: "unconfirmed_7d", label: "Ubekreftet > 7 dager (Påminnelse)" },
-                        { value: "unconfirmed_14d", label: "Ubekreftet > 14 dager (Sperring)" },
-                        { value: "inactive_6m", label: "Inaktiv > 6 måneder (Varsel)" },
-                        { value: "inactive_1y", label: "Inaktiv > 1 år (Sletting)" },
-                      ]}
-                      style={{ width: 280 }}
-                    />
-                  </Group>
+                  <TextInput
+                    placeholder="Søk på navn eller e-post..."
+                    leftSection={<IconSearch size={16} />}
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.currentTarget.value);
+                      setPage(1);
+                    }}
+                    style={{ minWidth: 260, flex: 1 }}
+                  />
 
                   <Text size="xs" c="dimmed">
                     Viser {paginatedUsers.length} av {filteredUsers.length} brukere ({allUsers.length} totalt)
                   </Text>
                 </Group>
 
+                {/* RAD 2: OPPDELT FILTRERING, SORTERING & NULLSTILL-KNAPP */}
+                <Group gap="sm" align="flex-end" wrap="wrap">
+                  {/* Select 1: Kontostatus */}
+                  <Select
+                    label="Kontostatus"
+                    size="xs"
+                    value={accountStatusFilter}
+                    onChange={(val) => {
+                      setAccountStatusFilter(val || "all");
+                      setPage(1);
+                    }}
+                    data={[
+                      { value: "all", label: "Alle kontostatusere" },
+                      { value: "active", label: "Kun aktive kontoer" },
+                      { value: "locked", label: "Kun låste kontoer" },
+                    ]}
+                    style={{ width: 170 }}
+                  />
+
+                  {/* Select 2: E-poststatus */}
+                  <Select
+                    label="E-poststatus"
+                    size="xs"
+                    value={emailStatusFilter}
+                    onChange={(val) => {
+                      setEmailStatusFilter(val || "all");
+                      setPage(1);
+                    }}
+                    data={[
+                      { value: "all", label: "Alle e-poststatuser" },
+                      { value: "confirmed", label: "Kun bekreftet" },
+                      { value: "unconfirmed", label: "Kun ubekreftet" },
+                    ]}
+                    style={{ width: 170 }}
+                  />
+
+                  {/* Select 3: Vilkår & Livssyklus */}
+                  <Select
+                    label="Vilkår / Inaktivitet"
+                    size="xs"
+                    leftSection={<IconFilter size={14} />}
+                    value={lifecycleFilter}
+                    onChange={(val) => {
+                      setLifecycleFilter(val || "all");
+                      setPage(1);
+                    }}
+                    data={[
+                      { value: "all", label: "Ingen særskilte vilkår" },
+                      { value: "unconfirmed_7d", label: "Ubekreftet > 7 dager (Påminnelse)" },
+                      { value: "unconfirmed_14d", label: "Ubekreftet > 14 dager (Sperring)" },
+                      { value: "inactive_6m", label: "Inaktiv > 6 måneder (Varsel)" },
+                      { value: "inactive_1y", label: "Inaktiv > 1 år (Sletting)" },
+                    ]}
+                    style={{ width: 230 }}
+                  />
+
+                  {/* Sortering */}
+                  <Group gap={4} align="flex-end">
+                    <Select
+                      label="Sorter etter"
+                      size="xs"
+                      value={sortBy}
+                      onChange={(val) => setSortBy(val || "createdAt")}
+                      data={[
+                        { value: "createdAt", label: "Opprettet dato" },
+                        { value: "name", label: "Navn / Brukernavn" },
+                        { value: "email", label: "E-postadresse" },
+                      ]}
+                      style={{ width: 160 }}
+                    />
+
+                    <Tooltip label={sortOrder === "asc" ? "Stigende (A-Å / Eldst)" : "Synkende (Å-A / Nyest)"}>
+                      <ActionIcon
+                        variant="default"
+                        size="input-xs"
+                        onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
+                        mb={2}
+                      >
+                        {sortOrder === "asc" ? <IconSortAscending size={16} /> : <IconSortDescending size={16} />}
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+
+                  {/* Nullstill-knapp (vises kun når filter/søk/sortering er aktivt) */}
+                  {isFiltered && (
+                    <Button
+                      variant="subtle"
+                      color="gray"
+                      size="xs"
+                      leftSection={<IconFilterOff size={14} />}
+                      onClick={handleResetFilters}
+                      mb={2}
+                    >
+                      Nullstill filter
+                    </Button>
+                  )}
+                </Group>
+
                 {/* Brukertabell */}
                 <AdminUserTable
                   users={paginatedUsers}
                   onRefreshNeeded={fetchUsers}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSortChange={handleSortChange}
                 />
 
                 {/* Paginering */}

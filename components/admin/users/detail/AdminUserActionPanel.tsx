@@ -21,6 +21,7 @@ import {
   IconTrash,
   IconAlertTriangle,
   IconUserOff,
+  IconMail,
 } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
@@ -296,6 +297,15 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         </div>
 
         <Group gap="sm" wrap="wrap">
+          <Button
+            variant="light"
+            color="teal"
+            leftSection={<IconMail size={16} />}
+            onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
+          >
+            Send e-post
+          </Button>
+
           {!user.isEmailConfirmed && (
             <Button
               variant="light"

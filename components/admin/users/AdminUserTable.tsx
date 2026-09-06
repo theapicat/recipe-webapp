@@ -15,6 +15,7 @@ import {
   Textarea,
   Button,
   Stack,
+  UnstyledButton,
 } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -27,6 +28,10 @@ import {
   IconUser,
   IconAlertTriangle,
   IconUserOff,
+  IconMail,
+  IconSelector,
+  IconSortAscending,
+  IconSortDescending,
 } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
@@ -35,9 +40,18 @@ import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 interface Props {
   users: AdminUserListItem[];
   onRefreshNeeded: () => void;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  onSortChange?: (field: string) => void;
 }
 
-export function AdminUserTable({ users, onRefreshNeeded }: Props) {
+export function AdminUserTable({
+                                 users,
+                                 onRefreshNeeded,
+                                 sortBy,
+                                 sortOrder,
+                                 onSortChange,
+                               }: Props) {
   const router = useRouter();
 
   // Tilstander for handlings-dialoger
@@ -58,7 +72,16 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }).format(new Date(dateString));
   };
 
-  // --- HANDLER: LÅS BRUKER ---
+  const renderSortIcon = (field: string) => {
+    if (sortBy !== field) return <IconSelector size={14} opacity={0.4} />;
+    return sortOrder === "asc" ? (
+      <IconSortAscending size={14} color="var(--mantine-color-teal-6)" />
+    ) : (
+      <IconSortDescending size={14} color="var(--mantine-color-teal-6)" />
+    );
+  };
+
+  // --- HANDLERE ---
   const handleLockUser = async () => {
     if (!lockTarget) return;
     setActionLoading(true);
@@ -97,7 +120,6 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
-  // --- HANDLER: GJENÅPNE BRUKER ---
   const handleUnlockUser = async (user: AdminUserListItem) => {
     try {
       const res = await agentInternal.post("/api/admin/users/unlock", {
@@ -128,7 +150,6 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
-  // --- HANDLER: SEND BEKREFTELSESE-POST ---
   const handleResendConfirmation = async (user: AdminUserListItem) => {
     try {
       const res = await agentInternal.post("/api/admin/users/resend-confirmation", {
@@ -158,7 +179,6 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
-  // --- HANDLER: TILBAKESTILL PASSORD ---
   const handleResetPassword = async (user: AdminUserListItem) => {
     try {
       const res = await agentInternal.post(
@@ -189,7 +209,6 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
-  // --- HANDLER: SLETT BRUKER ---
   const handleDeleteUser = async () => {
     if (!deleteTarget) return;
     setActionLoading(true);
@@ -226,7 +245,6 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
     }
   };
 
-  // --- HANDLER: SLETT OG SVARTELIST BRUKER ---
   const handleDeleteAndBlacklistUser = async () => {
     if (!blacklistTarget) return;
     setActionLoading(true);
@@ -270,11 +288,25 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
       <Table highlightOnHover verticalSpacing="sm">
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Bruker</Table.Th>
+            <Table.Th>
+              <UnstyledButton onClick={() => onSortChange && onSortChange("name")}>
+                <Group gap={4}>
+                  <Text fw={700} size="xs">Bruker</Text>
+                  {renderSortIcon("name")}
+                </Group>
+              </UnstyledButton>
+            </Table.Th>
             <Table.Th>Rolle</Table.Th>
             <Table.Th>Status</Table.Th>
             <Table.Th>E-post status</Table.Th>
-            <Table.Th>Opprettet</Table.Th>
+            <Table.Th>
+              <UnstyledButton onClick={() => onSortChange && onSortChange("createdAt")}>
+                <Group gap={4}>
+                  <Text fw={700} size="xs">Opprettet</Text>
+                  {renderSortIcon("createdAt")}
+                </Group>
+              </UnstyledButton>
+            </Table.Th>
             <Table.Th style={{ width: 60 }}></Table.Th>
           </Table.Tr>
         </Table.Thead>
@@ -282,7 +314,7 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
           {users.length === 0 ? (
             <Table.Tr>
               <Table.Td colSpan={6} style={{ textAlign: "center", padding: "30px" }}>
-                <Text c="dimmed">Ingen brukere funnet for dette søket.</Text>
+                <Text c="dimmed">Ingen brukere funnet for dette søket/filteret.</Text>
               </Table.Td>
             </Table.Tr>
           ) : (
@@ -338,7 +370,7 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
                   </Badge>
                 </Table.Td>
 
-                {/* Konto status (Aktiv / Låst) */}
+                {/* Konto status */}
                 <Table.Td>
                   <Badge
                     color={user.isLocked ? "red" : "green"}
@@ -348,7 +380,7 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
                   </Badge>
                 </Table.Td>
 
-                {/* E-post bekreftet status */}
+                {/* E-post status */}
                 <Table.Td>
                   <Badge
                     color={user.isEmailConfirmed ? "teal" : "orange"}
@@ -379,6 +411,14 @@ export function AdminUserTable({ users, onRefreshNeeded }: Props) {
                         onClick={() => router.push(`/admin/users/${user.userId}`)}
                       >
                         Åpne detaljside
+                      </Menu.Item>
+
+                      <Menu.Item
+                        leftSection={<IconMail size={14} />}
+                        color="teal"
+                        onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
+                      >
+                        Send e-post
                       </Menu.Item>
 
                       <Menu.Divider />

@@ -8,6 +8,7 @@ import { ResendConfirmationAdminRequest } from "@/lib/models/admin/users/ResendC
 import { ResetPasswordAdminRequest } from "@/lib/models/admin/users/ResetPasswordAdminRequest";
 import { DeleteUserAdminRequest } from "@/lib/models/admin/users/DeleteUserAdminRequest";
 import { AddBlacklistRequest } from "@/lib/models/admin/users/AddBlacklistRequest";
+import { SendUserEmailAdminRequest } from "@/lib/models/admin/users/SendUserEmailAdminRequest";
 import {DeleteAndBlacklistUserAdminRequest} from "@/lib/models/admin/users/BlacklistedEntry";
 import {BlacklistedEntry} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
 
@@ -147,7 +148,26 @@ export const agentAuthAdmin = {
     return await response.json();
   },
 
-  // --- 9. SLETT BRUKER (Admin-sletting) ---
+  // --- 9. SEND MANUELL E-POST TIL BRUKER ---
+  sendUserEmail: async (
+    data: SendUserEmailAdminRequest
+  ): Promise<{ message: string }> => {
+    const response = await agentExternal.post(
+      `${BASE_URL}/admin/send-email`,
+      data
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || "Kunne ikke sende e-post til brukeren."
+      );
+    }
+
+    return await response.json();
+  },
+
+  // --- 10. SLETT BRUKER (Admin-sletting) ---
   deleteUser: async (
     data: DeleteUserAdminRequest
   ): Promise<{ message: string }> => {
@@ -164,7 +184,7 @@ export const agentAuthAdmin = {
     return await response.json();
   },
 
-  // --- 10. SLETT OG SVARTELIST BRUKER ---
+  // --- 11. SLETT OG SVARTELIST BRUKER ---
   deleteAndBlacklistUser: async (
     data: DeleteAndBlacklistUserAdminRequest
   ): Promise<{ message: string }> => {
@@ -183,7 +203,7 @@ export const agentAuthAdmin = {
     return await response.json();
   },
 
-  // --- 11. HENT SVARTELISTE ---
+  // --- 12. HENT SVARTELISTE ---
   getBlacklist: async (): Promise<BlacklistedEntry[]> => {
     const response = await agentExternal.get(`${BASE_URL}/admin/blacklist`);
 
@@ -195,7 +215,7 @@ export const agentAuthAdmin = {
     return await response.json();
   },
 
-  // --- 12. LEGG TIL I SVARTELISTE (DIREKTE) ---
+  // --- 13. LEGG TIL I SVARTELISTE (DIREKTE) ---
   addToBlacklist: async (
     data: AddBlacklistRequest
   ): Promise<{ message: string }> => {
@@ -214,7 +234,7 @@ export const agentAuthAdmin = {
     return await response.json();
   },
 
-  // --- 13. FJERN FRA SVARTELISTE ---
+  // --- 14. FJERN FRA SVARTELISTE ---
   removeFromBlacklist: async (id: string): Promise<{ message: string }> => {
     const response = await agentExternal.delete(
       `${BASE_URL}/admin/blacklist/${id}`

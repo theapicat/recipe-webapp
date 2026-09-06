@@ -13,6 +13,8 @@ interface FormFieldProps {
   disabled?: boolean;
   span?: GridColProps["span"];
   minRows?: number;
+  maxRows?: number;
+  autosize?: boolean;
   extra?: React.ReactNode;
 }
 
@@ -24,7 +26,9 @@ export const FormField = ({
                             required = false,
                             disabled = false,
                             span = 12,
-                            minRows = 3,
+                            minRows = 8, // Økt standardstørrelse for romslig meldingsfelt
+                            maxRows = 16,
+                            autosize = true,
                             extra,
                           }: FormFieldProps) => {
   const form = useAppFormContext();
@@ -40,7 +44,7 @@ export const FormField = ({
         placeholder={placeholder}
         withAsterisk={required}
         disabled={disabled}
-        {...(type === "textarea" ? { minRows } : {})}
+        {...(type === "textarea" ? { minRows, maxRows, autosize } : {})}
         key={form.key(name)}
         {...form.getInputProps(name)}
       />

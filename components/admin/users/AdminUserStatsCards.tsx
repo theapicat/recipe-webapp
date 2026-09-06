@@ -10,10 +10,10 @@ import {
 
 interface Props {
   totalItems: number;
-  activeFilter?: string;
+  activeFilterSummary?: string;
 }
 
-export function AdminUserStatsCards({ totalItems, activeFilter }: Props) {
+export function AdminUserStatsCards({ totalItems, activeFilterSummary }: Props) {
   return (
     <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
       <Card withBorder padding="md" radius="md">
@@ -32,25 +32,13 @@ export function AdminUserStatsCards({ totalItems, activeFilter }: Props) {
         <Group justify="space-between">
           <div>
             <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-              Aktivt Filter
+              Aktiv Filtrering
             </Text>
-            <Title order={4} c="teal.7">
-              {!activeFilter || activeFilter === "all"
-                ? "Alle brukere"
-                : activeFilter === "locked"
-                  ? "Kun låste"
-                  : activeFilter === "unconfirmed"
-                    ? "Ubekreftet e-post"
-                    : "Inaktive"}
+            <Title order={5} c="teal.7" lineClamp={1}>
+              {activeFilterSummary || "Alle brukere"}
             </Title>
           </div>
-          {activeFilter === "locked" ? (
-            <IconUserOff size={32} color="var(--mantine-color-red-6)" />
-          ) : activeFilter === "unconfirmed" ? (
-            <IconMailQuestion size={32} color="var(--mantine-color-orange-6)" />
-          ) : (
-            <IconUserCheck size={32} color="var(--mantine-color-teal-6)" />
-          )}
+          <IconMailQuestion size={32} color="var(--mantine-color-orange-6)" />
         </Group>
       </Card>
 

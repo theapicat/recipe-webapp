@@ -12,6 +12,7 @@ import {
   IconCheck,
   IconX,
   IconId,
+  IconMail,
 } from "@tabler/icons-react";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 
@@ -25,7 +26,7 @@ export function AdminUserHeader({ user }: Props) {
   return (
     <Paper p="lg" radius="md" withBorder shadow="xs">
       <Stack gap="md">
-        <Group justify="space-between" align="flex-start">
+        <Group justify="space-between" align="center">
           <Button
             variant="subtle"
             color="gray"
@@ -35,22 +36,32 @@ export function AdminUserHeader({ user }: Props) {
             Tilbake til brukeroversikt
           </Button>
 
-          {user.isGoogleAccount && (
-            <Badge
-              variant="outline"
-              color="gray"
-              leftSection={
-                <Image
-                  src="/icons/google.svg"
-                  alt="Google"
-                  width={14}
-                  height={14}
-                />
-              }
+          <Group gap="sm">
+            {user.isGoogleAccount && (
+              <Badge
+                variant="outline"
+                color="gray"
+                leftSection={
+                  <Image
+                    src="/icons/google.svg"
+                    alt="Google"
+                    width={14}
+                    height={14}
+                  />
+                }
+              >
+                Innkoblet med Google
+              </Badge>
+            )}
+
+            <Button
+              color="teal"
+              leftSection={<IconMail size={16} />}
+              onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
             >
-              Innkoblet med Google
-            </Badge>
-          )}
+              Send e-post
+            </Button>
+          </Group>
         </Group>
 
         <Group align="center" gap="lg">
