@@ -21,7 +21,6 @@ import {
   IconServer,
   IconExternalLink,
   IconCheck,
-  IconMoonStars,
 } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
@@ -125,6 +124,42 @@ const initialRoadmap: CategoryTodos[] = [
         id: "ui_email_templates",
         label: "E-postmaler i Notification Service",
         description: "Styre opp og standardisere HTML-malene som sendes ut slik at de matcher nettsidens visuelle profil.",
+        completed: false,
+      },
+    ],
+  },
+  {
+    category: "Logg, Audit & Sikkerhet",
+    badgeColor: "teal",
+    items: [
+      {
+        id: "log_chrono_audit",
+        label: "Audit-logg for Chrono Worker",
+        description: "Loggføre automatiske bakgrunnsjobber (påminnelser sendt, kontoer sperret/slettet).",
+        completed: false,
+      },
+      {
+        id: "log_admin_activity",
+        label: "Aktivitetslogg for Admin-handlinger (Vurderes)",
+        description: "Loggføre manuelle endringer utført av administratorer i admin-panelet.",
+        completed: false,
+      },
+      {
+        id: "stats_user_metrics",
+        label: "Brukerstatistikk & Aktivitet",
+        description: "Oversikt over totalt antall brukere, aktive brukere (siste 24t / 7d / 30d basert på LastActiveAt) og snitttall.",
+        completed: false,
+      },
+      {
+        id: "sec_gateway_rate_limit",
+        label: "Rate Limiting & Throttling i API Gateway",
+        description: "Begrense antall forespørsler per IP og sette strengere grenser på innloggingsendepunkter.",
+        completed: false,
+      },
+      {
+        id: "sec_gateway_headers",
+        label: "Sikkerhets-headere i API Gateway",
+        description: "Konfigurere HSTS, X-Frame-Options og stramme inn request body-størrelser sentralt i Gateway.",
         completed: false,
       },
     ],
