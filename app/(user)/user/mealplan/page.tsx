@@ -21,7 +21,8 @@ import {
   Divider,
   Tooltip,
   Card,
-  SegmentedControl, ThemeIcon,
+  SegmentedControl,
+  ThemeIcon,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure as useMantineDisclosure } from "@mantine/hooks";
@@ -90,7 +91,7 @@ export interface PlannedMeal {
   time?: string;
   recipes: RecipeOption[];
   notes?: string;
-  dateStr?: string; // Format YYYY-MM-DD for datostyring
+  dateStr?: string;
 }
 
 // Mock-katalog over brukerens tilgjengelige oppskrifter med næringsinnhold
@@ -285,7 +286,7 @@ export default function MealPlannerPage() {
       notifications.show({
         title: "Velg minst én oppskrift",
         message: "Du må velge minst én oppskrift eller rett for å opprette måltidet.",
-        color: "orange",
+        color: "terracotta",
       });
       return;
     }
@@ -306,7 +307,7 @@ export default function MealPlannerPage() {
     notifications.show({
       title: "Måltid lagt til!",
       message: `${selectedCategory} for ${selectedDay} ble lagt til i ukesmenyen.`,
-      color: "teal",
+      color: "sage",
       icon: <IconCheck size={16} />,
     });
   };
@@ -361,7 +362,7 @@ export default function MealPlannerPage() {
       id: "shopping-generated",
       title: "Handleliste oppdatert!",
       message: `${shoppingPreviewItems.length} ingredienser ble overført til handlelisten din.`,
-      color: "blue",
+      color: "sage",
       icon: <IconShoppingCart size={16} />,
     });
 
@@ -373,7 +374,7 @@ export default function MealPlannerPage() {
   };
 
   // --- NÆRINGSINNHOLD BEREGNING FOR AKTIV VISNING ---
-  const activeMeals = meals; // I en full backend-versjon filtreres dette basert på valgt dato/periode
+  const activeMeals = meals;
   const totalNutrition = activeMeals.reduce(
     (acc, meal) => {
       meal.recipes.forEach((rec) => {
@@ -392,7 +393,8 @@ export default function MealPlannerPage() {
       <Stack gap="lg">
         {/* PROTOTYPING VARSEL */}
         <Alert
-          color="teal"
+          color="terracotta"
+          variant="light"
           title="🗓️ Måltidsplanlegger & Ukesmeny"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -412,14 +414,14 @@ export default function MealPlannerPage() {
           <Group gap="xs">
             <Button
               variant="outline"
-              color="blue"
+              color="sage"
               leftSection={<IconShoppingCart size={16} />}
               onClick={handlePrepareShoppingList}
             >
               Generer Handleliste
             </Button>
             <Button
-              color="teal"
+              color="sage"
               leftSection={<IconPlus size={16} />}
               onClick={() => handleOpenAddForDay("Mandag")}
             >
@@ -429,7 +431,12 @@ export default function MealPlannerPage() {
         </Group>
 
         {/* BRYTER FOR DAG / UKE / MÅNED & DATO-NAVIGASJON */}
-        <Paper p="sm" radius="md" withBorder bg="white">
+        <Paper
+          p="sm"
+          radius="md"
+          withBorder
+          bg="light-dark(var(--mantine-color-white), var(--mantine-color-dark-7))"
+        >
           <Group justify="space-between" align="center" wrap="wrap" gap="md">
             <SegmentedControl
               value={viewMode}
@@ -439,7 +446,7 @@ export default function MealPlannerPage() {
                 { label: "Uke", value: "week" },
                 { label: "Måned", value: "month" },
               ]}
-              color="teal"
+              color="sage"
             />
 
             <Group gap="xs">
@@ -476,7 +483,7 @@ export default function MealPlannerPage() {
                   Måltider for Mandag (Aktiv Dag)
                 </Title>
                 <Button
-                  color="teal"
+                  color="sage"
                   size="xs"
                   leftSection={<IconPlus size={14} />}
                   onClick={() => handleOpenAddForDay("Mandag")}
@@ -497,8 +504,8 @@ export default function MealPlannerPage() {
                           <Group gap="xs">
                             <Badge
                               size="md"
-                              variant="filled"
-                              color="teal"
+                              variant="light"
+                              color="sage"
                               leftSection={getCategoryIcon(meal.category)}
                             >
                               {meal.category}
@@ -521,13 +528,19 @@ export default function MealPlannerPage() {
 
                         <Stack gap="xs" mt="xs">
                           {meal.recipes.map((rec, idx) => (
-                            <Paper key={rec.id} p="xs" radius="sm" bg="gray.0" withBorder>
+                            <Paper
+                              key={rec.id}
+                              p="xs"
+                              radius="sm"
+                              bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+                              withBorder
+                            >
                               <Group justify="space-between">
                                 <Text fw={600} size="sm">
                                   {meal.recipes.length > 1 && `${idx + 1}. `}
                                   {rec.title}
                                 </Text>
-                                <Badge size="xs" color="blue" variant="light">
+                                <Badge size="xs" color="sage" variant="light">
                                   {rec.nutrition.calories} kcal
                                 </Badge>
                               </Group>
@@ -540,7 +553,7 @@ export default function MealPlannerPage() {
                         </Stack>
 
                         {meal.notes && (
-                          <Text size="xs" c="dimmed" style={{ italic: true }}>
+                          <Text size="xs" c="dimmed" style={{ fontStyle: "italic" }}>
                             Notat: &#34;{meal.notes}&#34;
                           </Text>
                         )}
@@ -565,17 +578,17 @@ export default function MealPlannerPage() {
                   radius="md"
                   withBorder
                   shadow="xs"
-                  bg="white"
+                  bg="light-dark(var(--mantine-color-white), var(--mantine-color-dark-7))"
                   style={{ minHeight: 280, display: "flex", flexDirection: "column" }}
                 >
                   <Stack gap="xs" style={{ flex: 1 }}>
                     <Group justify="space-between" align="center">
-                      <Text fw={700} size="md" color="teal">
+                      <Text fw={700} size="md" c="sage">
                         {day}
                       </Text>
                       <ActionIcon
                         variant="light"
-                        color="teal"
+                        color="sage"
                         size="sm"
                         onClick={() => handleOpenAddForDay(day)}
                       >
@@ -588,13 +601,19 @@ export default function MealPlannerPage() {
                     <Stack gap="xs" style={{ flex: 1 }}>
                       {dayMeals.length > 0 ? (
                         dayMeals.map((meal) => (
-                          <Card key={meal.id} p="xs" radius="sm" withBorder bg="gray.0">
+                          <Card
+                            key={meal.id}
+                            p="xs"
+                            radius="sm"
+                            withBorder
+                            bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+                          >
                             <Stack gap={4}>
                               <Group justify="space-between" align="center">
                                 <Badge
                                   size="xs"
                                   variant="light"
-                                  color="teal"
+                                  color="sage"
                                   leftSection={getCategoryIcon(meal.category)}
                                 >
                                   {meal.category}
@@ -629,7 +648,7 @@ export default function MealPlannerPage() {
                               </Stack>
 
                               {meal.notes && (
-                                <Text size="10px" c="dimmed" style={{ italic: true }}>
+                                <Text size="10px" c="dimmed" style={{ fontStyle: "italic" }}>
                                   &#34;{meal.notes}&#34;
                                 </Text>
                               )}
@@ -645,7 +664,7 @@ export default function MealPlannerPage() {
 
                     <Button
                       variant="subtle"
-                      color="teal"
+                      color="sage"
                       size="xs"
                       fullWidth
                       leftSection={<IconPlus size={12} />}
@@ -669,7 +688,7 @@ export default function MealPlannerPage() {
                 <Title order={3} size="h4">
                   Månedsoversikt (August 2026)
                 </Title>
-                <Badge color="blue" variant="light">
+                <Badge color="sage" variant="light">
                   {meals.length} planlagte måltider denne måneden
                 </Badge>
               </Group>
@@ -686,14 +705,23 @@ export default function MealPlannerPage() {
                       p="xs"
                       radius="sm"
                       withBorder
-                      bg={hasMeal ? "teal.0" : "gray.0"}
-                      style={{ height: 80, display: "flex", flexDirection: "column", justifyBetween: "space-between" }}
+                      bg={
+                        hasMeal
+                          ? "light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-5))"
+                          : "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7))"
+                      }
+                      style={{
+                        height: 80,
+                        display: "flex",
+                        flexDirection: "column",
+                        justify: "space-between",
+                      }}
                     >
                       <Group justify="space-between">
                         <Text size="xs" fw={700}>
                           {dateNum}.
                         </Text>
-                        {hasMeal && <Badge size="xs" color="teal">Måltid</Badge>}
+                        {hasMeal && <Badge size="xs" color="sage">Måltid</Badge>}
                       </Group>
 
                       {hasMeal && (
@@ -710,11 +738,17 @@ export default function MealPlannerPage() {
         )}
 
         {/* --- NÆRINGSINNHOLD OVERSIKT FOR VALGT PERIODE --- */}
-        <Paper p="lg" radius="md" withBorder bg="white" shadow="xs">
+        <Paper
+          p="lg"
+          radius="md"
+          withBorder
+          bg="light-dark(var(--mantine-color-white), var(--mantine-color-dark-7))"
+          shadow="xs"
+        >
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Group gap="xs">
-                <ThemeIcon color="teal" variant="light" size="lg" radius="md">
+                <ThemeIcon color="sage" variant="light" size="lg" radius="md">
                   <IconChartPie size={20} />
                 </ThemeIcon>
                 <div>
@@ -727,7 +761,7 @@ export default function MealPlannerPage() {
                 </div>
               </Group>
 
-              <Badge color="teal" variant="light">
+              <Badge color="sage" variant="light">
                 {activeMeals.length} Måltider inkludert
               </Badge>
             </Group>
@@ -735,41 +769,77 @@ export default function MealPlannerPage() {
             <Divider />
 
             <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-              <Paper p="md" radius="md" bg="orange.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-orange-2)" }}>
-                <ThemeIcon color="orange" variant="light" radius="xl" mb={4}>
+              <Paper
+                p="md"
+                radius="md"
+                bg="light-dark(var(--mantine-color-terracotta-0), var(--mantine-color-dark-6))"
+                ta="center"
+                withBorder
+                style={{
+                  borderColor: "light-dark(var(--mantine-color-terracotta-2), var(--mantine-color-terracotta-8))",
+                }}
+              >
+                <ThemeIcon color="terracotta" variant="light" radius="xl" mb={4}>
                   <IconFlame size={18} />
                 </ThemeIcon>
                 <Text size="xs" c="dimmed">
                   Total Energi
                 </Text>
-                <Text fw={800} size="xl" c="orange.9">
+                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-terracotta-9), var(--mantine-color-terracotta-3))">
                   {totalNutrition.calories} kcal
                 </Text>
               </Paper>
 
-              <Paper p="md" radius="md" bg="teal.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-teal-2)" }}>
+              <Paper
+                p="md"
+                radius="md"
+                bg="light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-6))"
+                ta="center"
+                withBorder
+                style={{
+                  borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-sage-8))",
+                }}
+              >
                 <Text size="xs" c="dimmed" mt={8}>
                   Proteiner
                 </Text>
-                <Text fw={800} size="xl" c="teal.9">
+                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-3))">
                   {totalNutrition.protein} g
                 </Text>
               </Paper>
 
-              <Paper p="md" radius="md" bg="blue.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-blue-2)" }}>
+              <Paper
+                p="md"
+                radius="md"
+                bg="light-dark(var(--mantine-color-blue-0), var(--mantine-color-dark-6))"
+                ta="center"
+                withBorder
+                style={{
+                  borderColor: "light-dark(var(--mantine-color-blue-2), var(--mantine-color-blue-8))",
+                }}
+              >
                 <Text size="xs" c="dimmed" mt={8}>
                   Karbohydrater
                 </Text>
-                <Text fw={800} size="xl" c="blue.9">
+                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-3))">
                   {totalNutrition.carbs} g
                 </Text>
               </Paper>
 
-              <Paper p="md" radius="md" bg="grape.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-grape-2)" }}>
+              <Paper
+                p="md"
+                radius="md"
+                bg="light-dark(var(--mantine-color-grape-0), var(--mantine-color-dark-6))"
+                ta="center"
+                withBorder
+                style={{
+                  borderColor: "light-dark(var(--mantine-color-grape-2), var(--mantine-color-grape-8))",
+                }}
+              >
                 <Text size="xs" c="dimmed" mt={8}>
                   Fett
                 </Text>
-                <Text fw={800} size="xl" c="grape.9">
+                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-grape-9), var(--mantine-color-grape-3))">
                   {totalNutrition.fat} g
                 </Text>
               </Paper>
@@ -843,7 +913,7 @@ export default function MealPlannerPage() {
             <Button variant="default" onClick={closeAddModal}>
               Avbryt
             </Button>
-            <Button color="teal" onClick={handleSaveMeal}>
+            <Button color="sage" onClick={handleSaveMeal}>
               Lagre Måltid
             </Button>
           </Group>
@@ -865,7 +935,12 @@ export default function MealPlannerPage() {
           </Text>
 
           {/* DAG-VELGER FOR HANDEL */}
-          <Paper p="sm" radius="md" withBorder bg="gray.0">
+          <Paper
+            p="sm"
+            radius="md"
+            withBorder
+            bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+          >
             <Text size="xs" fw={700} mb="xs" c="dimmed" tt="uppercase">
               1. Velg dager som skal inkluderes
             </Text>
@@ -879,7 +954,7 @@ export default function MealPlannerPage() {
                     const checked = e.currentTarget.checked;
                     setShoppingDays((prev) => ({ ...prev, [d]: checked }));
                   }}
-                  color="blue"
+                  color="sage"
                   size="xs"
                 />
               ))}
@@ -887,7 +962,7 @@ export default function MealPlannerPage() {
           </Paper>
 
           {/* PÅMINNELSESBOKS */}
-          <Alert color="blue" icon={<IconInfoCircle size={18} />} radius="md">
+          <Alert color="terracotta" variant="light" icon={<IconInfoCircle size={18} />} radius="md">
             <Text size="xs">
               <b>Tips:</b> Du kan fjerne varer du har fra før direkte i listen under. Du kan også finjustere mengder, kategorier og krysse av varer på den dedikerte handlelistesiden etterpå.
             </Text>
@@ -944,14 +1019,14 @@ export default function MealPlannerPage() {
             <Group gap="xs">
               <Button
                 variant="light"
-                color="blue"
+                color="sage"
                 disabled={shoppingPreviewItems.length === 0}
                 onClick={() => handleFinalizeShoppingList(false)}
               >
                 Legg til og bli her
               </Button>
               <Button
-                color="blue"
+                color="sage"
                 rightSection={<IconArrowRight size={16} />}
                 disabled={shoppingPreviewItems.length === 0}
                 onClick={() => handleFinalizeShoppingList(true)}

@@ -21,7 +21,7 @@ export default function NotFound() {
           component={Link}
           href="/dashboard"
           variant="light"
-          color="teal"
+          color="sage"
           mt="sm"
         >
           Tilbake til oversikten

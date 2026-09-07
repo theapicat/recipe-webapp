@@ -48,8 +48,7 @@ export const UserMenu = () => {
       <Menu.Target>
         <UnstyledButton style={{ borderRadius: "50%" }}>
           <Avatar
-            src={session.user?.avatarUrl}
-            color="blue"
+            color="sage"
             radius="xl"
             size="md"
           >
@@ -65,7 +64,7 @@ export const UserMenu = () => {
               {session.user?.firstName} {session.user?.lastName}
             </Text>
             {isAdmin && (
-              <Badge color="red" variant="light" size="xs">
+              <Badge color="terracotta" variant="light" size="xs">
                 Admin
               </Badge>
             )}

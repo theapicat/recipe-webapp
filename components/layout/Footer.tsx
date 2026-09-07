@@ -17,9 +17,6 @@ import Link from "next/link";
 import {
   IconChefHat,
   IconLock,
-  IconSparkles,
-  IconHeart,
-  IconShield,
   IconCircleCheck,
 } from "@tabler/icons-react";
 import { useSession } from "@/lib/session/SessionProvider";
@@ -37,7 +34,7 @@ export const Footer = () => {
           {/* Kolonne 1: Brand & Visjon */}
           <Stack gap="sm">
             <Group gap="xs">
-              <ThemeIcon size={34} radius="md" color="teal" variant="light">
+              <ThemeIcon size={34} radius="md" color="sage" variant="light">
                 <IconChefHat size={20} />
               </ThemeIcon>
               <div>
@@ -52,7 +49,7 @@ export const Footer = () => {
             </Text>
 
             <Group gap={6} mt={4}>
-              <Badge variant="dot" color="teal" size="xs">
+              <Badge variant="dot" color="sage" size="xs">
                 100% Privat
               </Badge>
               <Badge variant="dot" color="blue" size="xs">
@@ -141,7 +138,7 @@ export const Footer = () => {
 
           <Group gap="md">
             {userActive ? (
-              <Badge variant="light" color="teal" size="xs" leftSection={<IconCircleCheck size={12} />}>
+              <Badge variant="light" color="sage" size="xs" leftSection={<IconCircleCheck size={12} />}>
                 Innlogget som {session.user?.firstName || "bruker"}
               </Badge>
             ) : (

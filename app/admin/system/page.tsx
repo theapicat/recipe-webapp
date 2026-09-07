@@ -23,12 +23,8 @@ import {
   IconActivity,
   IconServer,
   IconExternalLink,
-  IconCheck,
-  IconAlertTriangle,
   IconInfoCircle,
   IconRefresh,
-  IconBug,
-  IconDatabase,
   IconMessage2,
   IconListCheck,
 } from "@tabler/icons-react";
@@ -129,7 +125,7 @@ export default function AdminSystemPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="orange"
+          color="terracotta"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -148,7 +144,7 @@ export default function AdminSystemPage() {
           <Tooltip label="Oppdater status">
             <ActionIcon
               variant="outline"
-              color="teal"
+              color="sage"
               size="lg"
               onClick={handleRefresh}
               loading={isRefreshing}
@@ -163,7 +159,7 @@ export default function AdminSystemPage() {
           <Card withBorder padding="md" radius="md">
             <Group justify="space-between" mb="xs">
               <Group gap="sm">
-                <ThemeIcon color="violet" size="lg" radius="md">
+                <ThemeIcon color="sage" size="lg" radius="md" variant="light">
                   <IconActivity size={20} />
                 </ThemeIcon>
                 <div>
@@ -175,7 +171,7 @@ export default function AdminSystemPage() {
                   </Text>
                 </div>
               </Group>
-              <Badge color="violet" variant="light">
+              <Badge color="sage" variant="light">
                 Port 5341
               </Badge>
             </Group>
@@ -187,7 +183,7 @@ export default function AdminSystemPage() {
               href="http://localhost:5341"
               target="_blank"
               variant="light"
-              color="violet"
+              color="sage"
               size="xs"
               rightSection={<IconExternalLink size={14} />}
             >
@@ -198,7 +194,7 @@ export default function AdminSystemPage() {
           <Card withBorder padding="md" radius="md">
             <Group justify="space-between" mb="xs">
               <Group gap="sm">
-                <ThemeIcon color="orange" size="lg" radius="md">
+                <ThemeIcon color="terracotta" size="lg" radius="md" variant="light">
                   <IconMessage2 size={20} />
                 </ThemeIcon>
                 <div>
@@ -210,7 +206,7 @@ export default function AdminSystemPage() {
                   </Text>
                 </div>
               </Group>
-              <Badge color="orange" variant="light">
+              <Badge color="terracotta" variant="light">
                 Port 15672
               </Badge>
             </Group>
@@ -222,7 +218,7 @@ export default function AdminSystemPage() {
               href="http://localhost:15672"
               target="_blank"
               variant="light"
-              color="orange"
+              color="terracotta"
               size="xs"
               rightSection={<IconExternalLink size={14} />}
             >
@@ -236,10 +232,10 @@ export default function AdminSystemPage() {
           <Stack gap="md">
             <Group justify="space-between">
               <Group gap="xs">
-                <IconServer size={20} color="var(--mantine-color-teal-6)" />
+                <IconServer size={20} color="var(--mantine-color-sage-6)" />
                 <Text fw={600}>Mikrotjenester Status (/health)</Text>
               </Group>
-              <Badge color="green" variant="filled">
+              <Badge color="sage" variant="light">
                 Alle Tjenester Operative
               </Badge>
             </Group>
@@ -278,7 +274,7 @@ export default function AdminSystemPage() {
                     </Table.Td>
                     <Table.Td>
                       <Group gap="xs" style={{ width: 120 }}>
-                        <Progress value={99.9} color="teal" size="xs" style={{ flex: 1 }} />
+                        <Progress value={99.9} color="sage" size="xs" style={{ flex: 1 }} />
                         <Text size="xs" c="dimmed">
                           {srv.uptime}
                         </Text>
@@ -286,7 +282,7 @@ export default function AdminSystemPage() {
                     </Table.Td>
                     <Table.Td>
                       <Badge
-                        color={srv.status === "Operativ" ? "green" : "red"}
+                        color={srv.status === "Operativ" ? "sage" : "red"}
                         variant="dot"
                       >
                         {srv.status}
@@ -304,7 +300,7 @@ export default function AdminSystemPage() {
           <Stack gap="md">
             <Group justify="space-between">
               <Group gap="xs">
-                <IconListCheck size={20} color="var(--mantine-color-blue-6)" />
+                <IconListCheck size={20} color="var(--mantine-color-terracotta-filled)" />
                 <Text fw={600}>Siste Systemhendelser & Feillogger</Text>
               </Group>
               <Anchor size="xs" href="http://localhost:5341" target="_blank">
@@ -341,8 +337,8 @@ export default function AdminSystemPage() {
                           log.level === "ERROR"
                             ? "red"
                             : log.level === "WARN"
-                              ? "orange"
-                              : "blue"
+                              ? "terracotta"
+                              : "sage"
                         }
                       >
                         {log.level}

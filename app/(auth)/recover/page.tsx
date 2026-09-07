@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/session/SessionProvider";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
-import {RecoverPassword} from "@/components/forms/auth/RecoverPassword";
+import { RecoverPassword } from "@/components/forms/auth/RecoverPassword";
 
 const ForgotPasswordPage = () => {
   const router = useRouter();
@@ -13,9 +13,10 @@ const ForgotPasswordPage = () => {
   useEffect(() => {
     if (!session || !session.role) return;
 
-    if (session.role === "Admin") {
+    const role = session.role.toLowerCase();
+    if (role === "admin") {
       router.push("/admin/dashboard");
-    } else if (session.role === "User") {
+    } else if (role === "user") {
       router.push("/dashboard");
     }
   }, [session?.role, router]);

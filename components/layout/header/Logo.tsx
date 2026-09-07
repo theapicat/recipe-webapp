@@ -1,6 +1,6 @@
 "use client";
 
-import {Group, Text, UnstyledButton} from "@mantine/core";
+import { Group, Text, UnstyledButton } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,9 +9,9 @@ interface LogoProps {
   size?: number;
 }
 
-export const Logo = ({href = "/", size = 32}: LogoProps) => {
+export const Logo = ({ href = "/", size = 32 }: LogoProps) => {
   return (
-    <UnstyledButton component={Link} href={href} style={{textDecoration: "none"}}>
+    <UnstyledButton component={Link} href={href} style={{ textDecoration: "none" }}>
       <Group gap="xs" align="center" wrap="nowrap">
         <Image
           src="/icons/logo.svg"
@@ -20,7 +20,7 @@ export const Logo = ({href = "/", size = 32}: LogoProps) => {
           height={size}
           priority
         />
-        <Text fw={800} size="lg" style={{letterSpacing: "-0.5px"}}>
+        <Text fw={800} size="lg" style={{ letterSpacing: "-0.5px" }}>
           Kjøkkenhylla
         </Text>
       </Group>

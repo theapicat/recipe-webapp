@@ -14,7 +14,15 @@ import {
   Progress,
   Anchor,
   Alert,
+  ThemeIcon,
 } from "@mantine/core";
+import {
+  IconCrown,
+  IconServer,
+  IconExternalLink,
+  IconCheck,
+  IconMoonStars,
+} from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
 interface TodoItem {
@@ -99,6 +107,12 @@ const initialRoadmap: CategoryTodos[] = [
         id: "ui_theme",
         label: "Helhetlig profil & Mantine Theme",
         description: "Standardisere farger, typografi og komponenter i Mantine for et konsistent uttrykk i hele løsningen.",
+        completed: true,
+      },
+      {
+        id: "ui_darkmode",
+        label: "Mørk modus (Dark Mode)",
+        description: "Dedikert Dark Mode-knapp i meny/header. Standardiseres mot systeminnstillinger med lagring i localStorage.",
         completed: false,
       },
       {
@@ -199,45 +213,77 @@ const AdminDashboardPage = () => {
     <AsyncMainContainer size="lg" py={30}>
       <Stack gap="lg">
         {/* Header */}
-        <Group justify="space-between" align="flex-end">
+        <Group justify="space-between" align="flex-end" wrap="wrap">
           <div>
-            <Title order={2}>👑 Admin Dashboard</Title>
+            <Group gap="xs" mb={4}>
+              <ThemeIcon color="sage" variant="light" size="md" radius="md">
+                <IconCrown size={18} />
+              </ThemeIcon>
+              <Title order={2}>Admin Dashboard</Title>
+            </Group>
             <Text c="dimmed" size="sm">
-              Kjøkkenhylla Administrasjon & Huskeliste
+              Kjøkkenhylla Administrasjon & Systemoversikt
             </Text>
           </div>
-          <Badge size="lg" variant="filled" color="teal">
+          <Badge size="lg" variant="filled" color="sage">
             Kjøkkenhylla Admin
           </Badge>
         </Group>
 
         {/* Fremgang */}
-        <Paper p="md" radius="md" withBorder>
+        <Paper p="md" radius="md" withBorder shadow="xs">
           <Stack gap="xs">
             <Group justify="space-between">
-              <Text fw={500}>Systemutvikling Fremdrift</Text>
+              <Group gap="xs">
+                <Text fw={600} size="sm">
+                  Systemutvikling Fremdrift
+                </Text>
+                <Badge color="sage" variant="light" size="xs">
+                  {progressPercentage}%
+                </Badge>
+              </Group>
               <Text size="sm" c="dimmed">
-                {completedItems} av {totalItems} funksjoner fullført ({progressPercentage}%)
+                {completedItems} av {totalItems} funksjoner fullført
               </Text>
             </Group>
-            <Progress value={progressPercentage} color="teal" size="xl" radius="xl" animated />
+            <Progress value={progressPercentage} color="sage" size="xl" radius="xl" animated />
           </Stack>
         </Paper>
 
         {/* Infrastruktur Snarveier */}
-        <Alert color="blue" title="🔗 Infrastruktur & Verktøy" radius="md">
-          <Group gap="md" mt="xs">
-            <Anchor href="http://localhost:5341" target="_blank" size="sm" fw={500}>
-              🔍 Åpne Seq Log Dashboard (5341)
+        <Alert
+          color="sage"
+          variant="light"
+          title="🔗 Infrastruktur & Verktøy"
+          icon={<IconServer size={20} />}
+          radius="md"
+        >
+          <Group gap="lg" mt="xs" wrap="wrap">
+            <Anchor
+              href="http://localhost:5341"
+              target="_blank"
+              size="sm"
+              fw={600}
+              c="sage.8"
+              style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}
+            >
+              🔍 Seq Log Dashboard (5341) <IconExternalLink size={14} />
             </Anchor>
-            <Anchor href="http://localhost:15672" target="_blank" size="sm" fw={500}>
-              🐰 Åpne RabbitMQ Manager (15672)
+            <Anchor
+              href="http://localhost:15672"
+              target="_blank"
+              size="sm"
+              fw={600}
+              c="sage.8"
+              style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}
+            >
+              🐰 RabbitMQ Manager (15672) <IconExternalLink size={14} />
             </Anchor>
           </Group>
         </Alert>
 
         {/* Tabs for Kategorier */}
-        <Tabs defaultValue="Brukeradministrasjon">
+        <Tabs defaultValue="Brukeradministrasjon" color="sage" radius="md">
           <Tabs.List mb="md">
             {roadmap.map((cat) => (
               <Tabs.Tab key={cat.category} value={cat.category}>
@@ -250,17 +296,26 @@ const AdminDashboardPage = () => {
             <Tabs.Panel key={cat.category} value={cat.category}>
               <Stack gap="md">
                 {cat.items.map((item) => (
-                  <Card key={item.id} withBorder radius="md" padding="sm">
-                    <Group align="flex-start" justify="space-between">
+                  <Card
+                    key={item.id}
+                    withBorder
+                    radius="md"
+                    padding="sm"
+                    bg="light-dark(var(--mantine-color-white), var(--mantine-color-dark-6))"
+                  >
+                    <Group align="flex-start" justify="space-between" wrap="nowrap">
                       <Checkbox
                         checked={item.completed}
                         onChange={() => toggleItem(cat.category, item.id)}
                         label={
                           <Text
-                            fw={500}
+                            fw={600}
+                            size="sm"
                             style={{
                               textDecoration: item.completed ? "line-through" : "none",
-                              color: item.completed ? "var(--mantine-color-dimmed)" : "inherit",
+                              color: item.completed
+                                ? "var(--mantine-color-dimmed)"
+                                : "inherit",
                             }}
                           >
                             {item.label}
@@ -268,9 +323,13 @@ const AdminDashboardPage = () => {
                         }
                         description={item.description}
                         size="md"
-                        color={cat.badgeColor}
+                        color="sage"
                       />
-                      <Badge color={item.completed ? "gray" : cat.badgeColor} variant="light">
+                      <Badge
+                        color={item.completed ? "gray" : cat.badgeColor}
+                        variant="light"
+                        leftSection={item.completed ? <IconCheck size={12} /> : undefined}
+                      >
                         {item.completed ? "Fullført" : "Planlagt"}
                       </Badge>
                     </Group>

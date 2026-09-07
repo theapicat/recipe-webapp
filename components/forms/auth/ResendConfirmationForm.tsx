@@ -27,7 +27,7 @@ export const ResendConfirmationForm = () => {
         notifications.show({
           title: "Bekreftelseslenke sendt!",
           message: data.message || `En ny e-post har blitt sendt til ${user.email}.`,
-          color: "teal",
+          color: "sage",
           icon: <IconCheck size={16} />,
         });
       } else {
@@ -49,32 +49,26 @@ export const ResendConfirmationForm = () => {
   };
 
   return (
-    <Paper
-      p="xl"
-      radius="md"
-      withBorder
-      bg="orange.0"
-      style={{ borderColor: "var(--mantine-color-orange-3)" }}
-    >
+    <Paper p="xl" radius="md" withBorder>
       <Stack gap="md">
         <Group gap="xs">
-          <IconAlertTriangle size={22} color="var(--mantine-color-orange-7)" />
-          <Title order={3} size="h4" c="orange.9">
+          <IconAlertTriangle size={22} color="var(--mantine-color-terracotta-filled)" />
+          <Title order={3} size="h4" c="terracotta">
             Bekreft din e-postadresse
           </Title>
         </Group>
 
-        <Alert color="orange" variant="light" radius="md">
+        <Alert color="terracotta" variant="light" radius="md">
           E-postadressen din (<b>{user.email}</b>) er ikke bekreftet ennå. For å holde kontoen din aktiv og forhindre at den sperres etter 14 dager, må e-posten verifiseres.
         </Alert>
 
-        <Text size="sm" c="orange.9">
+        <Text size="sm" c="dimmed">
           Sjekk innboksen din (og eventuelt søppelpost) for aktiveringslenken. Hvis du ikke finner e-posten, kan du be om å få tilsendt en ny ved å trykke på knappen under.
         </Text>
 
         <Group justify="flex-end">
           <Button
-            color="orange"
+            color="terracotta"
             variant="filled"
             leftSection={<IconSend size={16} />}
             onClick={handleResend}

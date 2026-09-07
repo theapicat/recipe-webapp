@@ -76,12 +76,12 @@ function ConfirmEmailContent() {
       {status === "success" && (
         <Paper p="xl" radius="md" withBorder shadow="sm">
           <Stack gap="lg" align="center" style={{ textAlign: "center" }}>
-            <ThemeIcon color="teal" size={70} radius="xl" variant="light">
+            <ThemeIcon color="sage" size={70} radius="xl" variant="light">
               <IconCheck size={40} />
             </ThemeIcon>
 
             <Stack gap="xs">
-              <Title order={1} size="h2" c="teal.9">
+              <Title order={1} size="h2">
                 E-posten din er bekreftet! 🎉
               </Title>
               <Text size="sm" c="dimmed">
@@ -93,7 +93,7 @@ function ConfirmEmailContent() {
 
             <Group justify="center">
               <Button
-                color="teal"
+                color="sage"
                 size="md"
                 rightSection={<IconArrowRight size={18} />}
                 onClick={() => router.push("/dashboard")}
@@ -142,7 +142,7 @@ function ConfirmEmailContent() {
               </Button>
 
               <Button
-                color="teal"
+                color="sage"
                 leftSection={<IconLogin size={18} />}
                 onClick={() => router.push("/login")}
               >

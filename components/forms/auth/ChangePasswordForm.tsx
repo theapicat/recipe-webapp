@@ -68,7 +68,7 @@ export const ChangePasswordForm = () => {
         notifications.show({
           title: hasPassword ? "Passord endret!" : "Passord opprettet!",
           message: data.message || "Ditt passord ble oppdatert.",
-          color: "teal",
+          color: "sage",
           icon: <IconCheck size={16} />,
         });
         form.reset();
@@ -109,7 +109,7 @@ export const ChangePasswordForm = () => {
       >
         {!hasPassword && (
           <Group mb="xs">
-            <Badge color="blue" variant="light">
+            <Badge color="terracotta" variant="light">
               Google-konto (Mangler lokalt passord)
             </Badge>
           </Group>

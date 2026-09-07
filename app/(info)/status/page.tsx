@@ -9,7 +9,6 @@ import {
   Group,
   Badge,
   Alert,
-  SimpleGrid,
   ThemeIcon,
   Divider,
   ActionIcon,
@@ -98,9 +97,9 @@ const INCIDENT_HISTORY: IncidentReport[] = [
 function getStatusBadge(status: PublicStatus) {
   switch (status) {
     case "OPERATIONAL":
-      return <Badge color="green" variant="light">Operativ</Badge>;
+      return <Badge color="sage" variant="light">Operativ</Badge>;
     case "DEGRADED":
-      return <Badge color="orange" variant="light">Redusert ytelse</Badge>;
+      return <Badge color="terracotta" variant="light">Redusert ytelse</Badge>;
     case "OUTAGE":
       return <Badge color="red" variant="light">Ute av drift</Badge>;
     case "MAINTENANCE":
@@ -138,7 +137,7 @@ export default function PublicStatusPage() {
       <Stack gap="xl">
         {/* --- PROTOTYPING VARSEL --- */}
         <Alert
-          color="orange"
+          color="terracotta"
           title="🚧 Mockup / Under utvikling"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -171,35 +170,23 @@ export default function PublicStatusPage() {
         </Group>
 
         {/* --- MAIN STATUS BANNER --- */}
-        <Paper
-          p="lg"
-          radius="md"
-          withBorder
-          style={{
-            borderColor: isAllOperational
-              ? "var(--mantine-color-green-4)"
-              : "var(--mantine-color-orange-4)",
-            backgroundColor: isAllOperational
-              ? "var(--mantine-color-green-0)"
-              : "var(--mantine-color-orange-0)",
-          }}
-        >
+        <Paper p="lg" radius="md" withBorder>
           <Group gap="md">
             <ThemeIcon
-              color={isAllOperational ? "green" : "orange"}
+              color={isAllOperational ? "sage" : "terracotta"}
               size={48}
               radius="xl"
-              variant="filled"
+              variant="light"
             >
               {isAllOperational ? <IconShieldCheck size={28} /> : <IconAlertTriangle size={28} />}
             </ThemeIcon>
             <div>
-              <Title order={3} size="h3" c={isAllOperational ? "green.9" : "orange.9"}>
+              <Title order={3} size="h3">
                 {isAllOperational
                   ? "Alle systemer fungerer normalt"
                   : "Enkelte tjenester har redusert funksjonalitet"}
               </Title>
-              <Text size="sm" c={isAllOperational ? "green.8" : "orange.8"}>
+              <Text size="sm" c="dimmed">
                 {isAllOperational
                   ? "Ingen rapporterte avbrudd eller problemer akkurat nå."
                   : "Vi jobber med å utbedre en kjent feil."}
@@ -222,7 +209,7 @@ export default function PublicStatusPage() {
                   <Group justify="space-between" align="center" py="xs">
                     <Group gap="sm">
                       <ThemeIcon
-                        color={service.status === "OPERATIONAL" ? "green" : "orange"}
+                        color={service.status === "OPERATIONAL" ? "sage" : "terracotta"}
                         variant="light"
                         size="md"
                         radius="xl"
@@ -248,7 +235,7 @@ export default function PublicStatusPage() {
           </Stack>
         </Paper>
 
-        {/* --- DRITTSOPPDATERINGER OG HISTORIKK --- */}
+        {/* --- DRIFTSOPPDATERINGER OG HISTORIKK --- */}
         <Paper p="md" radius="md" withBorder shadow="xs">
           <Stack gap="md">
             <Group justify="space-between">
@@ -264,7 +251,7 @@ export default function PublicStatusPage() {
             {INCIDENT_HISTORY.length > 0 ? (
               <Stack gap="lg">
                 {INCIDENT_HISTORY.map((incident) => (
-                  <Paper key={incident.id} p="sm" radius="sm" bg="gray.0" withBorder>
+                  <Paper key={incident.id} p="sm" radius="sm" withBorder>
                     <Group justify="space-between" mb={4}>
                       <Group gap="xs">
                         <Text fw={600} size="sm">
@@ -276,7 +263,8 @@ export default function PublicStatusPage() {
                       </Group>
                       <Badge
                         size="xs"
-                        color={incident.status === "Løst" ? "green" : "blue"}
+                        variant="light"
+                        color={incident.status === "Løst" ? "sage" : "terracotta"}
                       >
                         {incident.status}
                       </Badge>

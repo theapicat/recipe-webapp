@@ -9,11 +9,11 @@ interface Props {
 
 export function AdminUserCard({ user }: Props) {
   return (
-    <Card withBorder radius="md" p="sm" bg="var(--mantine-color-gray-0)">
+    <Card withBorder radius="md" p="sm">
       <Group justify="space-between" align="center" wrap="wrap">
         <Group gap="sm">
           <Avatar
-            color={user.role.toLowerCase() === "admin" ? "violet" : "teal"}
+            color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
             radius="xl"
           >
             {user.fullName
@@ -33,7 +33,7 @@ export function AdminUserCard({ user }: Props) {
 
         <Group gap={6}>
           <Badge
-            color={user.isLocked ? "red" : "green"}
+            color={user.isLocked ? "red" : "sage"}
             variant="dot"
             size="xs"
           >
@@ -41,7 +41,7 @@ export function AdminUserCard({ user }: Props) {
           </Badge>
 
           <Badge
-            color={user.isEmailConfirmed ? "teal" : "orange"}
+            color={user.isEmailConfirmed ? "sage" : "terracotta"}
             variant="subtle"
             size="xs"
           >

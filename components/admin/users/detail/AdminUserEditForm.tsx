@@ -45,7 +45,7 @@ export function AdminUserEditForm({ user, onUserUpdated }: Props) {
         notifications.show({
           title: "Profil oppdatert",
           message: "Brukerens personalia har blitt endret.",
-          color: "teal",
+          color: "sage",
         });
         onUserUpdated();
       } else {

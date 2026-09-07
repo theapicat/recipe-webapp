@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button, Group, Stack } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
@@ -8,9 +8,9 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
-import {AdminSendEmailForm} from "@/components/admin/users/email/AdminSendEmailForm";
+import { AdminSendEmailForm } from "@/components/admin/users/email/AdminSendEmailForm";
 
-export default function AdminSendEmailPage() {
+function AdminSendEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedUserId = searchParams.get("userId");
@@ -64,5 +64,13 @@ export default function AdminSendEmailPage() {
         />
       </Stack>
     </AsyncMainContainer>
+  );
+}
+
+export default function AdminSendEmailPage() {
+  return (
+    <Suspense fallback={<AsyncMainContainer size="sm" py={30} loading={true} />}>
+      <AdminSendEmailContent />
+    </Suspense>
   );
 }

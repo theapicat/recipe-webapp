@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, useMemo, ComponentType} from "react";
+import { useState, useMemo, ComponentType } from "react";
 import {
   Title,
   Text,
@@ -49,7 +49,7 @@ const FAQ_DATA: FaqCategory[] = [
     id: "generelt",
     title: "Generelt og personvern",
     icon: IconHelp,
-    color: "teal",
+    color: "sage",
     items: [
       {
         id: "gen-1",
@@ -77,7 +77,7 @@ const FAQ_DATA: FaqCategory[] = [
     id: "oppskrifter",
     title: "Oppskrifter og import",
     icon: IconChefHat,
-    color: "blue",
+    color: "sage",
     items: [
       {
         id: "rec-1",
@@ -100,7 +100,7 @@ const FAQ_DATA: FaqCategory[] = [
     id: "planlegging",
     title: "Måltidsplanlegging og handleliste",
     icon: IconCalendarEvent,
-    color: "indigo",
+    color: "terracotta",
     items: [
       {
         id: "plan-1",
@@ -118,7 +118,7 @@ const FAQ_DATA: FaqCategory[] = [
     id: "helse",
     title: "Næringsinnhold og helse",
     icon: IconHeart,
-    color: "orange",
+    color: "terracotta",
     items: [
       {
         id: "health-1",
@@ -136,7 +136,7 @@ const FAQ_DATA: FaqCategory[] = [
     id: "konto",
     title: "Brukerkonto og sikkerhet",
     icon: IconUser,
-    color: "violet",
+    color: "sage",
     items: [
       {
         id: "acc-1",
@@ -175,7 +175,7 @@ export default function FaqPage() {
       <Stack gap="xl">
         {/* --- HEADER --- */}
         <Stack gap="sm" ta="center" align="center">
-          <Badge color="teal" variant="light" size="lg">
+          <Badge color="sage" variant="light" size="lg">
             Hjelpesenter & FAQ
           </Badge>
 
@@ -257,7 +257,7 @@ export default function FaqPage() {
               </Text>
               <Button
                 variant="light"
-                color="teal"
+                color="sage"
                 size="xs"
                 mt="xs"
                 onClick={() => setSearch("")}
@@ -269,16 +269,16 @@ export default function FaqPage() {
         )}
 
         {/* --- BOTTOM CALL TO ACTION --- */}
-        <Paper p="xl" radius="md" withBorder bg="var(--mantine-color-teal-0)" style={{ borderColor: "var(--mantine-color-teal-2)" }}>
+        <Paper p="xl" radius="md" withBorder>
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
             <Stack gap="xs">
               <Group gap={6}>
-                <IconSparkles size={18} color="var(--mantine-color-teal-7)" />
-                <Text fw={700} size="md" c="teal.9">
+                <IconSparkles size={18} color="var(--mantine-color-sage-filled)" />
+                <Text fw={700} size="md">
                   Fant du ikke det du trengte?
                 </Text>
               </Group>
-              <Text size="sm" c="teal.9">
+              <Text size="sm" c="dimmed">
                 Vi hjelper deg gjerne! Send oss en melding via kontaktskjemaet eller les våre juridiske brukervilkår.
               </Text>
             </Stack>
@@ -287,7 +287,7 @@ export default function FaqPage() {
               <Button
                 component={Link}
                 href="/contact"
-                color="teal"
+                color="sage"
                 leftSection={<IconMessage2 size={16} />}
               >
                 Kontakt oss
@@ -296,7 +296,7 @@ export default function FaqPage() {
                 component={Link}
                 href="/legal/terms"
                 variant="outline"
-                color="teal"
+                color="sage"
                 leftSection={<IconFileText size={16} />}
                 rightSection={<IconArrowRight size={14} />}
               >

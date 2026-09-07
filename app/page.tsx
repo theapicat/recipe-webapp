@@ -31,9 +31,10 @@ export default function Home() {
   useEffect(() => {
     if (!session || !session.role) return;
 
-    if (session.role === "Admin") {
+    const role = session.role.toLowerCase();
+    if (role === "admin") {
       router.push("/admin/dashboard");
-    } else if (session.role === "User") {
+    } else if (role === "user") {
       router.push("/dashboard");
     }
   }, [session?.role, router]);
@@ -47,7 +48,7 @@ export default function Home() {
         <Stack align="center" my="lg" gap="md">
           <Badge
             variant="light"
-            color="green"
+            color="sage"
             size="lg"
             leftSection={<IconSparkles size={14} />}
           >
@@ -56,19 +57,19 @@ export default function Home() {
 
           <Title order={1} ta="center" fw={900} style={{ fontSize: "2.75rem" }}>
             Samle, planlegg og kos deg med maten –{" "}
-            <Text component="span" c="green" inherit>
+            <Text component="span" c="sage" inherit>
               helt uten støy
             </Text>
           </Title>
 
-          <Text c="dimmed" size="lg" ta="center">
+          <Text c="dimmed" size="lg" ta="center" style={{ maxWidth: 650 }}>
             Kjøkkenhylla samler dine favorittoppskrifter på ett sted. Importer fra
             godkjente nettsteder, planlegg ukens måltider og generer ferdige
             handlelister – 100 % privat og reklamefritt.
           </Text>
 
           <Group justify="center" mt="md">
-            <Button component={Link} href="/register" size="md" color="green">
+            <Button component={Link} href="/register" size="md" color="sage">
               Kom i gang
             </Button>
             <Button component={Link} href="/login" size="md" variant="default">
@@ -80,7 +81,7 @@ export default function Home() {
         {/* Feature Cards */}
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" mt="xl">
           <Card radius="md" p="lg" withBorder>
-            <ThemeIcon radius="md" size="xl" color="green" variant="light" mb="md">
+            <ThemeIcon radius="md" size="xl" color="sage" variant="light" mb="md">
               <IconBook size={24} />
             </ThemeIcon>
 
@@ -95,7 +96,7 @@ export default function Home() {
           </Card>
 
           <Card radius="md" p="lg" withBorder>
-            <ThemeIcon radius="md" size="xl" color="blue" variant="light" mb="md">
+            <ThemeIcon radius="md" size="xl" color="sage" variant="light" mb="md">
               <IconDownload size={24} />
             </ThemeIcon>
 
@@ -110,7 +111,7 @@ export default function Home() {
           </Card>
 
           <Card radius="md" p="lg" withBorder>
-            <ThemeIcon radius="md" size="xl" color="orange" variant="light" mb="md">
+            <ThemeIcon radius="md" size="xl" color="terracotta" variant="light" mb="md">
               <IconCalendarEvent size={24} />
             </ThemeIcon>
 
@@ -126,17 +127,11 @@ export default function Home() {
         </SimpleGrid>
 
         {/* Info Banner */}
-        <Card
-          radius="md"
-          p="xl"
-          withBorder
-          bg="var(--mantine-color-gray-0)"
-          mt="lg"
-        >
-          <Group justify="space-between" align="center">
+        <Card radius="md" p="xl" withBorder mt="lg">
+          <Group justify="space-between" align="center" wrap="wrap" gap="md">
             <Stack gap={4}>
               <Group gap="xs">
-                <IconLock size={18} />
+                <IconLock size={18} color="var(--mantine-color-sage-filled)" />
                 <Text fw={700} size="md">
                   100 % Privat & Eierskapsbasert
                 </Text>
@@ -150,7 +145,7 @@ export default function Home() {
               component={Link}
               href="/about"
               variant="subtle"
-              color="gray"
+              color="sage"
               size="sm"
             >
               Les mer om prosjektet →

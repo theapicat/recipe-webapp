@@ -28,7 +28,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { BlacklistType } from "@/lib/models/enums/BlacklistType";
-import {BlacklistedEntry} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import { BlacklistedEntry } from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
 
 export function AdminBlacklistTable() {
   const [loading, setLoading] = useState(true);
@@ -91,7 +91,7 @@ export function AdminBlacklistTable() {
         notifications.show({
           title: "Lagt til i svarteliste",
           message: `${pattern} ble lagt til i svartelisten.`,
-          color: "teal",
+          color: "sage",
         });
         setAddModalOpen(false);
         setPattern("");
@@ -127,7 +127,7 @@ export function AdminBlacklistTable() {
         notifications.show({
           title: "Oppføring fjernet",
           message: `${deleteTarget.pattern} ble fjernet fra svartelisten.`,
-          color: "blue",
+          color: "sage",
         });
         setDeleteTarget(null);
         fetchBlacklist();
@@ -230,7 +230,7 @@ export function AdminBlacklistTable() {
                       {entry.type === BlacklistType.ExactEmail ? (
                         <IconMailOff size={16} color="var(--mantine-color-red-6)" />
                       ) : (
-                        <IconWorldOff size={16} color="var(--mantine-color-orange-6)" />
+                        <IconWorldOff size={16} color="var(--mantine-color-terracotta-filled)" />
                       )}
                       <Text size="sm" fw={600}>
                         {entry.pattern}
@@ -240,7 +240,7 @@ export function AdminBlacklistTable() {
 
                   <Table.Td>
                     <Badge
-                      color={entry.type === BlacklistType.ExactEmail ? "red" : "orange"}
+                      color={entry.type === BlacklistType.ExactEmail ? "red" : "terracotta"}
                       variant="light"
                       size="xs"
                     >
@@ -329,7 +329,7 @@ export function AdminBlacklistTable() {
         centered
       >
         <Stack gap="md">
-          <Group gap="xs" c="orange">
+          <Group gap="xs" c="terracotta">
             <IconAlertCircle size={24} />
             <Text fw={600}>Gjenåpne for registrering</Text>
           </Group>
@@ -343,7 +343,7 @@ export function AdminBlacklistTable() {
               Avbryt
             </Button>
             <Button color="red" onClick={handleRemoveEntry} loading={submitting}>
-              Fjern fra list
+              Fjern fra liste
             </Button>
           </Group>
         </Stack>

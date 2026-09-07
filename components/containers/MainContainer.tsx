@@ -41,7 +41,7 @@ export const AsyncMainContainer = ({
     <MainContainer {...props}>
       {loading ? (
         <Center style={{ minHeight }}>
-          <Loader color="green" size="md" type="dots" />
+          <Loader color="sage" size="md" type="dots" />
         </Center>
       ) : (
         children

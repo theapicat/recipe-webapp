@@ -189,7 +189,7 @@ export default function RecipeCreatePage() {
         id: "recipe-created",
         title: "Oppskrift opprettet! 🎉",
         message: `"${form.title}" er lagret i din private samling.`,
-        color: "teal",
+        color: "sage",
         icon: <IconCheck size={16} />,
       });
       router.push("/user/recipes");
@@ -202,7 +202,8 @@ export default function RecipeCreatePage() {
         <Stack gap="lg">
           {/* INFORMASJONSVARSEL */}
           <Alert
-            color="teal"
+            color="terracotta"
+            variant="light"
             title="✨ Ny Egen Oppskrift"
             icon={<IconInfoCircle size={20} />}
             radius="md"
@@ -225,7 +226,7 @@ export default function RecipeCreatePage() {
             <Group gap="xs">
               <Button
                 type="submit"
-                color="teal"
+                color="sage"
                 leftSection={<IconDeviceFloppy size={18} />}
                 loading={isSaving}
               >
@@ -333,7 +334,7 @@ export default function RecipeCreatePage() {
 
                 <Button
                   variant="light"
-                  color="teal"
+                  color="sage"
                   size="xs"
                   leftSection={<IconPlus size={14} />}
                   onClick={addIngredient}
@@ -402,7 +403,7 @@ export default function RecipeCreatePage() {
 
                 <Button
                   variant="light"
-                  color="teal"
+                  color="sage"
                   size="xs"
                   leftSection={<IconPlus size={14} />}
                   onClick={addStep}
@@ -419,7 +420,7 @@ export default function RecipeCreatePage() {
                     <Stack gap="xs">
                       <Group justify="space-between" align="center">
                         <Group gap="xs">
-                          <ActionIcon color="teal" radius="xl" variant="filled" size="sm">
+                          <ActionIcon color="sage" radius="xl" variant="filled" size="sm">
                             <Text fw={700} size="xs">
                               {step.stepNumber}
                             </Text>
@@ -504,7 +505,7 @@ export default function RecipeCreatePage() {
             </Button>
             <Button
               type="submit"
-              color="teal"
+              color="sage"
               leftSection={<IconDeviceFloppy size={18} />}
               loading={isSaving}
             >

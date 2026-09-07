@@ -8,7 +8,7 @@ export default function AccessibilityPage() {
       <Paper p="xl" radius="md" withBorder shadow="xs">
           <Stack gap="lg">
               <div>
-                  <Badge color="gray" variant="light" mb="xs">
+                  <Badge color="sage" variant="light" mb="xs">
                       Sist oppdatert: 25. august 2026
                   </Badge>
                   <Title order={2} size="h2">
@@ -29,12 +29,25 @@ export default function AccessibilityPage() {
                       </Text>
                   </div>
 
-                  <Alert color="orange" title="2. Kjente utfordringer og områder for forbedring" icon={<IconInfoCircle size={20} />}>
-                      <Text size="xs" mb="xs">Vi er oppmerksomme på følgende områder som krever forbedring:</Text>
+                  <Alert
+                    color="terracotta"
+                    title="2. Kjente utfordringer og områder for forbedring"
+                    icon={<IconInfoCircle size={20} />}
+                    radius="md"
+                  >
+                      <Text size="xs" mb="xs">
+                          Vi er oppmerksomme på følgende områder som krever forbedring:
+                      </Text>
                       <Stack gap={4}>
-                          <Text size="xs">• <b>Skjermlesere:</b> Enkelte dynamiske komponenter eller skjemaer kan mangle optimale ARIA-etiketter.</Text>
-                          <Text size="xs">• <b>Kontraster:</b> Enkelte fargekombinasjoner kan ha utilstrekkelig kontrast i spesifikke visningsmoduser.</Text>
-                          <Text size="xs">• <b>Tastaturbetjening:</b> Avansert interaksjon (som drag-and-drop i måltidsplanleggeren) har begrenset støtte for ren tastaturbetjening.</Text>
+                          <Text size="xs">
+                              • <b>Skjermlesere:</b> Enkelte dynamiske komponenter eller skjemaer kan mangle optimale ARIA-etiketter.
+                          </Text>
+                          <Text size="xs">
+                              • <b>Kontraster:</b> Enkelte fargekombinasjoner kan ha utilstrekkelig kontrast i spesifikke visningsmoduser.
+                          </Text>
+                          <Text size="xs">
+                              • <b>Tastaturbetjening:</b> Avansert interaksjon (som drag-and-drop i måltidsplanleggeren) har begrenset støtte for ren tastaturbetjening.
+                          </Text>
                       </Stack>
                   </Alert>
 

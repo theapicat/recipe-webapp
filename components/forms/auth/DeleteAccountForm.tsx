@@ -29,7 +29,7 @@ export const DeleteAccountForm = () => {
         notifications.show({
           title: "Konto slettet",
           message: "Din brukerkonto er nå permanent slettet.",
-          color: "gray",
+          color: "sage",
         });
         setUser(undefined);
         close();
@@ -55,11 +55,11 @@ export const DeleteAccountForm = () => {
 
   return (
     <>
-      <Paper p="xl" radius="md" withBorder bg="red.0" style={{ borderColor: "var(--mantine-color-red-3)" }}>
+      <Paper p="xl" radius="md" withBorder>
         <Stack gap="md">
           <Group gap="xs">
-            <IconAlertTriangle size={22} color="var(--mantine-color-red-7)" />
-            <Title order={3} size="h4" c="red.9">
+            <IconAlertTriangle size={22} color="var(--mantine-color-red-filled)" />
+            <Title order={3} size="h4" c="red">
               Faresone
             </Title>
           </Group>
@@ -69,9 +69,9 @@ export const DeleteAccountForm = () => {
               Systemadministratorkontoen er låst mot sletting. Kontakt systemansvarlig dersom du ønsker å gjøre endringer på denne kontoen.
             </Alert>
           ) : (
-            <Text size="sm" c="red.9">
+            <Alert color="red" variant="light" icon={<IconAlertTriangle size={20} />}>
               Sletting av brukerkontoen din vil umiddelbart fjerne alle dine lagrede oppskrifter, ukesmenyer og personlige preferanser. Handlingen er permanent og kan ikke reverseres.
-            </Text>
+            </Alert>
           )}
 
           <Group justify="flex-end">

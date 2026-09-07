@@ -11,7 +11,7 @@ interface IProps {
 
 const MainShell = ({ children }: IProps) => {
   return (
-    <AppShell padding="md" header={{ height: 60 }}>
+    <AppShell padding={0} header={{ height: 60 }}>
       <AppShellHeader>
         <Header />
       </AppShellHeader>

@@ -20,9 +20,13 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
   return (
     <AsyncMainContainer size="xs" py={80}>
       <Stack align="center" ta="center" gap="md">
-        <IconAlertTriangle size={80} stroke={1.5} color="var(--mantine-color-red-6)" />
+        <IconAlertTriangle
+          size={80}
+          stroke={1.5}
+          color="var(--mantine-color-red-6)"
+        />
 
-        <Title order={2}>Noen gikk galt!</Title>
+        <Title order={2}>Noe gikk galt!</Title>
 
         <Text size="sm" c="dimmed" maw={360}>
           Det oppstod en uventet feil under lasting av denne siden. Du kan prøve å laste siden på nytt eller gå tilbake til oversikten.
@@ -40,7 +44,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
           <Button
             onClick={reset}
             variant="light"
-            color="teal"
+            color="sage"
             leftSection={<IconRefresh size={16} />}
           >
             Prøv igjen

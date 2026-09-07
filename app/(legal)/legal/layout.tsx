@@ -18,7 +18,8 @@ import {
   IconShield,
   IconCookie,
   IconChevronRight,
-  IconScale, IconWheelchair,
+  IconScale,
+  IconWheelchair,
 } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
@@ -58,8 +59,8 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         {/* Header-banner for Legal-seksjonen */}
         <div>
           <Group gap="xs" mb={4}>
-            <IconScale size={20} color="var(--mantine-color-teal-6)" />
-            <Text fw={600} size="sm" c="teal">
+            <IconScale size={20} color="var(--mantine-color-sage-filled)" />
+            <Text fw={600} size="sm" c="sage">
               Juridisk informasjon & Vilkår
             </Text>
           </Group>
@@ -97,7 +98,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                       leftSection={<Icon size={18} />}
                       rightSection={<IconChevronRight size={14} />}
                       active={isActive}
-                      color="teal"
+                      color="sage"
                       variant="light"
                     />
                   );

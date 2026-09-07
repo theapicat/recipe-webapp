@@ -126,8 +126,10 @@ export default function WelcomePage() {
             p="xl"
             radius="md"
             withBorder
-            bg="teal.0"
-            style={{ borderColor: "var(--mantine-color-teal-3)" }}
+            bg="light-dark(var(--mantine-color-teal-0), var(--mantine-color-dark-6))"
+            style={{
+              borderColor: "light-dark(var(--mantine-color-teal-3), var(--mantine-color-teal-8))",
+            }}
           >
             <Group justify="space-between" align="center" wrap="wrap" gap="md">
               <Stack gap="xs" style={{ flex: 1 }}>
@@ -136,10 +138,17 @@ export default function WelcomePage() {
                     {isEmailConfirmed ? "Konto klar" : "Nesten i mål"}
                   </Badge>
                 </Group>
-                <Title order={1} size="h2" c="teal.9">
+                <Title
+                  order={1}
+                  size="h2"
+                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-2))"
+                >
                   Velkommen til Kjøkkenhylla, {user.firstName || "kokk"}! 🍳
                 </Title>
-                <Text size="sm" c="teal.9">
+                <Text
+                  size="sm"
+                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-3))"
+                >
                   {isEmailConfirmed
                     ? "Kontoen din er bekreftet og klar! Du har nå tilgang til din helt egne, digitale og støyfrie kokebok."
                     : "Kontoen din er opprettet. For å holde plattformen trygg og fri for inaktive brukere, ber vi deg bekrefte e-postadressen din."}
@@ -276,9 +285,14 @@ export default function WelcomePage() {
 
           {/* GENERELL INFORMASJON OM INAKTIVITET (FOR BEKREFTEDE BRUKERE) */}
           {isEmailConfirmed && (
-            <Paper p="md" radius="md" withBorder bg="gray.0">
+            <Paper
+              p="md"
+              radius="md"
+              withBorder
+              bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+            >
               <Group gap="xs">
-                <IconLock size={18} color="var(--mantine-color-gray-7)" />
+                <IconLock size={18} color="var(--mantine-color-gray-5)" />
                 <Text size="xs" c="dimmed">
                   <b>Personvern & inaktivitet:</b> Kontoer som er inaktive i over 1 år sperres og slettes automatisk for å beskytte dine personopplysninger.
                 </Text>
@@ -287,13 +301,29 @@ export default function WelcomePage() {
           )}
 
           {/* HOVEDKNAPP :: GÅ TIL DASHBOARD */}
-          <Paper p="md" radius="md" withBorder shadow="xs" bg="teal.0" style={{ borderColor: "var(--mantine-color-teal-2)" }}>
+          <Paper
+            p="md"
+            radius="md"
+            withBorder
+            shadow="xs"
+            bg="light-dark(var(--mantine-color-teal-0), var(--mantine-color-dark-6))"
+            style={{
+              borderColor: "light-dark(var(--mantine-color-teal-2), var(--mantine-color-teal-8))",
+            }}
+          >
             <Group justify="space-between" align="center" wrap="wrap" gap="md">
               <div>
-                <Text fw={600} size="sm" c="teal.9">
+                <Text
+                  fw={600}
+                  size="sm"
+                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-2))"
+                >
                   Klar til å sette i gang?
                 </Text>
-                <Text size="xs" c="teal.8">
+                <Text
+                  size="xs"
+                  c="light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-3))"
+                >
                   Gå direkte til din personlige oversikt og start oppbyggingen av din kokebok.
                 </Text>
               </div>

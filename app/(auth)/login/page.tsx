@@ -34,7 +34,7 @@ const LoginPage = () => {
       case "blacklisted":
         return "Denne e-postadressen eller domenet er utestengt fra Kjøkkenhylla.";
       case "access_denied":
-        return "Innlugging med Google ble avbrutt.";
+        return "Innlogging med Google ble avbrutt.";
       case "google_failed":
       case "oauth_failed":
       default:
@@ -77,7 +77,7 @@ const LoginPage = () => {
       <Stack gap="md">
         {/* VARSEL: Utløpt økt */}
         {hasExpired && (
-          <Alert color="orange" title="Økten har utløpt" variant="light" radius="md">
+          <Alert color="terracotta" title="Økten har utløpt" variant="light" radius="md">
             Du må logge inn på nytt for å fortsette.
           </Alert>
         )}
@@ -113,7 +113,7 @@ const LoginPage = () => {
 
         {/* DEV :: Testverktøy for hurtiginnlogging */}
         {process.env.NODE_ENV === "development" && (
-          <Paper radius="md" p="md" withBorder bg="var(--mantine-color-gray-0)">
+          <Paper radius="md" p="md" withBorder>
             <Divider label="DEV :: Hurtiginnlogging" labelPosition="center" mb="sm" />
             <Stack gap="xs">
               {Object.entries(DEV_USERS).map(([key, user]) => {

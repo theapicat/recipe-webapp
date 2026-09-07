@@ -72,7 +72,7 @@ export default function AdminCategoriesPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="orange"
+          color="terracotta"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -88,7 +88,7 @@ export default function AdminCategoriesPage() {
               Administrer globale kategorier, standard ingredienser og måleenheter
             </Text>
           </div>
-          <Button leftSection={<IconPlus size={16} />} color="teal" onClick={open}>
+          <Button leftSection={<IconPlus size={16} />} color="sage" onClick={open}>
             {activeTab === "categories"
               ? "Ny Kategori"
               : activeTab === "ingredients"
@@ -107,7 +107,7 @@ export default function AdminCategoriesPage() {
                 </Text>
                 <Title order={3}>{mockCategories.length}</Title>
               </div>
-              <IconTags size={32} color="var(--mantine-color-teal-6)" />
+              <IconTags size={32} color="var(--mantine-color-sage-6)" />
             </Group>
           </Card>
 
@@ -119,7 +119,7 @@ export default function AdminCategoriesPage() {
                 </Text>
                 <Title order={3}>{mockIngredients.length}</Title>
               </div>
-              <IconMeat size={32} color="var(--mantine-color-blue-6)" />
+              <IconMeat size={32} color="var(--mantine-color-terracotta-filled)" />
             </Group>
           </Card>
 
@@ -131,7 +131,7 @@ export default function AdminCategoriesPage() {
                 </Text>
                 <Title order={3}>{mockUnits.length}</Title>
               </div>
-              <IconScale size={32} color="var(--mantine-color-violet-6)" />
+              <IconScale size={32} color="var(--mantine-color-sage-6)" />
             </Group>
           </Card>
         </SimpleGrid>
@@ -187,7 +187,7 @@ export default function AdminCategoriesPage() {
                           <Text size="sm">{cat.count} oppskrifter</Text>
                         </Table.Td>
                         <Table.Td>
-                          <Badge color="green" variant="light">
+                          <Badge color="sage" variant="light">
                             {cat.status}
                           </Badge>
                         </Table.Td>
@@ -239,14 +239,14 @@ export default function AdminCategoriesPage() {
                         </Table.Td>
                         <Table.Td>
                           <Badge
-                            color={ing.allergens === "Ingen" ? "gray" : "orange"}
+                            color={ing.allergens === "Ingen" ? "gray" : "terracotta"}
                             variant="light"
                           >
                             {ing.allergens}
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                          <Badge variant="outline">{ing.defaultUnit}</Badge>
+                          <Badge variant="outline" color="gray">{ing.defaultUnit}</Badge>
                         </Table.Td>
                         <Table.Td>
                           <Menu position="bottom-end" shadow="md">
@@ -291,7 +291,7 @@ export default function AdminCategoriesPage() {
                           </Text>
                         </Table.Td>
                         <Table.Td>
-                          <Badge color="teal">{unit.abbreviation}</Badge>
+                          <Badge color="sage">{unit.abbreviation}</Badge>
                         </Table.Td>
                         <Table.Td>
                           <Text size="sm">{unit.type}</Text>
@@ -363,7 +363,7 @@ export default function AdminCategoriesPage() {
             <Button variant="default" onClick={close}>
               Avbryt
             </Button>
-            <Button color="teal" onClick={close}>
+            <Button color="sage" onClick={close}>
               Lagre
             </Button>
           </Group>

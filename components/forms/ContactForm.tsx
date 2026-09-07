@@ -9,7 +9,7 @@ import { CreateFormContainer } from "@/components/forms/common/CreateFormContain
 import { FormField } from "@/components/forms/common/FormField";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {ContactRequest} from "@/lib/models/public/ContactRequest";
+import { ContactRequest } from "@/lib/models/public/ContactRequest";
 
 type SubmissionStatus = "idle" | "success" | "rejected";
 
@@ -29,12 +29,12 @@ export const ContactForm = () => {
     validate: {
       name: isNotEmpty("Vennligst oppgi navnet ditt"),
       email: isEmail("Ikke gyldig e-postadresse"),
-      subject: (value:string) => {
+      subject: (value: string) => {
         if (!value || value.trim().length === 0) return "Vennligst oppgi et emne";
         if (value.length > 150) return "Emnet kan ikke være lengre enn 150 tegn";
         return null;
       },
-      message: (value:string) => {
+      message: (value: string) => {
         if (!value || value.trim().length === 0) return "Vennligst skriv inn en melding";
         if (value.length > 2000) return "Meldingen kan ikke være lengre enn 2000 tegn";
         return null;
@@ -92,7 +92,7 @@ export const ContactForm = () => {
           <ThemeIcon
             size={60}
             radius="xl"
-            color={isSuccess ? "green" : "red"}
+            color={isSuccess ? "sage" : "red"}
             variant="light"
           >
             {isSuccess ? <IconCheck size={36} /> : <IconX size={36} />}
@@ -108,7 +108,7 @@ export const ContactForm = () => {
 
           <Button
             variant="outline"
-            color={isSuccess ? "green" : "gray"}
+            color={isSuccess ? "sage" : "gray"}
             leftSection={<IconRefresh size={16} />}
             onClick={resetFormState}
             mt="sm"

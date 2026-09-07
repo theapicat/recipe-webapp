@@ -15,7 +15,6 @@ import {
   IconCheck,
   IconAlertTriangle,
   IconMailCheck,
-  IconBan,
   IconDownload,
 } from "@tabler/icons-react";
 
@@ -24,7 +23,7 @@ export default function TermsPage() {
     <Paper p="xl" radius="md" withBorder shadow="xs">
       <Stack gap="lg">
         <div>
-          <Badge color="gray" variant="light" mb="xs">
+          <Badge color="sage" variant="light" mb="xs">
             Sist oppdatert: 5. september 2026
           </Badge>
           <Title order={2} size="h2">
@@ -47,7 +46,7 @@ export default function TermsPage() {
               size="sm"
               center
               icon={
-                <ThemeIcon color="teal" size={18} radius="xl">
+                <ThemeIcon color="sage" size={18} radius="xl">
                   <IconCheck size={12} />
                 </ThemeIcon>
               }
@@ -108,7 +107,7 @@ export default function TermsPage() {
 
             <Stack gap="sm" mt="xs">
               <Alert
-                color="blue"
+                color="sage"
                 variant="light"
                 title="Krav om e-postbekreftelse"
                 icon={<IconMailCheck size={20} />}
@@ -155,7 +154,7 @@ export default function TermsPage() {
               </List>
 
               <Alert
-                color="teal"
+                color="sage"
                 variant="light"
                 title="Datainnsyn og dataeksport (GDPR)"
                 icon={<IconDownload size={20} />}
@@ -231,7 +230,7 @@ export default function TermsPage() {
 
           {/* Seksjon 6 - Ansvarsfraskrivelse */}
           <Alert
-            color="orange"
+            color="terracotta"
             title="6. Ansvarsfraskrivelse for helse, allergener og næringsinnhold"
             icon={<IconAlertTriangle size={20} />}
           >

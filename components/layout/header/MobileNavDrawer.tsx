@@ -55,7 +55,7 @@ export const MobileNavDrawer = ({
             </Button>
             <Button
               variant="filled"
-              color="green"
+              color="sage"
               component={Link}
               href="/register"
               onClick={onClose}

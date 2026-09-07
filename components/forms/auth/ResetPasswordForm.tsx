@@ -90,7 +90,7 @@ export const ResetPasswordForm = () => {
     return (
       <Stack gap="md">
         <Alert
-          color="green"
+          color="sage"
           title="Passord tilbakestilt"
           icon={<IconCheck size={18} />}
         >

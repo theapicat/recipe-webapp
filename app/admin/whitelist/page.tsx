@@ -95,7 +95,7 @@ export default function AdminWhitelistPage() {
       <Stack gap="lg">
         {/* Mockup Varsel-banner */}
         <Alert
-          color="orange"
+          color="terracotta"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -113,7 +113,7 @@ export default function AdminWhitelistPage() {
           </div>
           <Button
             leftSection={<IconPlus size={16} />}
-            color="teal"
+            color="sage"
             onClick={open}
           >
             Legg til domene
@@ -130,7 +130,7 @@ export default function AdminWhitelistPage() {
                 </Text>
                 <Title order={3}>{mockDomainsData.length}</Title>
               </div>
-              <IconWorldCheck size={32} color="var(--mantine-color-teal-6)" />
+              <IconWorldCheck size={32} color="var(--mantine-color-sage-6)" />
             </Group>
           </Card>
 
@@ -144,7 +144,7 @@ export default function AdminWhitelistPage() {
                   {mockDomainsData.filter((d) => d.status === "Aktiv").length}
                 </Title>
               </div>
-              <IconWorld size={32} color="var(--mantine-color-green-6)" />
+              <IconWorld size={32} color="var(--mantine-color-sage-6)" />
             </Group>
           </Card>
 
@@ -216,7 +216,7 @@ export default function AdminWhitelistPage() {
                     </Table.Td>
                     <Table.Td>
                       <Badge
-                        color={item.status === "Aktiv" ? "green" : "gray"}
+                        color={item.status === "Aktiv" ? "sage" : "gray"}
                         variant="dot"
                       >
                         {item.status}
@@ -294,14 +294,14 @@ export default function AdminWhitelistPage() {
           <Switch
             label="Aktivert umiddelbart"
             defaultChecked
-            color="teal"
+            color="sage"
           />
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={close}>
               Avbryt
             </Button>
 
-            <Button color="teal" onClick={close}>
+            <Button color="sage" onClick={close}>
               Lagre Domene
             </Button>
           </Group>

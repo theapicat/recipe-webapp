@@ -55,7 +55,7 @@ export function AdminUserHeader({ user }: Props) {
             )}
 
             <Button
-              color="teal"
+              color="sage"
               leftSection={<IconMail size={16} />}
               onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
             >
@@ -68,7 +68,7 @@ export function AdminUserHeader({ user }: Props) {
           <Avatar
             size={70}
             radius="xl"
-            color={user.role.toLowerCase() === "admin" ? "violet" : "teal"}
+            color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
           >
             {user.firstName && user.lastName
               ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
@@ -81,7 +81,7 @@ export function AdminUserHeader({ user }: Props) {
                 {user.firstName} {user.lastName}
               </Title>
               <Badge
-                color={user.role.toLowerCase() === "admin" ? "violet" : "teal"}
+                color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
                 variant="light"
                 size="md"
                 leftSection={<IconShield size={12} />}
@@ -106,7 +106,7 @@ export function AdminUserHeader({ user }: Props) {
 
               <Badge
                 variant="light"
-                color={user.isLocked ? "red" : "green"}
+                color={user.isLocked ? "red" : "sage"}
                 size="xs"
                 leftSection={user.isLocked ? <IconLock size={10} /> : undefined}
               >
@@ -115,7 +115,7 @@ export function AdminUserHeader({ user }: Props) {
 
               <Badge
                 variant="light"
-                color={user.isEmailConfirmed ? "teal" : "orange"}
+                color={user.isEmailConfirmed ? "sage" : "terracotta"}
                 size="xs"
                 leftSection={
                   user.isEmailConfirmed ? (
@@ -130,7 +130,7 @@ export function AdminUserHeader({ user }: Props) {
 
               <Badge
                 variant="light"
-                color={user.welcomeCompleted ? "blue" : "gray"}
+                color={user.welcomeCompleted ? "sage" : "gray"}
                 size="xs"
                 leftSection={
                   user.welcomeCompleted ? <IconCheck size={10} /> : <IconX size={10} />

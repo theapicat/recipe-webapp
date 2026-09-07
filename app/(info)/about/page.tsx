@@ -12,7 +12,6 @@ import {
   Divider,
   Alert,
   Card,
-  Anchor,
   Badge,
 } from "@mantine/core";
 import {
@@ -28,8 +27,8 @@ import {
   IconFileText,
   IconShield,
   IconCookie,
-  IconEyeglass,
-  IconArrowRight, IconWheel, IconWheelchair,
+  IconArrowRight,
+  IconWheelchair,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
@@ -40,7 +39,7 @@ export default function AboutPage() {
       <Stack gap={40}>
         {/* --- HERO / TOPPSEKSJON --- */}
         <Stack gap="md" ta="center" align="center">
-          <Badge color="teal" variant="light" size="lg" radius="sm">
+          <Badge color="sage" variant="light" size="lg" radius="sm">
             Et støyfritt og personlig verktøy
           </Badge>
           <Title order={1} size="h1" style={{ fontSize: "2.5rem", fontWeight: 800 }}>
@@ -66,7 +65,7 @@ export default function AboutPage() {
 
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
             <Paper p="lg" radius="md" withBorder shadow="xs">
-              <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="md">
+              <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="md">
                 <IconBook size={24} />
               </ThemeIcon>
               <Text fw={600} size="md" mb={4}>
@@ -78,7 +77,7 @@ export default function AboutPage() {
             </Paper>
 
             <Paper p="lg" radius="md" withBorder shadow="xs">
-              <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="md">
+              <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="md">
                 <IconFridge size={24} />
               </ThemeIcon>
               <Text fw={600} size="md" mb={4}>
@@ -90,7 +89,7 @@ export default function AboutPage() {
             </Paper>
 
             <Paper p="lg" radius="md" withBorder shadow="xs">
-              <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="md">
+              <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="md">
                 <IconCalendarCheck size={24} />
               </ThemeIcon>
               <Text fw={600} size="md" mb={4}>
@@ -102,7 +101,7 @@ export default function AboutPage() {
             </Paper>
 
             <Paper p="lg" radius="md" withBorder shadow="xs">
-              <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="md">
+              <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="md">
                 <IconChartBar size={24} />
               </ThemeIcon>
               <Text fw={600} size="md" mb={4}>
@@ -116,10 +115,10 @@ export default function AboutPage() {
         </Stack>
 
         {/* --- PRIVATLIV & STØYFRITT VERKTØY --- */}
-        <Paper p="xl" radius="md" withBorder bg="var(--mantine-color-gray-0)">
+        <Paper p="xl" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="dark" variant="filled" size={32} radius="md">
+              <ThemeIcon color="sage" variant="filled" size={32} radius="md">
                 <IconLock size={18} />
               </ThemeIcon>
               <Title order={2} size="h3">
@@ -133,7 +132,7 @@ export default function AboutPage() {
             <SimpleGrid cols={{ base: 1, md: 3 }} spacing="md" mt="xs">
               <Stack gap={4}>
                 <Group gap={6}>
-                  <IconUserCheck size={18} color="var(--mantine-color-teal-6)" />
+                  <IconUserCheck size={18} color="var(--mantine-color-sage-filled)" />
                   <Text fw={600} size="sm">
                     Fullstendig privat
                   </Text>
@@ -145,7 +144,7 @@ export default function AboutPage() {
 
               <Stack gap={4}>
                 <Group gap={6}>
-                  <IconEdit size={18} color="var(--mantine-color-teal-6)" />
+                  <IconEdit size={18} color="var(--mantine-color-sage-filled)" />
                   <Text fw={600} size="sm">
                     Full redigeringsfrihet
                   </Text>
@@ -157,7 +156,7 @@ export default function AboutPage() {
 
               <Stack gap={4}>
                 <Group gap={6}>
-                  <IconLock size={18} color="var(--mantine-color-teal-6)" />
+                  <IconLock size={18} color="var(--mantine-color-sage-filled)" />
                   <Text fw={600} size="sm">
                     Fullt eierskap
                   </Text>
@@ -171,9 +170,9 @@ export default function AboutPage() {
         </Paper>
 
         {/* --- ET PERSONLIG HJERTEBARN --- */}
-        <Paper p="lg" radius="md" withBorder style={{ borderColor: "var(--mantine-color-teal-3)" }}>
+        <Paper p="lg" radius="md" withBorder>
           <Group align="flex-start" wrap="nowrap" gap="md">
-            <ThemeIcon color="teal" size={40} radius="xl" variant="light">
+            <ThemeIcon color="terracotta" size={40} radius="xl" variant="light">
               <IconHeart size={22} />
             </ThemeIcon>
             <div>
@@ -189,7 +188,7 @@ export default function AboutPage() {
 
         {/* --- HELSEFORBEHOLD (ALERT) --- */}
         <Alert
-          color="blue"
+          color="terracotta"
           title="Næringsinnhold og helseforbehold"
           icon={<IconInfoCircle size={22} />}
           radius="md"

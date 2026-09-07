@@ -29,7 +29,6 @@ import {
   IconArrowUp,
   IconArrowDown,
   IconClock,
-  IconChefHat,
   IconInfoCircle,
   IconCheck,
   IconPhoto,
@@ -230,7 +229,7 @@ export default function RecipeEditPage() {
       notifications.show({
         title: "Oppskrift oppdatert",
         message: `Endringene i "${form.title}" er lagret.`,
-        color: "teal",
+        color: "sage",
         icon: <IconCheck size={16} />,
       });
       router.push(`/user/recipes/${recipeId}`);
@@ -243,7 +242,8 @@ export default function RecipeEditPage() {
         <Stack gap="lg">
           {/* VARSEL OM SKISSE */}
           <Alert
-            color="teal"
+            color="terracotta"
+            variant="light"
             title="✏️ Rediger Oppskrift"
             icon={<IconInfoCircle size={20} />}
             radius="md"
@@ -266,7 +266,7 @@ export default function RecipeEditPage() {
             <Group gap="xs">
               <Button
                 type="submit"
-                color="teal"
+                color="sage"
                 leftSection={<IconDeviceFloppy size={18} />}
                 loading={isSaving}
               >
@@ -374,7 +374,7 @@ export default function RecipeEditPage() {
 
                 <Button
                   variant="light"
-                  color="teal"
+                  color="sage"
                   size="xs"
                   leftSection={<IconPlus size={14} />}
                   onClick={addIngredient}
@@ -443,7 +443,7 @@ export default function RecipeEditPage() {
 
                 <Button
                   variant="light"
-                  color="teal"
+                  color="sage"
                   size="xs"
                   leftSection={<IconPlus size={14} />}
                   onClick={addStep}
@@ -460,7 +460,7 @@ export default function RecipeEditPage() {
                     <Stack gap="xs">
                       <Group justify="space-between" align="center">
                         <Group gap="xs">
-                          <ActionIcon color="teal" radius="xl" variant="filled" size="sm">
+                          <ActionIcon color="sage" radius="xl" variant="filled" size="sm">
                             <Text fw={700} size="xs">
                               {step.stepNumber}
                             </Text>
@@ -549,7 +549,7 @@ export default function RecipeEditPage() {
             </Button>
             <Button
               type="submit"
-              color="teal"
+              color="sage"
               leftSection={<IconDeviceFloppy size={18} />}
               loading={isSaving}
             >

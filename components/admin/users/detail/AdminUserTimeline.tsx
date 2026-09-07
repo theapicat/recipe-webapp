@@ -1,13 +1,14 @@
 "use client";
 
-import { Paper, Title, Text, Timeline, Group, Alert, ThemeIcon } from "@mantine/core";
+import { Paper, Title, Text, Timeline, Alert, ThemeIcon } from "@mantine/core";
 import {
   IconCalendar,
   IconClock,
   IconMailCheck,
   IconUserExclamation,
   IconUserX,
-  IconInfoCircle, IconLock,
+  IconInfoCircle,
+  IconLock,
 } from "@tabler/icons-react";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 
@@ -35,7 +36,7 @@ export function AdminUserTimeline({ user }: Props) {
 
       {user.isLocked && user.lockoutReasonDetails && (
         <Alert
-          color="orange"
+          color="terracotta"
           title={`Konto sperret (${user.lockoutReason})`}
           icon={<IconInfoCircle size={18} />}
           mb="lg"
@@ -49,7 +50,7 @@ export function AdminUserTimeline({ user }: Props) {
         {/* Opprettet */}
         <Timeline.Item
           bullet={
-            <ThemeIcon color="blue" size={24} radius="xl">
+            <ThemeIcon color="sage" size={24} radius="xl">
               <IconCalendar size={14} />
             </ThemeIcon>
           }
@@ -63,7 +64,7 @@ export function AdminUserTimeline({ user }: Props) {
         {/* Siste innlogging */}
         <Timeline.Item
           bullet={
-            <ThemeIcon color="teal" size={24} radius="xl">
+            <ThemeIcon color="sage" size={24} radius="xl">
               <IconClock size={14} />
             </ThemeIcon>
           }
@@ -78,7 +79,7 @@ export function AdminUserTimeline({ user }: Props) {
         <Timeline.Item
           bullet={
             <ThemeIcon
-              color={user.confirmation7DaysReminderSentAt ? "orange" : "gray"}
+              color={user.confirmation7DaysReminderSentAt ? "terracotta" : "gray"}
               size={24}
               radius="xl"
             >
@@ -114,7 +115,7 @@ export function AdminUserTimeline({ user }: Props) {
         <Timeline.Item
           bullet={
             <ThemeIcon
-              color={user.inactivityWarning6MonthsSentAt ? "orange" : "gray"}
+              color={user.inactivityWarning6MonthsSentAt ? "terracotta" : "gray"}
               size={24}
               radius="xl"
             >

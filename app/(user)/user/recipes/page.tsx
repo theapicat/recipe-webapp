@@ -154,9 +154,9 @@ export default function UserRecipesPage() {
       setIsSendingShare(false);
       closeShare();
       notifications.show({
-        title: "Oppskrift delvis delat",
+        title: "Oppskrift delt",
         message: `Kopi av "${activeRecipe.title}" er sendt til ${shareEmail}.`,
-        color: "teal",
+        color: "sage",
         icon: <IconCheck size={16} />,
       });
     }, 600);
@@ -202,12 +202,13 @@ export default function UserRecipesPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="teal"
+          color="terracotta"
+          variant="light"
           title="🎨 Mine Oppskrifter - Oversikt"
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er din personlige oppskriftssamling. Herfra kan du navigere til detalejside, opprette nye retter, starte kokkemodus, redigere eller dele direkte via e-post.
+          Dette er din personlige oppskriftssamling. Herfra kan du navigere til detaljside, opprette nye retter, starte kokkemodus, redigere eller dele direkte via e-post.
         </Alert>
 
         {/* Overskrift & Handlingsknapper med Ruting */}
@@ -221,7 +222,7 @@ export default function UserRecipesPage() {
           <Group gap="xs">
             <Button
               variant="light"
-              color="teal"
+              color="sage"
               leftSection={<IconLink size={16} />}
               component={Link}
               href="/user/import"
@@ -230,7 +231,7 @@ export default function UserRecipesPage() {
             </Button>
             <Button
               leftSection={<IconPlus size={16} />}
-              color="teal"
+              color="sage"
               component={Link}
               href="/user/recipes/create"
             >
@@ -253,7 +254,7 @@ export default function UserRecipesPage() {
 
               <Button
                 variant={selectedIngredients.length > 0 ? "filled" : "outline"}
-                color={selectedIngredients.length > 0 ? "blue" : "gray"}
+                color={selectedIngredients.length > 0 ? "sage" : "gray"}
                 leftSection={<IconFridge size={18} />}
                 onClick={openFridge}
               >
@@ -263,7 +264,7 @@ export default function UserRecipesPage() {
             </Group>
 
             {/* Faneblad for filtrering */}
-            <Tabs value={activeTab} onChange={setActiveTab}>
+            <Tabs value={activeTab} onChange={setActiveTab} color="sage">
               <Tabs.List>
                 <Tabs.Tab value="all">Alle ({recipes.length})</Tabs.Tab>
                 <Tabs.Tab
@@ -316,7 +317,7 @@ export default function UserRecipesPage() {
                     )}
                   </ActionIcon>
                   <Badge
-                    color="teal"
+                    color="sage"
                     variant="filled"
                     style={{ position: "absolute", bottom: 10, left: 10 }}
                   >
@@ -401,7 +402,7 @@ export default function UserRecipesPage() {
                       component={Link}
                       href={`/user/recipes/${recipe.id}`}
                       variant="light"
-                      color="teal"
+                      color="sage"
                       size="xs"
                       leftSection={<IconEye size={14} />}
                     >
@@ -411,7 +412,7 @@ export default function UserRecipesPage() {
                       component={Link}
                       href={`/user/recipes/${recipe.id}/cook`}
                       variant="outline"
-                      color="blue"
+                      color="sage"
                       size="xs"
                       leftSection={<IconChefHat size={14} />}
                     >
@@ -471,7 +472,7 @@ export default function UserRecipesPage() {
             >
               Tøm utvalg
             </Button>
-            <Button color="blue" onClick={closeFridge}>
+            <Button color="sage" onClick={closeFridge}>
               Vis Matchende Oppskrifter
             </Button>
           </Group>
@@ -505,7 +506,7 @@ export default function UserRecipesPage() {
               <Button variant="default" onClick={closeShare} disabled={isSendingShare}>
                 Avbryt
               </Button>
-              <Button color="teal" type="submit" loading={isSendingShare}>
+              <Button color="sage" type="submit" loading={isSendingShare}>
                 Send Oppskrift
               </Button>
             </Group>

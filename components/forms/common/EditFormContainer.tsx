@@ -51,19 +51,7 @@ export interface EditFormContainerProps {
 }
 
 /**
- * Layout-wrapper for redigeringsskjemaer (Edit Forms).
- *
- * I motsetning til CreateFormContainer inneholder denne:
- * - Nullstill-knapp (`onReset`) for å tilbakestille uførte endringer til sine opprinnelige verdier.
- * - Innebygd bekreftelsesdialog (`Modal`) før endringene faktisk lagres.
- *
- * @example
- * ```tsx
- * <EditFormContainer * onReset="{()" onSubmit="{form.onSubmit(handleSave)}" title="Rediger profil"> form.reset()}
- * >
- *   <FormField label="Fornavn" name="firstName"/>
- * </EditFormContainer>
- * ```
+ * Layout-wrapper for redigeringsskjemaer (Edit Forms) med nullstill-knapp og bekreftelsesmodal.
  */
 export const EditFormContainer = ({
                                     title,
@@ -164,7 +152,7 @@ export const EditFormContainer = ({
           <Button variant="default" onClick={() => setIsConfirmOpen(false)}>
             Avbryt
           </Button>
-          <Button color="blue" onClick={handleConfirmSave} loading={loading}>
+          <Button color="sage" onClick={handleConfirmSave} loading={loading}>
             Ja, lagre
           </Button>
         </Group>

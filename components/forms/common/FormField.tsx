@@ -26,7 +26,7 @@ export const FormField = ({
                             required = false,
                             disabled = false,
                             span = 12,
-                            minRows = 8, // Økt standardstørrelse for romslig meldingsfelt
+                            minRows = 8,
                             maxRows = 16,
                             autosize = true,
                             extra,

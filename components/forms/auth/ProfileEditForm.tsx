@@ -73,7 +73,7 @@ export const ProfileEditForm = () => {
         notifications.show({
           title: "Profil oppdatert!",
           message: "Dine navneendringer har blitt lagret.",
-          color: "teal",
+          color: "sage",
           icon: <IconCheck size={16} />,
         });
       } else {
@@ -104,7 +104,7 @@ export const ProfileEditForm = () => {
         disabled={isAdmin}
       >
         {isAdmin && (
-          <Alert color="blue" icon={<IconLock size={20} />} mb="md">
+          <Alert color="terracotta" icon={<IconLock size={20} />} mb="md" radius="md">
             Systemadministrator sin profilinformasjon er skrivebeskyttet og kan ikke endres via grensesnittet.
           </Alert>
         )}

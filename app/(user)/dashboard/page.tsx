@@ -31,7 +31,7 @@ interface CategoryTodos {
 const initialRoadmap: CategoryTodos[] = [
   {
     category: "Konto & Autentisering",
-    badgeColor: "orange",
+    badgeColor: "terracotta",
     items: [
       {
         id: "prof_settings",
@@ -73,7 +73,7 @@ const initialRoadmap: CategoryTodos[] = [
   },
   {
     category: "Oppskrifter & Søk",
-    badgeColor: "teal",
+    badgeColor: "sage",
     items: [
       {
         id: "imp_scraper",
@@ -109,7 +109,7 @@ const initialRoadmap: CategoryTodos[] = [
   },
   {
     category: "Ukesmeny & Handleliste",
-    badgeColor: "blue",
+    badgeColor: "sage",
     items: [
       {
         id: "plan_planner",
@@ -173,7 +173,7 @@ const UserDashboardPage = () => {
               Oversikt over planlagte brukerfunksjoner og utviklingsfremdrift
             </Text>
           </div>
-          <Badge size="lg" variant="filled" color="teal">
+          <Badge size="lg" variant="light" color="sage">
             Kjøkkenhylla v1.0
           </Badge>
         </Group>
@@ -186,11 +186,11 @@ const UserDashboardPage = () => {
                 {completedItems} av {totalItems} funksjoner fullført ({progressPercentage}%)
               </Text>
             </Group>
-            <Progress value={progressPercentage} color="teal" size="xl" radius="xl" animated />
+            <Progress value={progressPercentage} color="sage" size="xl" radius="xl" animated />
           </Stack>
         </Paper>
 
-        <Tabs defaultValue="Konto & Autentisering">
+        <Tabs defaultValue="Konto & Autentisering" color="sage">
           <Tabs.List mb="md">
             {roadmap.map((cat) => (
               <Tabs.Tab key={cat.category} value={cat.category}>

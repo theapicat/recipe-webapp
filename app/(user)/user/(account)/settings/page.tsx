@@ -75,7 +75,7 @@ export default function UserSettingsPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="teal"
+          color="terracotta"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -91,7 +91,7 @@ export default function UserSettingsPage() {
               Tilpass Kjøkkenhylla til ditt hushold og dine matvaner
             </Text>
           </div>
-          <Button color="teal" leftSection={<IconCheck size={18} />}>
+          <Button color="sage" leftSection={<IconCheck size={18} />}>
             Lagre endringer
           </Button>
         </Group>
@@ -100,7 +100,7 @@ export default function UserSettingsPage() {
         <Paper p="lg" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="orange" size="lg" radius="md">
+              <ThemeIcon color="terracotta" size="lg" radius="md" variant="light">
                 <IconFlame size={20} />
               </ThemeIcon>
               <div>
@@ -152,7 +152,7 @@ export default function UserSettingsPage() {
             />
 
             {allergies.length > 0 && (
-              <Alert color="orange" icon={<IconAlertTriangle size={18} />}>
+              <Alert color="terracotta" variant="light" icon={<IconAlertTriangle size={18} />}>
                 Når du importerer nye oppskrifter vil systemet sjekke ingrediensene og si fra dersom de inneholder:{" "}
                 <b>{allergies.join(", ")}</b>.
               </Alert>
@@ -164,7 +164,7 @@ export default function UserSettingsPage() {
         <Paper p="lg" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="teal" size="lg" radius="md">
+              <ThemeIcon color="sage" size="lg" radius="md" variant="light">
                 <IconChefHat size={20} />
               </ThemeIcon>
               <div>
@@ -195,7 +195,7 @@ export default function UserSettingsPage() {
         <Paper p="lg" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="blue" size="lg" radius="md">
+              <ThemeIcon color="sage" size="lg" radius="md" variant="light">
                 <IconUsers size={20} />
               </ThemeIcon>
               <div>
@@ -222,7 +222,7 @@ export default function UserSettingsPage() {
                 style={{ flex: 1 }}
               />
               <Button
-                color="blue"
+                color="sage"
                 leftSection={<IconUserPlus size={16} />}
                 onClick={handleAddUser}
               >
@@ -243,7 +243,7 @@ export default function UserSettingsPage() {
                         {u.email}
                       </Text>
                       <Group gap={6}>
-                        <Badge size="xs" color={u.accepted ? "green" : "yellow"} variant="light">
+                        <Badge size="xs" color={u.accepted ? "sage" : "terracotta"} variant="light">
                           {u.accepted ? "Aktiv i husholdningen" : "Ventende invitasjon"}
                         </Badge>
                         <Text size="xs" c="dimmed">
@@ -270,7 +270,7 @@ export default function UserSettingsPage() {
         <Paper p="lg" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="violet" size="lg" radius="md">
+              <ThemeIcon color="sage" size="lg" radius="md" variant="light">
                 <IconBell size={20} />
               </ThemeIcon>
               <div>
@@ -290,6 +290,7 @@ export default function UserSettingsPage() {
               description="Send varsel på søndager om å planlegge neste ukes middager"
               checked={weekMenuReminder}
               onChange={(e) => setWeekMenuReminder(e.currentTarget.checked)}
+              color="sage"
             />
 
             <Switch
@@ -297,6 +298,7 @@ export default function UserSettingsPage() {
               description="Få varsel kvelden før dersom morgendagens middag krever tining av kjøtt/fisk"
               checked={thawReminder}
               onChange={(e) => setThawReminder(e.currentTarget.checked)}
+              color="sage"
             />
           </Stack>
         </Paper>
@@ -305,7 +307,7 @@ export default function UserSettingsPage() {
         <Paper p="lg" radius="md" withBorder>
           <Stack gap="md">
             <Group gap="xs">
-              <ThemeIcon color="gray" size="lg" radius="md">
+              <ThemeIcon color="gray" size="lg" radius="md" variant="light">
                 <IconSun size={20} />
               </ThemeIcon>
               <div>
@@ -327,6 +329,7 @@ export default function UserSettingsPage() {
               <SegmentedControl
                 value={colorScheme}
                 onChange={setColorScheme}
+                color="sage"
                 data={[
                   {
                     label: (

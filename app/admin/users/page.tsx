@@ -43,7 +43,7 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [accountStatusFilter, setAccountStatusFilter] = useState<string>("all"); // "all", "active", "locked"
   const [emailStatusFilter, setEmailStatusFilter] = useState<string>("all");     // "all", "confirmed", "unconfirmed"
-  const [lifecycleFilter, setLifecycleFilter] = useState<string>("all");         // "all", "unconfirmed_7d", "unconfirmed_14d", "inactive_6m", "inactive_1y"
+  const [lifecycleFilter, setLifecycleFilter] = useState<string>("all");          // "all", "unconfirmed_7d", "unconfirmed_14d", "inactive_6m", "inactive_1y"
 
   // --- SORTERING ---
   const [sortBy, setSortBy] = useState<string>("createdAt"); // "name", "email", "createdAt"
@@ -217,7 +217,7 @@ export default function AdminUsersPage() {
 
           <Button
             leftSection={<IconMail size={18} />}
-            color="teal"
+            color="sage"
             onClick={() => router.push("/admin/users/email")}
           >
             Skriv e-post
@@ -231,7 +231,7 @@ export default function AdminUsersPage() {
         />
 
         {/* Faneinndeling (Brukere vs Svarteliste) */}
-        <Tabs value={activeTab} onChange={setActiveTab} color="teal" variant="outline">
+        <Tabs value={activeTab} onChange={setActiveTab} color="sage" variant="outline">
           <Tabs.List mb="md">
             <Tabs.Tab value="users" leftSection={<IconUsers size={16} />}>
               Brukere ({allUsers.length})
@@ -377,7 +377,7 @@ export default function AdminUsersPage() {
                       total={totalPages}
                       value={page}
                       onChange={setPage}
-                      color="teal"
+                      color="sage"
                       size="sm"
                     />
                   </Group>

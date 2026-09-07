@@ -53,7 +53,7 @@ export default function UserProfilePage() {
             <Title order={2}>Min Profil</Title>
             {user?.role && (
               <Badge
-                color={user.role.toLowerCase() === "admin" ? "violet" : "teal"}
+                color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
                 variant="light"
                 size="lg"
                 leftSection={<IconShield size={14} />}
@@ -96,7 +96,7 @@ export default function UserProfilePage() {
               {/* Opprettet dato */}
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <Group gap="xs">
-                  <ThemeIcon color="blue" variant="light" size="md">
+                  <ThemeIcon color="sage" variant="light" size="md">
                     <IconCalendar size={18} />
                   </ThemeIcon>
                   <div>
@@ -113,7 +113,7 @@ export default function UserProfilePage() {
               {/* Siste innlogging */}
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <Group gap="xs">
-                  <ThemeIcon color="teal" variant="light" size="md">
+                  <ThemeIcon color="sage" variant="light" size="md">
                     <IconClock size={18} />
                   </ThemeIcon>
                   <div>
@@ -142,7 +142,7 @@ export default function UserProfilePage() {
 
               <Badge
                 variant="light"
-                color={user?.isEmailConfirmed ? "teal" : "orange"}
+                color={user?.isEmailConfirmed ? "sage" : "terracotta"}
                 leftSection={<IconMailCheck size={12} />}
               >
                 E-post: {user?.isEmailConfirmed ? "Bekreftet" : "Ubekreftet"}
@@ -150,7 +150,7 @@ export default function UserProfilePage() {
 
               <Badge
                 variant="light"
-                color={user?.welcomeCompleted ? "blue" : "gray"}
+                color={user?.welcomeCompleted ? "sage" : "gray"}
                 leftSection={
                   user?.welcomeCompleted ? (
                     <IconCheck size={12} />

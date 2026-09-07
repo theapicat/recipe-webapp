@@ -311,7 +311,15 @@ export default function RecipeCookPage() {
     <AsyncMainContainer size="lg" py={20}>
       <Stack gap="lg">
         {/* TOPP-LINJE FOR KOKKEMODUS */}
-        <Paper p="md" radius="md" withBorder bg="var(--mantine-color-gray-0)">
+        <Paper
+          p="md"
+          radius="md"
+          withBorder
+          bg="light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-6))"
+          style={{
+            borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-dark-4))"
+          }}
+        >
           <Group justify="space-between" align="center">
             <Group gap="sm">
               <Button
@@ -324,14 +332,14 @@ export default function RecipeCookPage() {
               >
                 Avslutt Kokkemodus
               </Button>
-              <Badge color="teal" variant="filled" size="lg" leftSection={<IconChefHat size={14} />}>
+              <Badge color="sage" variant="filled" size="lg" leftSection={<IconChefHat size={14} />}>
                 Kokkemodus
               </Badge>
             </Group>
 
             <Group gap="md">
               <Badge
-                color={isWakeLockActive ? "green" : "gray"}
+                color={isWakeLockActive ? "sage" : "gray"}
                 variant="light"
                 leftSection={<IconSun size={14} />}
               >
@@ -340,7 +348,7 @@ export default function RecipeCookPage() {
 
               <Button
                 variant="outline"
-                color="teal"
+                color="sage"
                 size="xs"
                 leftSection={<IconListCheck size={16} />}
                 onClick={openDrawer}
@@ -376,7 +384,7 @@ export default function RecipeCookPage() {
         </Group>
 
         {/* FREMDRIFTSLINJE */}
-        <Progress value={progressPercent} color="teal" size="md" radius="xl" animated />
+        <Progress value={progressPercent} color="sage" size="md" radius="xl" animated />
 
         {/* GLOBALE AKTIVE TIMER-OVERSIKT */}
         {activeTimerList.length > 0 && (
@@ -452,7 +460,7 @@ export default function RecipeCookPage() {
         <Paper p={{ base: "lg", md: "25" }} radius="md" withBorder shadow="md">
           <Stack gap="xl">
             <Group justify="space-between" align="flex-start">
-              <ThemeIcon color="teal" size={54} radius="xl" variant="filled">
+              <ThemeIcon color="sage" size={54} radius="xl" variant="filled">
                 <Text fw={800} size="xl">
                   {currentStep.stepNumber}
                 </Text>
@@ -564,7 +572,7 @@ export default function RecipeCookPage() {
               {currentStepIndex < totalSteps - 1 ? (
                 <Button
                   size="lg"
-                  color="teal"
+                  color="sage"
                   rightSection={<IconChevronRight size={20} />}
                   onClick={() => setCurrentStepIndex((prev) => prev + 1)}
                 >
@@ -573,14 +581,14 @@ export default function RecipeCookPage() {
               ) : (
                 <Button
                   size="lg"
-                  color="green"
+                  color="sage"
                   leftSection={<IconCheck size={20} />}
                   onClick={() => {
                     notifications.show({
                       id: "cook-complete",
                       title: "🎉 Måltidet er ferdig!",
                       message: `God middag! "${recipe.title}" er klar til servering.`,
-                      color: "green",
+                      color: "sage",
                     });
                     router.push(`/user/recipes/${recipeId}`);
                   }}
@@ -596,7 +604,7 @@ export default function RecipeCookPage() {
         <Paper p="md" radius="md" withBorder>
           <Group justify="space-between" mb="xs">
             <Group gap="xs">
-              <IconListCheck size={18} color="var(--mantine-color-teal-6)" />
+              <IconListCheck size={18} color="var(--mantine-color-sage-6)" />
               <Text fw={600} size="sm">
                 Ingredienser for {servings} porsjoner
               </Text>
@@ -627,7 +635,7 @@ export default function RecipeCookPage() {
                       <b>{scaledAmount} {ing.unit}</b> {ing.name}
                     </Text>
                   }
-                  color="teal"
+                  color="sage"
                   size="xs"
                 />
               );
@@ -646,7 +654,7 @@ export default function RecipeCookPage() {
         padding="lg"
       >
         <Stack gap="md">
-          <Alert color="teal" icon={<IconSparkles size={16} />}>
+          <Alert color="terracotta" variant="light" icon={<IconSparkles size={16} />}>
             Mengdene er automatisk skalert til <b>{servings} porsjoner</b>.
           </Alert>
 
@@ -671,14 +679,14 @@ export default function RecipeCookPage() {
                         <b>{scaledAmount} {ing.unit}</b> {ing.name}
                       </Text>
                     }
-                    color="teal"
+                    color="sage"
                   />
                 </Paper>
               );
             })}
           </Stack>
 
-          <Button variant="light" color="teal" onClick={closeDrawer} mt="md">
+          <Button variant="light" color="sage" onClick={closeDrawer} mt="md">
             Lukk og fortsett matlagingen
           </Button>
         </Stack>

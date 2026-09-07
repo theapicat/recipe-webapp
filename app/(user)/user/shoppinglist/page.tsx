@@ -61,10 +61,10 @@ const initialItems: ShoppingItem[] = [
 ];
 
 const categoryConfig: Record<CategoryType, { color: string; icon: React.ElementType }> = {
-  "Frukt & Grønt": { color: "orange", icon: IconCarrot },
-  "Kjøtt & Fisk": { color: "red", icon: IconMeat },
-  "Meieri & Egg": { color: "blue", icon: IconMilk },
-  "Tørrvarer & Hermetikk": { color: "teal", icon: IconBread },
+  "Frukt & Grønt": { color: "sage", icon: IconCarrot },
+  "Kjøtt & Fisk": { color: "terracotta", icon: IconMeat },
+  "Meieri & Egg": { color: "sage", icon: IconMilk },
+  "Tørrvarer & Hermetikk": { color: "sage", icon: IconBread },
   Annet: { color: "gray", icon: IconShoppingCart },
 };
 
@@ -132,7 +132,8 @@ export default function UserShoppingListPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="teal"
+          color="terracotta"
+          variant="light"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -204,7 +205,7 @@ export default function UserShoppingListPage() {
                   onChange={(val) => setItemCategory((val as CategoryType) || "Annet")}
                   style={{ flex: 1.5 }}
                 />
-                <Button color="teal" type="submit" leftSection={<IconPlus size={16} />}>
+                <Button color="sage" type="submit" leftSection={<IconPlus size={16} />}>
                   Legg til
                 </Button>
               </Group>
@@ -220,11 +221,11 @@ export default function UserShoppingListPage() {
                 <Text size="sm" fw={600}>
                   Handlestatus: {checkedCount} av {totalCount} varer plukket
                 </Text>
-                <Badge color={progressPercent === 100 ? "teal" : "blue"} variant="light">
+                <Badge color={progressPercent === 100 ? "sage" : "terracotta"} variant="light">
                   {progressPercent}% Fullført
                 </Badge>
               </Group>
-              <Progress value={progressPercent} color="teal" animated={progressPercent < 100} />
+              <Progress value={progressPercent} color="sage" animated={progressPercent < 100} />
             </Stack>
           </Paper>
         )}
@@ -270,6 +271,7 @@ export default function UserShoppingListPage() {
                   {categoryItems.map((item) => (
                     <Group key={item.id} justify="space-between" align="center" wrap="nowrap">
                       <Checkbox
+                        color="sage"
                         checked={item.checked}
                         onChange={() => toggleItem(item.id)}
                         label={

@@ -13,9 +13,10 @@ const ResetPasswordContent = () => {
   useEffect(() => {
     if (!session || !session.role) return;
 
-    if (session.role === "Admin") {
+    const role = session.role.toLowerCase();
+    if (role === "admin") {
       router.push("/admin/dashboard");
-    } else if (session.role === "User") {
+    } else if (role === "user") {
       router.push("/dashboard");
     }
   }, [session?.role, router]);

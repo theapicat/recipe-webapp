@@ -1,14 +1,14 @@
 "use client";
 
 import { Title, Text, Paper, Stack, Badge, Table, Alert } from "@mantine/core";
-import { IconCookie, IconInfoCircle } from "@tabler/icons-react";
+import { IconCookie } from "@tabler/icons-react";
 
 export default function CookiesPage() {
   return (
     <Paper p="xl" radius="md" withBorder shadow="xs">
       <Stack gap="lg">
         <div>
-          <Badge color="gray" variant="light" mb="xs">
+          <Badge color="sage" variant="light" mb="xs">
             Sist oppdatert: 25. august 2026
           </Badge>
           <Title order={2} size="h2">
@@ -49,23 +49,23 @@ export default function CookiesPage() {
                 <Table.Tr>
                   <Table.Td><Text fw={600} size="xs">Autentisering</Text></Table.Td>
                   <Table.Td><Text size="xs">Husker at du er innlogget gjennom økten.</Text></Table.Td>
-                  <Table.Td><Badge size="xs" color="teal">Nødvendig</Badge></Table.Td>
+                  <Table.Td><Badge size="xs" color="sage">Nødvendig</Badge></Table.Td>
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td><Text fw={600} size="xs">Sikkerhet</Text></Table.Td>
                   <Table.Td><Text size="xs">Sikrer at forespørsler kommer fra din gyldige økt.</Text></Table.Td>
-                  <Table.Td><Badge size="xs" color="teal">Nødvendig</Badge></Table.Td>
+                  <Table.Td><Badge size="xs" color="sage">Nødvendig</Badge></Table.Td>
                 </Table.Tr>
                 <Table.Tr>
                   <Table.Td><Text fw={600} size="xs">Preferanser</Text></Table.Td>
                   <Table.Td><Text size="xs">Lagring av visningsinnstillinger (mørk/lys modus).</Text></Table.Td>
-                  <Table.Td><Badge size="xs" color="blue">Funksjonell</Badge></Table.Td>
+                  <Table.Td><Badge size="xs" color="sage" variant="outline">Funksjonell</Badge></Table.Td>
                 </Table.Tr>
               </Table.Tbody>
             </Table>
           </div>
 
-          <Alert color="teal" title="Ingen Tredjepartskapsler" icon={<IconCookie size={20} />}>
+          <Alert color="sage" title="Ingen Tredjepartskapsler" icon={<IconCookie size={20} />}>
             Kjøkkenhylla benytter <b>ingen tredjepartskapsler</b>. Vi plasserer ikke kapsler fra eksterne annonsører, sosiale medier eller sporingstjenester (som Google Analytics) på din enhet.
           </Alert>
 

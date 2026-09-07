@@ -58,7 +58,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         notifications.show({
           title: "Bruker sperret",
           message: `Kontoen til ${user.email} har blitt sperret.`,
-          color: "orange",
+          color: "terracotta",
         });
         setLockModalOpen(false);
         setLockReason("");
@@ -94,7 +94,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         notifications.show({
           title: "Konto gjenåpnet",
           message: `Sperren for ${user.email} er fjernet.`,
-          color: "teal",
+          color: "sage",
         });
         onRefreshNeeded();
       } else {
@@ -128,7 +128,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         notifications.show({
           title: "E-post bekreftet",
           message: `E-posten til ${user.email} er nå bekreftet.`,
-          color: "teal",
+          color: "sage",
         });
         onRefreshNeeded();
       } else {
@@ -162,7 +162,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         notifications.show({
           title: "E-post sendt",
           message: `Ny bekreftelseslenke sendt til ${user.email}.`,
-          color: "blue",
+          color: "sage",
         });
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -196,7 +196,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         notifications.show({
           title: "E-post sendt",
           message: `Tilbakestillingslenke for passord sendt til ${user.email}.`,
-          color: "blue",
+          color: "sage",
         });
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -299,7 +299,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         <Group gap="sm" wrap="wrap">
           <Button
             variant="light"
-            color="teal"
+            color="sage"
             leftSection={<IconMail size={16} />}
             onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
           >
@@ -309,7 +309,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
           {!user.isEmailConfirmed && (
             <Button
               variant="light"
-              color="teal"
+              color="sage"
               leftSection={<IconMailCheck size={16} />}
               onClick={handleConfirmEmailManually}
               loading={loading}
@@ -321,7 +321,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
           {!user.isEmailConfirmed && (
             <Button
               variant="outline"
-              color="blue"
+              color="sage"
               leftSection={<IconMailCheck size={16} />}
               onClick={handleResendConfirmation}
               loading={loading}
@@ -342,7 +342,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
 
           {user.isLocked ? (
             <Button
-              color="green"
+              color="sage"
               leftSection={<IconLockOpen size={16} />}
               onClick={handleUnlock}
               loading={loading}
@@ -351,7 +351,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
             </Button>
           ) : (
             <Button
-              color="orange"
+              color="terracotta"
               leftSection={<IconLock size={16} />}
               onClick={() => setLockModalOpen(true)}
               loading={loading}
@@ -419,7 +419,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
             <Button variant="default" onClick={() => setLockModalOpen(false)}>
               Avbryt
             </Button>
-            <Button color="orange" onClick={handleLock} loading={loading}>
+            <Button color="terracotta" onClick={handleLock} loading={loading}>
               Bekreft sperring
             </Button>
           </Group>

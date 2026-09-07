@@ -12,7 +12,7 @@ import { EditFormContainer } from "@/components/forms/common/EditFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
-import {AdminUserCard} from "@/components/admin/users/email/AdminUserCard";
+import { AdminUserCard } from "@/components/admin/users/email/AdminUserCard";
 
 interface FormValues {
   userId: string;
@@ -66,7 +66,7 @@ export function AdminSendEmailForm({ users, preselectedUserId }: Props) {
         notifications.show({
           title: "E-post sendt",
           message: `Meldingen ble sendt til ${selectedUser?.email || "brukeren"}.`,
-          color: "teal",
+          color: "sage",
         });
 
         if (preselectedUserId) {
@@ -123,7 +123,7 @@ export function AdminSendEmailForm({ users, preselectedUserId }: Props) {
             </Grid.Col>
           )}
 
-          {/* Emnefelt (FormField returnerer Grid.Col) */}
+          {/* Emnefelt */}
           <FormField
             name="subject"
             label="Emne (Subject)"
@@ -133,7 +133,7 @@ export function AdminSendEmailForm({ users, preselectedUserId }: Props) {
             span={12}
           />
 
-          {/* Meldingsfelt (FormField returnerer Grid.Col) */}
+          {/* Meldingsfelt */}
           <FormField
             name="message"
             label="Melding (Message)"

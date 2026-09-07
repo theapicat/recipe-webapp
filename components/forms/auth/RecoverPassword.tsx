@@ -7,10 +7,10 @@ import Link from "next/link";
 import { useForm, isEmail } from "@mantine/form";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import { RecoverRequest } from "@/lib/models/auth";
 import { CreateFormContainer } from "@/components/forms/common/CreateFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { AppFormProvider } from "@/components/forms/common/FormContext";
+import {RecoverRequest} from "@/lib/models/auth/recoverRequest";
 
 export const RecoverPassword = () => {
   const [requestActive, setRequestActive] = useState<boolean>(false);
@@ -74,7 +74,7 @@ export const RecoverPassword = () => {
           <Alert
             icon={<IconCheck size={16} />}
             title="Forespørsel sendt"
-            color="green"
+            color="sage"
             mb="md"
             radius="md"
           >

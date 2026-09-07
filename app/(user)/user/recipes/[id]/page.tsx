@@ -162,7 +162,7 @@ export default function RecipeDetailPage() {
       notifications.show({
         title: "Lagt til i handlelisten",
         message: `${itemsToAdd.length} ingrediens(er) ble overført til din handleliste.`,
-        color: "blue",
+        color: "sage",
         icon: <IconShoppingCart size={16} />,
       });
     }, 400);
@@ -177,9 +177,9 @@ export default function RecipeDetailPage() {
       setIsSendingShare(false);
       closeShare();
       notifications.show({
-        title: "Oppskrift delvis delat",
+        title: "Oppskrift delt",
         message: `Kopi av "${recipe.title}" ble sendt til ${shareEmail}.`,
-        color: "teal",
+        color: "sage",
         icon: <IconCheck size={16} />,
       });
       setShareEmail("");
@@ -206,7 +206,7 @@ export default function RecipeDetailPage() {
           <Group gap="xs">
             <Button
               variant="light"
-              color="gray"
+              color="sage"
               leftSection={<IconShare size={16} />}
               onClick={openShare}
             >
@@ -216,7 +216,7 @@ export default function RecipeDetailPage() {
               component={Link}
               href={`/user/recipes/${recipeId}/edit`}
               variant="light"
-              color="teal"
+              color="sage"
               leftSection={<IconEdit size={16} />}
             >
               Rediger
@@ -224,7 +224,7 @@ export default function RecipeDetailPage() {
             <Button
               component={Link}
               href={`/user/recipes/${recipeId}/cook`}
-              color="teal"
+              color="sage"
               leftSection={<IconChefHat size={18} />}
             >
               Start Kokkemodus
@@ -262,7 +262,7 @@ export default function RecipeDetailPage() {
             </ActionIcon>
 
             <Badge
-              color="teal"
+              color="sage"
               size="lg"
               variant="filled"
               style={{ position: "absolute", bottom: 16, left: 16 }}
@@ -285,7 +285,7 @@ export default function RecipeDetailPage() {
             <Group justify="space-between" align="center" wrap="wrap">
               <Group gap="xl">
                 <Group gap="xs">
-                  <ThemeIcon color="teal" variant="light" radius="md">
+                  <ThemeIcon color="sage" variant="light" radius="md">
                     <IconClock size={18} />
                   </ThemeIcon>
                   <div>
@@ -299,7 +299,7 @@ export default function RecipeDetailPage() {
                 </Group>
 
                 <Group gap="xs">
-                  <ThemeIcon color="blue" variant="light" radius="md">
+                  <ThemeIcon color="terracotta" variant="light" radius="md">
                     <IconUsers size={18} />
                   </ThemeIcon>
                   <div>
@@ -328,7 +328,7 @@ export default function RecipeDetailPage() {
         </Paper>
 
         {/* HOVEDINNHOLD: FANEINNDELING */}
-        <Tabs defaultValue="recipe" variant="outline" radius="md">
+        <Tabs defaultValue="recipe" variant="outline" radius="md" color="sage">
           <Tabs.List mb="md">
             <Tabs.Tab value="recipe" leftSection={<IconChefHat size={16} />}>
               Oppskrift & Ingredienser
@@ -356,7 +356,7 @@ export default function RecipeDetailPage() {
 
                     <Button
                       variant="light"
-                      color="blue"
+                      color="sage"
                       size="xs"
                       leftSection={<IconShoppingCart size={14} />}
                       onClick={handleAddToShoppingList}
@@ -394,20 +394,20 @@ export default function RecipeDetailPage() {
                                 {ing.name}
                               </Text>
                             }
-                            color="teal"
+                            color="sage"
                             style={{ flex: 1 }}
                           />
 
                           <Tooltip label="Legg kun denne i handlelisten" position="left">
                             <ActionIcon
                               variant="subtle"
-                              color="blue"
+                              color="sage"
                               size="sm"
                               onClick={() => {
                                 notifications.show({
                                   title: "Lagt til i handlelisten",
                                   message: `${scaledAmount} ${ing.unit} ${ing.name} ble lagt til.`,
-                                  color: "blue",
+                                  color: "sage",
                                   icon: <IconShoppingCart size={16} />,
                                 });
                               }}
@@ -433,7 +433,7 @@ export default function RecipeDetailPage() {
                   <Stack gap="lg">
                     {recipe.steps.map((step) => (
                       <Group key={step.stepNumber} align="flex-start" wrap="nowrap" gap="md">
-                        <ThemeIcon color="teal" size={32} radius="xl" variant="filled">
+                        <ThemeIcon color="sage" size={32} radius="xl" variant="filled">
                           <Text fw={700} size="sm">
                             {step.stepNumber}
                           </Text>
@@ -451,7 +451,7 @@ export default function RecipeDetailPage() {
 
           {/* FANE 2: NÆRINGSINNHOLD */}
           <Tabs.Panel value="nutrition">
-            <Paper p="lg" radius="md" withBorder>
+            <Paper p="lg" radius="md" withBorder bg="white">
               <Stack gap="md">
                 <Group justify="space-between">
                   <div>
@@ -462,7 +462,7 @@ export default function RecipeDetailPage() {
                       Basert på offentlige næringsdata fra Matvaretabellen.
                     </Text>
                   </div>
-                  <Badge color="blue" variant="light" leftSection={<IconSparkles size={12} />}>
+                  <Badge color="sage" variant="light" leftSection={<IconSparkles size={12} />}>
                     Automatisk beregnet
                   </Badge>
                 </Group>
@@ -470,41 +470,41 @@ export default function RecipeDetailPage() {
                 <Divider />
 
                 <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-                  <Paper p="md" radius="md" bg="gray.0" ta="center">
-                    <ThemeIcon color="orange" variant="light" radius="xl" mb={4}>
+                  <Paper p="md" radius="md" bg="terracotta.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-terracotta-2)" }}>
+                    <ThemeIcon color="terracotta" variant="light" radius="xl" mb={4}>
                       <IconFlame size={18} />
                     </ThemeIcon>
                     <Text size="xs" c="dimmed">
                       Energi
                     </Text>
-                    <Text fw={700} size="lg">
+                    <Text fw={800} size="xl" c="terracotta.9">
                       {recipe.nutrition.calories} kcal
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="gray.0" ta="center">
+                  <Paper p="md" radius="md" bg="sage.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-sage-2)" }}>
                     <Text size="xs" c="dimmed" mt={8}>
                       Proteiner
                     </Text>
-                    <Text fw={700} size="lg" color="teal">
+                    <Text fw={800} size="xl" c="sage.9">
                       {recipe.nutrition.protein} g
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="gray.0" ta="center">
+                  <Paper p="md" radius="md" bg="blue.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-blue-2)" }}>
                     <Text size="xs" c="dimmed" mt={8}>
                       Karbohydrater
                     </Text>
-                    <Text fw={700} size="lg" color="blue">
+                    <Text fw={800} size="xl" c="blue.9">
                       {recipe.nutrition.carbs} g
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="gray.0" ta="center">
+                  <Paper p="md" radius="md" bg="grape.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-grape-2)" }}>
                     <Text size="xs" c="dimmed" mt={8}>
                       Fett
                     </Text>
-                    <Text fw={700} size="lg" color="violet">
+                    <Text fw={800} size="xl" c="grape.9">
                       {recipe.nutrition.fat} g
                     </Text>
                   </Paper>
@@ -536,7 +536,7 @@ export default function RecipeDetailPage() {
               <Button variant="default" onClick={closeShare} disabled={isSendingShare}>
                 Avbryt
               </Button>
-              <Button color="teal" type="submit" loading={isSendingShare}>
+              <Button color="sage" type="submit" loading={isSendingShare}>
                 Send Oppskrift
               </Button>
             </Group>

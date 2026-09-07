@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Title,
-  Text,
-  Paper,
-  Stack,
-  Badge,
-  ThemeIcon,
-  Group,
-  SimpleGrid,
-  Card,
-} from "@mantine/core";
+import { Title, Text, Paper, Stack, Badge, ThemeIcon, Group, SimpleGrid, Card } from "@mantine/core";
 import {
   IconShieldCheck,
   IconLock,
@@ -24,7 +14,7 @@ export default function PrivacyPage() {
     <Paper p="xl" radius="md" withBorder shadow="xs">
       <Stack gap="lg">
         <div>
-          <Badge color="gray" variant="light" mb="xs">
+          <Badge color="sage" variant="light" mb="xs">
             Sist oppdatert: 5. september 2026
           </Badge>
           <Title order={2} size="h2">
@@ -44,7 +34,7 @@ export default function PrivacyPage() {
             <Text size="sm" lh={1.6} mb="xs">
               Vi samler kun inn følgende opplysninger når du registrerer en konto:
             </Text>
-            <Paper p="sm" radius="sm" bg="gray.0" withBorder>
+            <Paper p="sm" radius="sm" withBorder>
               <Stack gap={4}>
                 <Text size="xs">
                   • <b>E-postadresse:</b> Brukes som din unike identifikator for innlogging, kontogjenoppretting og viktige systemmeldinger.
@@ -63,7 +53,7 @@ export default function PrivacyPage() {
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
             <Card withBorder padding="md" radius="md">
               <Group gap="xs" mb="xs">
-                <ThemeIcon color="teal" variant="light" size="sm">
+                <ThemeIcon color="sage" variant="light" size="sm">
                   <IconLock size={16} />
                 </ThemeIcon>
                 <Text fw={600} size="sm">
@@ -77,7 +67,7 @@ export default function PrivacyPage() {
 
             <Card withBorder padding="md" radius="md">
               <Group gap="xs" mb="xs">
-                <ThemeIcon color="teal" variant="light" size="sm">
+                <ThemeIcon color="sage" variant="light" size="sm">
                   <IconShieldCheck size={16} />
                 </ThemeIcon>
                 <Text fw={600} size="sm">
@@ -100,9 +90,9 @@ export default function PrivacyPage() {
             </Text>
             <Stack gap="xs">
               {/* Datainnsyn og dataportabilitet */}
-              <Paper p="sm" radius="sm" withBorder style={{ borderColor: "var(--mantine-color-teal-3)" }}>
+              <Paper p="sm" radius="sm" withBorder>
                 <Group align="flex-start" gap="sm">
-                  <IconDownload size={20} color="var(--mantine-color-teal-6)" />
+                  <IconDownload size={20} color="var(--mantine-color-sage-filled)" />
                   <div>
                     <Text fw={600} size="sm">
                       Rett til innsyn og dataportabilitet (Selvbetjent eksport)
@@ -115,9 +105,9 @@ export default function PrivacyPage() {
               </Paper>
 
               {/* Sletting */}
-              <Paper p="sm" radius="sm" withBorder style={{ borderColor: "var(--mantine-color-red-3)" }}>
+              <Paper p="sm" radius="sm" withBorder>
                 <Group align="flex-start" gap="sm">
-                  <IconTrash size={20} color="var(--mantine-color-red-6)" />
+                  <IconTrash size={20} color="var(--mantine-color-red-filled)" />
                   <div>
                     <Text fw={600} size="sm">
                       Rett til sletting ("Rett til å bli glemt")
@@ -132,7 +122,7 @@ export default function PrivacyPage() {
               {/* Retting & Kontakt */}
               <Paper p="sm" radius="sm" withBorder>
                 <Group align="flex-start" gap="sm">
-                  <IconUserCheck size={20} color="var(--mantine-color-blue-6)" />
+                  <IconUserCheck size={20} color="var(--mantine-color-sage-filled)" />
                   <div>
                     <Text fw={600} size="sm">
                       Rett til retting og øvrige henvendelser

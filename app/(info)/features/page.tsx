@@ -33,13 +33,27 @@ function FeatureCard({ item }: { item: FeatureItem }) {
   const IconComponent = item.icon;
   const statusConfig = STATUS_CONFIG[item.status];
 
+  const itemColor =
+    item.color === "teal"
+      ? "sage"
+      : item.color === "orange"
+        ? "terracotta"
+        : item.color;
+
+  const statusColor =
+    statusConfig.color === "teal"
+      ? "sage"
+      : statusConfig.color === "orange"
+        ? "terracotta"
+        : statusConfig.color;
+
   return (
     <Card withBorder radius="md" p="lg" shadow="sm">
       <Group justify="space-between" align="flex-start" mb="sm">
-        <ThemeIcon size={44} radius="md" color={item.color} variant="light">
+        <ThemeIcon size={44} radius="md" color={itemColor} variant="light">
           <IconComponent size={24} />
         </ThemeIcon>
-        <Badge color={statusConfig.color} variant="light" size="sm">
+        <Badge color={statusColor} variant="light" size="sm">
           {statusConfig.label}
         </Badge>
       </Group>
@@ -64,12 +78,12 @@ export default function FeaturePage() {
           radius="lg"
           style={{
             background:
-              "linear-gradient(135deg, var(--mantine-color-teal-9) 0%, var(--mantine-color-teal-7) 100%)",
+              "linear-gradient(135deg, var(--mantine-color-sage-9) 0%, var(--mantine-color-sage-7) 100%)",
             color: "white",
           }}
         >
           <Stack gap="md" align="center" ta="center">
-            <Badge size="lg" color="teal.1" variant="white" c="teal.9">
+            <Badge size="lg" color="sage.1" variant="white" c="sage.9">
               <Group gap={6}>
                 <IconSparkles size={14} />
                 <span>Din personlige oppskriftsbok</span>
@@ -90,8 +104,8 @@ export default function FeaturePage() {
                 component={Link}
                 href="/user/import"
                 size="md"
-                color="dark"
                 variant="white"
+                c="sage.9"
                 leftSection={<IconLink size={18} />}
                 rightSection={<IconArrowRight size={18} />}
               >
@@ -117,13 +131,20 @@ export default function FeaturePage() {
             (f) => f.category === category.id
           );
 
+          const badgeColor =
+            category.badgeColor === "teal"
+              ? "sage"
+              : category.badgeColor === "orange"
+                ? "terracotta"
+                : category.badgeColor;
+
           return (
             <React.Fragment key={category.id}>
               {index > 0 && <Divider />}
 
               <Stack gap="md">
                 <div>
-                  <Badge color={category.badgeColor} variant="dot" size="md">
+                  <Badge color={badgeColor} variant="dot" size="md">
                     {category.badgeLabel}
                   </Badge>
                   <Title order={2} mt={4}>
@@ -145,7 +166,7 @@ export default function FeaturePage() {
         })}
 
         {/* --- BOTTOM CALL TO ACTION --- */}
-        <Paper p="xl" radius="md" withBorder bg="var(--mantine-color-gray-0)">
+        <Paper p="xl" radius="md" withBorder>
           <Group justify="space-between" align="center" wrap="wrap">
             <Stack gap="xs" style={{ maxWidth: 500 }}>
               <Title order={3}>Klar til å samle oppskriftene dine?</Title>
@@ -157,7 +178,7 @@ export default function FeaturePage() {
               <Button
                 component={Link}
                 href="/user/import"
-                color="teal"
+                color="sage"
                 size="md"
                 leftSection={<IconLink size={18} />}
               >

@@ -1,6 +1,6 @@
 "use client";
 
-import React, {SyntheticEvent} from "react";
+import React, { SyntheticEvent } from "react";
 import { Alert, Button, Grid, Paper, Text, Title } from "@mantine/core";
 
 export interface FormContainerProps {
@@ -37,38 +37,20 @@ export interface FormContainerProps {
   children: React.ReactNode;
 }
 
-
 /**
  * Felles layout-wrapper for applikasjonens skjemaer.
- *
- * Sørger for konsistent visning av:
- * - Kort-innramming (`Paper` med kantomriss og polstring)
- * - Sentrert tittel og beskrivelse
- * - Responsivt Mantine Grid for skjemaelementer
- * - Feilmeldinger i rød Alert-boks
- * - Primær submit-knapp med lasteindikator
- * - Sentrert bunntekst/lenkeseksjon
- *
- * @example
- * ```tsx
- * <CreateFormContainer * description="Fyll inn e-post og passord" errorMessage="{error}" footer="{<Anchor" href="/register" loading="{isLoading}" onSubmit="{form.onSubmit(handleSubmit)}" submitText="Logg inn" title="Logg inn">Har du ikke konto?</Anchor>}
- * >
- *   <FormField label="E-post" name="email" required/>
- *   <FormField label="Passord" name="password" required type="password"/>
- * </CreateFormContainer>
- * ```
  */
 export const CreateFormContainer = ({
-                                title,
-                                description,
-                                onSubmit,
-                                submitText,
-                                loading = false,
-                                disabled = false,
-                                errorMessage,
-                                footer,
-                                children,
-                              }: FormContainerProps) => {
+                                      title,
+                                      description,
+                                      onSubmit,
+                                      submitText,
+                                      loading = false,
+                                      disabled = false,
+                                      errorMessage,
+                                      footer,
+                                      children,
+                                    }: FormContainerProps) => {
   return (
     <Paper radius="md" p="xl" withBorder>
       <Title order={2} ta="center" mb={description ? "xs" : "lg"}>

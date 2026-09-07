@@ -121,7 +121,8 @@ export default function UserImportPage() {
       <Stack gap="lg">
         {/* Prototyping Varsel */}
         <Alert
-          color="orange"
+          color="terracotta"
+          variant="light"
           title="🎨 Prototyping / Mockup-side"
           icon={<IconInfoCircle size={20} />}
           radius="md"
@@ -137,7 +138,7 @@ export default function UserImportPage() {
               Lim inn en nettadresse fra en godkjent oppskriftsside for å legge den til i din samling
             </Text>
           </div>
-          <Badge size="lg" variant="light" color="teal" leftSection={<IconWorldCheck size={16} />}>
+          <Badge size="lg" variant="light" color="sage" leftSection={<IconWorldCheck size={16} />}>
             Auto-skraper Aktiv
           </Badge>
         </Group>
@@ -166,7 +167,7 @@ export default function UserImportPage() {
               </Group>
 
               <Button
-                color="teal"
+                color="sage"
                 size="md"
                 leftSection={isLoading ? <Loader size="xs" color="white" /> : <IconDownload size={18} />}
                 onClick={handleImport}
@@ -182,12 +183,12 @@ export default function UserImportPage() {
         {savedSuccess && (
           <Notification
             icon={<IconCheck size={18} />}
-            color="teal"
+            color="sage"
             title="Oppskrift lagret!"
             onClose={() => setSavedSuccess(false)}
           >
             Oppskriften er lagret i din samling. Du finner den under{" "}
-            <Link href="/user/recipes" style={{ color: "var(--mantine-color-teal-7)", fontWeight: 600 }}>
+            <Link href="/user/recipes" style={{ color: "var(--mantine-color-sage-7)", fontWeight: 600 }}>
               Mine Oppskrifter
             </Link>.
           </Notification>
@@ -199,7 +200,7 @@ export default function UserImportPage() {
             <Stack gap="lg">
               <Group justify="space-between" align="flex-start">
                 <Group gap="xs">
-                  <ThemeIcon color="teal" size="lg" radius="xl">
+                  <ThemeIcon color="sage" size="lg" radius="xl" variant="light">
                     <IconSparkles size={20} />
                   </ThemeIcon>
                   <div>
@@ -211,7 +212,7 @@ export default function UserImportPage() {
                 </Group>
 
                 <Button
-                  color="teal"
+                  color="sage"
                   leftSection={<IconDeviceFloppy size={18} />}
                   onClick={handleSave}
                   disabled={savedSuccess}
@@ -230,10 +231,10 @@ export default function UserImportPage() {
                   </Card>
 
                   <Group gap="md">
-                    <Badge size="lg" variant="light" color="blue" leftSection={<IconClock size={16} />}>
+                    <Badge size="lg" variant="light" color="sage" leftSection={<IconClock size={16} />}>
                       {scrapedRecipe.prepTime}
                     </Badge>
-                    <Badge size="lg" variant="light" color="teal" leftSection={<IconUsers size={16} />}>
+                    <Badge size="lg" variant="light" color="sage" leftSection={<IconUsers size={16} />}>
                       {scrapedRecipe.servings} porsjoner
                     </Badge>
                   </Group>
@@ -243,12 +244,12 @@ export default function UserImportPage() {
                 <Card withBorder radius="md" p="md">
                   <Stack gap="xs">
                     <Group gap="xs" mb="xs">
-                      <IconChefHat size={18} color="var(--mantine-color-teal-6)" />
+                      <IconChefHat size={18} color="var(--mantine-color-sage-6)" />
                       <Text fw={600} size="sm">
                         Ingredienser
                       </Text>
                     </Group>
-                    <List spacing="xs" size="sm" icon={<IconCheck size={14} color="var(--mantine-color-teal-6)" />}>
+                    <List spacing="xs" size="sm" icon={<IconCheck size={14} color="var(--mantine-color-sage-6)" />}>
                       {scrapedRecipe.ingredients.map((ing, idx) => (
                         <List.Item key={idx}>{ing}</List.Item>
                       ))}
@@ -260,7 +261,7 @@ export default function UserImportPage() {
                 <Card withBorder radius="md" p="md">
                   <Stack gap="xs">
                     <Group gap="xs" mb="xs">
-                      <IconInfoCircle size={18} color="var(--mantine-color-blue-6)" />
+                      <IconInfoCircle size={18} color="var(--mantine-color-sage-6)" />
                       <Text fw={600} size="sm">
                         Fremgangsmåte
                       </Text>

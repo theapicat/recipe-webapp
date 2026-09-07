@@ -75,9 +75,9 @@ export function AdminUserTable({
   const renderSortIcon = (field: string) => {
     if (sortBy !== field) return <IconSelector size={14} opacity={0.4} />;
     return sortOrder === "asc" ? (
-      <IconSortAscending size={14} color="var(--mantine-color-teal-6)" />
+      <IconSortAscending size={14} color="var(--mantine-color-sage-6)" />
     ) : (
-      <IconSortDescending size={14} color="var(--mantine-color-teal-6)" />
+      <IconSortDescending size={14} color="var(--mantine-color-sage-6)" />
     );
   };
 
@@ -96,7 +96,7 @@ export function AdminUserTable({
         notifications.show({
           title: "Bruker sperret",
           message: `Kontoen til ${lockTarget.email} har blitt sperret.`,
-          color: "orange",
+          color: "terracotta",
         });
         setLockTarget(null);
         setLockReason("");
@@ -130,7 +130,7 @@ export function AdminUserTable({
         notifications.show({
           title: "Konto gjenåpnet",
           message: `Sperren for ${user.email} er nå fjernet.`,
-          color: "teal",
+          color: "sage",
         });
         onRefreshNeeded();
       } else {
@@ -160,7 +160,7 @@ export function AdminUserTable({
         notifications.show({
           title: "E-post sendt",
           message: `Ny bekreftelseslenke sendt til ${user.email}.`,
-          color: "blue",
+          color: "sage",
         });
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -190,7 +190,7 @@ export function AdminUserTable({
         notifications.show({
           title: "E-post sendt",
           message: `Tilbakestillingslenke for passord sendt til ${user.email}.`,
-          color: "blue",
+          color: "sage",
         });
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -324,7 +324,7 @@ export function AdminUserTable({
                 <Table.Td>
                   <Group gap="sm">
                     <Avatar
-                      color={user.role.toLowerCase() === "admin" ? "violet" : "teal"}
+                      color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
                       radius="xl"
                     >
                       {user.fullName ? user.fullName.substring(0, 2).toUpperCase() : "U"}
@@ -358,7 +358,7 @@ export function AdminUserTable({
                 {/* Rolle */}
                 <Table.Td>
                   <Badge
-                    color={user.role.toLowerCase() === "admin" ? "violet" : "gray"}
+                    color={user.role.toLowerCase() === "admin" ? "terracotta" : "gray"}
                     variant="light"
                     leftSection={
                       user.role.toLowerCase() === "admin" ? (
@@ -373,7 +373,7 @@ export function AdminUserTable({
                 {/* Konto status */}
                 <Table.Td>
                   <Badge
-                    color={user.isLocked ? "red" : "green"}
+                    color={user.isLocked ? "red" : "sage"}
                     variant="dot"
                   >
                     {user.isLocked ? "Låst" : "Aktiv"}
@@ -383,7 +383,7 @@ export function AdminUserTable({
                 {/* E-post status */}
                 <Table.Td>
                   <Badge
-                    color={user.isEmailConfirmed ? "teal" : "orange"}
+                    color={user.isEmailConfirmed ? "sage" : "terracotta"}
                     variant="subtle"
                   >
                     {user.isEmailConfirmed ? "Bekreftet" : "Ubekreftet"}
@@ -415,7 +415,7 @@ export function AdminUserTable({
 
                       <Menu.Item
                         leftSection={<IconMail size={14} />}
-                        color="teal"
+                        color="sage"
                         onClick={() => router.push(`/admin/users/email?userId=${user.userId}`)}
                       >
                         Send e-post
@@ -443,7 +443,7 @@ export function AdminUserTable({
                       {user.isLocked ? (
                         <Menu.Item
                           leftSection={<IconLockOpen size={14} />}
-                          color="green"
+                          color="sage"
                           onClick={() => handleUnlockUser(user)}
                         >
                           Lås opp konto
@@ -451,7 +451,7 @@ export function AdminUserTable({
                       ) : (
                         <Menu.Item
                           leftSection={<IconLock size={14} />}
-                          color="orange"
+                          color="terracotta"
                           onClick={() => setLockTarget(user)}
                         >
                           Lås konto
@@ -509,7 +509,7 @@ export function AdminUserTable({
             </Button>
 
             <Button
-              color="orange"
+              color="terracotta"
               onClick={handleLockUser}
               loading={actionLoading}
             >
