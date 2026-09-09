@@ -15,6 +15,7 @@ import {
   IconCheck,
   IconAlertTriangle,
   IconMailCheck,
+  IconMailX,
   IconDownload,
 } from "@tabler/icons-react";
 
@@ -24,7 +25,7 @@ export default function TermsPage() {
       <Stack gap="lg">
         <div>
           <Badge color="sage" variant="light" mb="xs">
-            Sist oppdatert: 5. september 2026
+            Sist oppdatert: 9. september 2026
           </Badge>
           <Title order={2} size="h2">
             Brukervilkår for Kjøkkenhylla
@@ -98,7 +99,7 @@ export default function TermsPage() {
           {/* Seksjon 3 */}
           <div>
             <Title order={3} size="h4" mb={6}>
-              3. Brukerkonto, e-postbekreftelse, inaktivitet og datainnsyn
+              3. Brukerkonto, e-postbekreftelse, leverbarhet, inaktivitet og datainnsyn
             </Title>
             <Text size="sm" lh={1.6} mb="xs">
               For å oppretteholde sikkerhet, forhindre ubrukte eller fiktive kontoer,
@@ -115,6 +116,22 @@ export default function TermsPage() {
                 <Text size="xs">
                   Alle nye kontoer må bekrefte sin e-postadresse via aktiveringslenken
                   som sendes ved registrering.
+                </Text>
+              </Alert>
+
+              <Alert
+                color="terracotta"
+                variant="light"
+                title="Krav om gyldig og leverbar e-postadresse (Hard Bounce)"
+                icon={<IconMailX size={20} />}
+              >
+                <Text size="xs">
+                  Kjøkkenhylla krever at alle registrerte brukere til enhver tid har en aktiv,
+                  fungerende og leverbar e-postadresse. Dersom e-postutsendelser til din adresse
+                  avvises permanent av mottakers e-posttjener (hard bounce / 550-feil), eller
+                  dersom det benyttes en fiktiv/engangs e-postadresse, forbeholder Kjøkkenhylla
+                  seg retten til å <b>umiddelbart slette brukerkontoen permanent og svarteliste
+                  e-postadressen uten forvarsel</b>.
                 </Text>
               </Alert>
 
@@ -186,13 +203,13 @@ export default function TermsPage() {
               <List.Item>
                 <b>Rett til utestengelse:</b> Siden Kjøkkenhylla er en privat plattform, forbeholder vi oss
                 retten til når som helst, uten forvarsel eller begrunnelse, å utestenge, sperre eller slette brukere
-                som bryter disse vilkårene, utviser uakseptabel oppførsel, eller dersom vi av andre administrative
-                grunner finner det nødvendig.
+                som bryter disse vilkårene, utviser uakseptabel oppførsel, benytter ugyldige e-postadresser, eller dersom
+                vi av andre administrative/tekniske grunner finner det nødvendig.
               </List.Item>
               <List.Item>
-                <b>Svartelisting av e-postadresser og domener:</b> Ved utestengelse, regelbrudd eller misbruk
-                forbeholder vi oss retten til å svarteliste spesifikke e-postadresser eller hele e-postdomener. En svartelistet
-                e-postadresse eller et svartelistet domene vil nektes framtidig registrering og tilgang til Kjøkkenhylla.
+                <b>Svartelisting av e-postadresser og domener:</b> Ved utestengelse, uleverbare e-postadresser (hard bounce),
+                regelbrudd eller misbruk forbeholder vi oss retten til å svarteliste spesifikke e-postadresser eller hele e-postdomener.
+                En svartelistet e-postadresse eller et svartelistet domene vil nektes framtidig registrering og tilgang til Kjøkkenhylla.
               </List.Item>
             </List>
           </div>

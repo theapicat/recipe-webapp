@@ -1,6 +1,6 @@
 # Brukervilkår for Kjøkkenhylla
 
-**Sist oppdatert:** 5. september 2026
+**Sist oppdatert:** 9. september 2026
 
 Velkommen til Kjøkkenhylla. Ved å opprette en konto eller bruke våre tjenester aksepterer du følgende brukervilkår. Vennligst les dem nøye.
 
@@ -22,11 +22,12 @@ Velkommen til Kjøkkenhylla. Ved å opprette en konto eller bruke våre tjeneste
 
 ---
 
-## 3. Brukerkonto, e-postbekreftelse, inaktivitet og datainnsyn
+## 3. Brukerkonto, e-postbekreftelse, leverbarhet, inaktivitet og datainnsyn
 
 For å opprettholde sikkerhet, forhindre ubrukte eller fiktive kontoer, ivareta personvern og god datahygiene, gjelder følgende regler:
 
 * **Krav om e-postbekreftelse:** Alle nye kontoer må bekrefte sin e-postadresse via aktiveringslenken som sendes ved registrering.
+* **Krav om gyldig og leverbar e-postadresse (Hard Bounce):** Kjøkkenhylla krever at alle registrerte brukere til enhver tid har en aktiv, fungerende og leverbar e-postadresse. Dersom e-postutsendelser til din adresse avvises permanent av mottakers e-posttjener (hard bounce/550-feil), eller dersom det benyttes en fiktiv/engangs e-postadresse, forbeholder Kjøkkenhylla seg retten til å **umiddelbart slette brukerkontoen permanent og svarteliste e-postadressen uten forvarsel**.
 * **Ubekreftede kontoer (opprydding):**
 * **7 dager:** Sendes e-postpåminnelse dersom e-postadressen ikke er bekreftet.
 * **14 dager (2 uker):** Kontoer som forblir ubekreftet sperres automatisk for innlogging.
@@ -38,7 +39,7 @@ For å opprettholde sikkerhet, forhindre ubrukte eller fiktive kontoer, ivareta 
 * **1 år:** Kontoer som er inaktive i 1 år sperres i 30 dager før de slettes permanent, med mindre brukeren logger inn og bekrefter at kontoen fortsatt er i bruk.
 
 
-* **Datainnsyn og dataeksport (GDPR):** Du har fullt innsyn i personopplysningene og brukerdataene som er registrert om deg i våre systemer. Du kan når som helst hente ut og laste ned en kopi av dine registrerte brukerdata direktetil din enhet fra profilinnstillingene på din konto.
+* **Datainnsyn og dataeksport (GDPR):** Du har fullt innsyn i personopplysningene og brukerdataene som er registrert om deg i våre systemer. Du kan når som helst hente ut og laste ned en kopi av dine registrerte brukerdata direkte til din enhet fra profilinnstillingene på din konto.
 
 ---
 
@@ -47,8 +48,8 @@ For å opprettholde sikkerhet, forhindre ubrukte eller fiktive kontoer, ivareta 
 Vi ønsker at Kjøkkenhylla skal være en trygg og ryddig plattform. Derfor gjelder følgende regler for oppførsel, utestengelse og adgangsrestriksjoner:
 
 * **Krav til alminnelig folkeskikk:** Brukere plikter å opptre ordentlig og utvise alminnelig folkeskikk i all interaksjon med plattformen og i henvendelser til support og administrasjon.
-* **Rett til utestengelse:** Siden Kjøkkenhylla er en privat plattform, forbeholder vi oss retten til når som helst, uten forvarsel eller begrunnelse, å utestenge, sperre eller slette brukere som bryter disse vilkårene, utviser uakseptabel oppførsel, eller dersom vi av andre administrative grunner finner det nødvendig.
-* **Svartelisting av e-postadresser og domener:** Ved utestengelse, regelbrudd eller misbruk forbeholder vi oss retten til å svarteliste spesifikke e-postadresser eller hele e-postdomener. En svartelistet e-postadresse eller et svartelistet domene vil nektes framtidig registrering og tilgang til Kjøkkenhylla sine tjenester.
+* **Rett til utestengelse:** Siden Kjøkkenhylla er en privat plattform, forbeholder vi oss retten til når som helst, uten forvarsel eller begrunnelse, å utestenge, sperre eller slette brukere som bryter disse vilkårene, utviser uakseptabel oppførsel, benytter ugyldige e-postadresser, eller dersom vi av andre administrative/tekniske grunner finner det nødvendig.
+* **Svartelisting av e-postadresser og domener:** Ved utestengelse, uleverbare e-postadresser (hard bounce), regelbrudd eller misbruk forbeholder vi oss retten til å svarteliste spesifikke e-postadresser eller hele e-postdomener. En svartelistet e-postadresse eller et svartelistet domene vil nektes framtidig registrering og tilgang til Kjøkkenhylla sine tjenester.
 
 ---
 
