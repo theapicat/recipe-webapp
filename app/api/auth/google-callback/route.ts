@@ -6,28 +6,24 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const error = searchParams.get("error");
 
-  // 1. Håndter feil fra backend/Google
   if (error) {
     return NextResponse.redirect(
       new URL(`/login?error=${encodeURIComponent(error)}`, request.url)
     );
   }
 
-  // 2. Les ut parametere fra URL
   const accessToken = searchParams.get("access_token");
   const refreshToken = searchParams.get("refresh_token");
   const userId = searchParams.get("user_id");
   const email = searchParams.get("email");
   const role = searchParams.get("role");
 
-  // 3. Valider at vi har minimum av nødvendig data
   if (!accessToken || !refreshToken || !userId) {
     return NextResponse.redirect(
       new URL("/login?error=Ugyldig+sesjonsdata+fra+Google", request.url)
     );
   }
 
-  // 4. Bygg token-objektet
   const tokens: OpenIddictTokenResponse = {
     access_token: accessToken,
     refresh_token: refreshToken,
@@ -37,7 +33,6 @@ export async function GET(request: NextRequest) {
 
   const welcomeCompleted = searchParams.get("welcome_completed") === "true";
 
-  // 5. Bygg brukerprofil-objektet
   const userProfile: UserProfileResponse = {
     userId: userId,
     userName: email || "",
@@ -55,11 +50,41 @@ export async function GET(request: NextRequest) {
     lastLoginAt: new Date().toISOString(),
   };
 
-  // 6. Lagre i HttpOnly session cookies
+  // 1. Sett kakene via sessionManager
   await sessionManager.setSession(tokens, userProfile);
 
-  // 7. Rute brukeren til dashboard (eller velkomstskjerm dersom ikke fullført)
   const targetPath = welcomeCompleted ? "/dashboard" : "/user/welcome";
+  const redirectUrl = new URL(targetPath, request.url);
 
-  return NextResponse.redirect(new URL(targetPath, request.url));
+  // 2. Opprett responsen
+  const response = NextResponse.redirect(redirectUrl);
+
+  // 3. Tving kakene inn på respons-objektet slik at de garantert sendes til nettleseren
+  const isProd = process.env.NODE_ENV === "production";
+
+  response.cookies.set("token", accessToken, {
+    httpOnly: true,
+    secure: isProd,
+    maxAge: 3600,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  response.cookies.set("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: isProd,
+    maxAge: 60 * 60 * 24 * 14,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  response.cookies.set("user_data", JSON.stringify(userProfile), {
+    httpOnly: false,
+    secure: isProd,
+    maxAge: 60 * 60 * 24 * 14,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return response;
 }
