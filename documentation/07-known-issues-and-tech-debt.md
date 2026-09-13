@@ -5,15 +5,7 @@ mot koden (grep/lesing/`tsc --noEmit`/`eslint`), ikke gjettet. Oppdater denne li
 oppdages; se git-historikken for hva som allerede er rettet (bl.a. `npm run lint`/`tsc --noEmit` er begge
 100 % rene per commit `79e8305`).
 
-## Auth & sesjon (høyest prioritet — påvirker brukeropplevelsen direkte)
-
-**Ingen token-fornyelse for API-kall, kun for sidenavigasjon.** `proxy.ts` sin matcher
-(`/dashboard/:path*`, `/user/:path*`, `/admin/:path*`) dekker ikke `/api/:path*`. Token-fornyelse skjer derfor
-kun når brukeren _navigerer_ til en beskyttet side — ikke når en klientkomponent gjør et `agentInternal`-kall
-mens brukeren blir stående på samme side. Ingen 401-interceptor finnes for å fange dette opp.
-`agentAuth.refresh()` er implementert, men kalles aldri fra noe sted i kodebasen. **Dette er den mest
-sannsynlige rotårsaken til at brukere mister sesjonen uventet.** → Full gjennomgang og forslag til fix:
-[03 – Auth & sesjon, seksjon 5](./03-auth-and-session.md#5-hva-proxyts-ikke-dekker--rotårsaken-til-de-fleste-sesjonsproblemer).
+## Auth & sesjon
 
 **Inkonsistent rollesjekk i `Header.tsx`.** Sammenligner `session.role === "Admin"` (case-sensitiv), mens
 `proxy.ts` og alle andre steder bruker `.toLowerCase() === "admin"`. Rotårsaken er trolig
@@ -94,11 +86,10 @@ med andre fikser.
 
 ## Foreslått rekkefølge for videre arbeid
 
-1. Ta beslutningen om token-fornyelse for API-kall (401-håndtering) — se de to alternativene i
-   [03](./03-auth-and-session.md#5-hva-proxyts-ikke-dekker--rotårsaken-til-de-fleste-sesjonsproblemer). Ta
-   `UserRoleType`-innstrammingen og `Header.tsx`-fiksen samtidig, siden de henger sammen.
-2. Lag en teststrategi (rammeverk, hva som skal dekkes først — trolig auth-flyten) før noe annet av
-   kjernedomene-arbeidet starter.
+1. Stram inn `UserRoleType` og fiks `Header.tsx`-rollesjekken (henger sammen, se punktet over).
+2. Lag en teststrategi (rammeverk, hva som skal dekkes først — trolig auth-flyten, siden den nå har fått en
+   god del ny logikk med `agentInternal`s fornyelses-/retry-mekanisme) før noe annet av kjernedomene-arbeidet
+   starter.
 3. Design datamodell + API-lag for oppskrifter/måltidsplan/handleliste (inkl. `DatesProvider`-oppsett for
    `@mantine/dates`), og migrer én side om gangen til ekte backend + riktig komponentstruktur — følg
    mappestrukturen i [08](./08-model-and-component-structure-proposal.md).

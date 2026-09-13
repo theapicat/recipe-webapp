@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { SendUserEmailAdminRequest } from "@/lib/models/admin/users/SendUserEmailAdminRequest";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
+import { ApiError } from "@/lib/agent/ApiError";
 
 export const POST = async (request: Request) => {
   try {
@@ -16,17 +17,18 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage =
       error instanceof Error
         ? error.message
         : "Kunne ikke sende e-posten. Vennligst prøv igjen senere.";
 
     const errorResponse: HttpResponse<undefined> = {
-      statusCode: 400,
+      statusCode: status,
       message: errorMessage,
       timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(errorResponse, { status: 400 });
+    return NextResponse.json(errorResponse, { status });
   }
 };

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { agentAuth } from "@/lib/agent/agentAuth";
+import { ApiError } from "@/lib/agent/ApiError";
 import sessionManager from "@/lib/session/sessionManager";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
@@ -12,8 +13,9 @@ export async function GET() {
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage =
       error instanceof Error ? error.message : "Kunne ikke fullføre velkomstreisen.";
-    return NextResponse.json({ message: errorMessage }, { status: 400 });
+    return NextResponse.json({ message: errorMessage }, { status });
   }
 }

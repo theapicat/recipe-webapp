@@ -35,7 +35,7 @@ before making non-trivial changes in that area; it goes into far more depth than
 - `GATEWAY_URL` — base URL of the Recipe Gateway API (e.g. `http://localhost:5000/api`). Auth endpoints are
   `${GATEWAY_URL}/auth/*` (used by `lib/agent/agentAuth.ts`, `agentAuthAdmin.ts`, `proxy.ts`, and the Google OAuth
   routes); everything else (e.g. the public contact form) hits `${GATEWAY_URL}/*` directly. One variable for both,
-  by design — see the "Known gap" note below for why that used to be two out-of-sync variables.
+  by design (used to be two out-of-sync variables — see `documentation/03-auth-and-session.md`).
 - `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — Google OAuth client id (client-visible). Currently unused in the frontend code
   (the actual client secret/id exchange happens gateway-side) — not necessarily dead, just unverified in this repo.
 
@@ -53,24 +53,29 @@ before making non-trivial changes in that area; it goes into far more depth than
   `/404` if the role isn't `admin`.
 - Two HTTP client wrappers, not interchangeable:
   - `lib/agent/agentInternal.ts` — `"use client"`, same-origin `fetch` used by client components to call this app's
-    own `app/api/**/route.ts` handlers.
+    own `app/api/**/route.ts` handlers. Catches 401 responses, calls `POST /api/auth/refresh` (deduped across
+    concurrent calls via a module-level promise) and retries the original request once before giving up.
   - `lib/agent/agentExternal.ts` — server-side `fetch` (CORS) that attaches `Authorization: Bearer <token>` from
-    `sessionManager`, used to call the external gateway directly.
+    `sessionManager`, used to call the external gateway directly. Does not itself refresh an expired token.
 - `lib/agent/agentAuth.ts` and `lib/agent/agentAuthAdmin.ts` wrap `agentExternal` into typed, per-endpoint methods
-  (login, register, profile, admin user management, blacklist, etc.) against `${GATEWAY_URL}/auth`.
+  (login, register, profile, admin user management, blacklist, etc.) against `${GATEWAY_URL}/auth`. They throw
+  `ApiError` (`lib/agent/ApiError.ts`, carries the real HTTP status) rather than a plain `Error`, so route handlers
+  can propagate the actual status code (401 vs. 400 etc.) instead of flattening everything — this is what
+  `agentInternal` keys its refresh-and-retry logic on.
 - `app/api/**/route.ts` handlers are a thin proxy layer: parse the client request, call `agentAuth`/`agentAuthAdmin`,
-  then translate the result into session cookies (via `sessionManager`) and a JSON response.
+  then translate the result into session cookies (via `sessionManager`) and a JSON response whose status mirrors
+  `error.status` when the caught error is an `ApiError`.
+- `app/api/auth/refresh/route.ts` is called only by `agentInternal` (never directly from a component): runs
+  `agentAuth.refresh()`, updates the `token`/`refreshToken` cookies via `sessionManager`, or clears the session and
+  returns 401 if the refresh token itself is dead.
 - Google OAuth is the one path that bypasses `agentAuth`: `app/api/auth/google` redirects to the gateway's
   `external-login`; `app/api/auth/google-callback` receives tokens + profile fields as query params directly from
   the gateway and calls `sessionManager.setSession` itself.
 - JWT role/expiry are decoded manually in `sessionManager` (`getUserRole`, `getRemainingExpTime`) via base64 payload
   decoding — there is no JWT library dependency.
-- **Known gap (see `documentation/03-auth-and-session.md`):** `proxy.ts`'s token-refresh only runs for page
-  navigations matching its matcher — it does not cover `/api/*`, so a client-side `agentInternal` call made after
-  the access token has expired just fails with a generic 400 instead of refreshing or forcing logout.
-  `agentAuth.refresh()` exists but is called from nowhere. Don't "fix" this without discussing the approach first —
-  see the doc for options. (The env-var mismatch that used to compound this — `proxy.ts` reading a different,
-  unset variable than everything else — is fixed; both now read `GATEWAY_URL`.)
+- `proxy.ts` still separately refreshes the token on page navigation to `/dashboard/*`, `/user/*`, `/admin/*` (see
+  `documentation/03-auth-and-session.md`, section 3) — the two refresh paths (page nav vs. API call) are
+  independent and both read `GATEWAY_URL`.
 
 ### Route structure
 

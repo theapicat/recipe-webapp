@@ -19,14 +19,15 @@ recipe-authentication-api (5001)  /  recipe-core-api (5002)
 Route handlers er en **tynn oversettelsesjobb**, ikke forretningslogikk: de tar imot JSON fra klienten,
 kaller riktig `agentAuth`/`agentAuthAdmin`-metode, og pakker resultatet i en konsistent konvolutt (se punkt 3).
 
-## 2. `lib/agent/` — de fire filene
+## 2. `lib/agent/` — filene
 
-| Fil                 | Ansvar                                                                                                                                                                                                                                     |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `agentInternal.ts`  | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk.                                                                                                                   |
-| `agentExternal.ts`  | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet). |
-| `agentAuth.ts`      | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `Error` med norsk melding fra `errorData.message`/`error_description` ved `!response.ok`.             |
-| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post).                                                                                                                                                    |
+| Fil                 | Ansvar                                                                                                                                                                                                                                                                                                                 |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agentInternal.ts`  | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk. Fanger opp 401-svar, fornyer tokenet via `POST /api/auth/refresh` og gjentar kallet én gang — se [03](./03-auth-and-session.md#5-token-fornyelse-for-api-kall-agentinternal--apiauthrefresh). |
+| `agentExternal.ts`  | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet).                                                                             |
+| `agentAuth.ts`      | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `ApiError` (melding + Gatewayens faktiske statuskode) ved `!response.ok`.                                                                                                         |
+| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post).                                                                                                                                                                                                                                |
+| `ApiError.ts`       | `Error`-subklasse med et `status`-felt — se seksjon 6.                                                                                                                                                                                                                                                                 |
 
 **Regel:** ny funksjonalitet mot backend skal legges til som en ny metode i `agentAuth`/`agentAuthAdmin`, ikke
 som et rått `fetch`-kall inne i en komponent eller route handler. `app/api/public/contact/route.ts` er unntaket
@@ -85,15 +86,17 @@ export const POST = async (request: Request) => {
     const result = await agentAuth.someMethod(body);
     return NextResponse.json({ statusCode: 200, message: "...", body: result, timestamp: ... }, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage = error instanceof Error ? error.message : "Fallback-melding på norsk.";
-    return NextResponse.json({ statusCode: 400, message: errorMessage, timestamp: ... }, { status: 400 });
+    return NextResponse.json({ statusCode: status, message: errorMessage, timestamp: ... }, { status });
   }
 };
 ```
 
-Alle feil fra Gatewayen (400, 401, 403, 404, 500 ...) blir i praksis flatet til **400** av denne
-try/catch-blokken, siden det er `agentAuth`/`agentAuthAdmin` som kaster en generisk `Error`, ikke noe som
-bærer med seg den opprinnelige statuskoden. Dette er bevisst enkelt, men betyr at klienten ikke kan skille
-"ugyldig input" fra "ikke autentisert" fra "server nede" uten å tolke feilteksten. Relevant for
-[03 – Auth & sesjon](./03-auth-and-session.md#5-hva-proxyts-ikke-dekker--rotårsaken-til-de-fleste-sesjonsproblemer)
-— en utløpt token gir samme 400-respons som en valideringsfeil.
+`agentAuth`/`agentAuthAdmin` kaster `ApiError` (`lib/agent/ApiError.ts`) i stedet for en ren `Error` — den
+bærer med seg Gatewayens faktiske HTTP-statuskode (`error.status`), som route handleren propagerer videre i
+stedet for å flate alt til 400. Dette er det `agentInternal.ts` bruker til å avgjøre om et mislykket kall
+skal utløse et fornyelsesforsøk (kun ved nøyaktig 401) — se
+[03 – Auth & sesjon, seksjon 5](./03-auth-and-session.md#5-token-fornyelse-for-api-kall-agentinternal--apiauthrefresh).
+For feil som ikke kommer fra `agentAuth`/`agentAuthAdmin` (f.eks. `JSON.parse`-feil på selve requesten) er
+`error` ikke en `ApiError`, og statusen faller tilbake til 400 som før.

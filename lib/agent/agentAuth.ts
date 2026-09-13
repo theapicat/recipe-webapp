@@ -1,4 +1,5 @@
 import { agentExternal } from "@/lib/agent/agentExternal";
+import { ApiError } from "@/lib/agent/ApiError";
 import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionManager";
 import { LoginRequest } from "@/lib/models/auth/loginRequest";
 import { RegisterRequest } from "@/lib/models/auth/registerRequest";
@@ -32,7 +33,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error_description || errorData.error || "Innlogging mislyktes.");
+      throw new ApiError(
+        errorData.error_description || errorData.error || "Innlogging mislyktes.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -42,7 +46,7 @@ export const agentAuth = {
   refresh: async (): Promise<OpenIddictTokenResponse> => {
     const refreshToken = await sessionManager.getRefreshToken();
     if (!refreshToken) {
-      throw new Error("Ingen refresh token tilgjengelig.");
+      throw new ApiError("Ingen refresh token tilgjengelig.", 401);
     }
 
     const body = new URLSearchParams();
@@ -54,7 +58,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error_description || errorData.error || "Kunne ikke fornye token.");
+      throw new ApiError(
+        errorData.error_description || errorData.error || "Kunne ikke fornye token.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -72,7 +79,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Registrering mislyktes.");
+      throw new ApiError(errorData.message || "Registrering mislyktes.", response.status);
     }
 
     return await response.json(); // Returnerer ren UserProfileResponse
@@ -84,7 +91,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke hente brukerprofil.");
+      throw new ApiError(errorData.message || "Kunne ikke hente brukerprofil.", response.status);
     }
 
     return await response.json();
@@ -96,7 +103,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Oppdatering av profil mislyktes.");
+      throw new ApiError(errorData.message || "Oppdatering av profil mislyktes.", response.status);
     }
 
     return await response.json();
@@ -108,7 +115,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Endring av passord mislyktes.");
+      throw new ApiError(errorData.message || "Endring av passord mislyktes.", response.status);
     }
 
     return await response.json();
@@ -120,7 +127,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Opprettelse av passord mislyktes.");
+      throw new ApiError(errorData.message || "Opprettelse av passord mislyktes.", response.status);
     }
 
     return await response.json();
@@ -132,7 +139,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke fullføre velkomstreisen.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke fullføre velkomstreisen.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -144,7 +154,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sende bekreftelsese-post på nytt.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke sende bekreftelsese-post på nytt.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -156,7 +169,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Ugyldig eller utløpt bekreftelseskode.");
+      throw new ApiError(
+        errorData.message || "Ugyldig eller utløpt bekreftelseskode.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -170,7 +186,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sende gjenopprettingslenke.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke sende gjenopprettingslenke.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -182,7 +201,10 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Tilbakestilling av passord mislyktes.");
+      throw new ApiError(
+        errorData.message || "Tilbakestilling av passord mislyktes.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -194,7 +216,7 @@ export const agentAuth = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Sletting av konto mislyktes.");
+      throw new ApiError(errorData.message || "Sletting av konto mislyktes.", response.status);
     }
 
     return await response.json();

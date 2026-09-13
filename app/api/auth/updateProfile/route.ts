@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { agentAuth } from "@/lib/agent/agentAuth";
+import { ApiError } from "@/lib/agent/ApiError";
 import sessionManager from "@/lib/session/sessionManager";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
@@ -24,14 +25,15 @@ export const PUT = async (request: Request) => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage = error instanceof Error ? error.message : "Kunne ikke oppdatere profilen.";
 
     const errorResponse: HttpResponse<undefined> = {
-      statusCode: 400,
+      statusCode: status,
       message: errorMessage,
       timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(errorResponse, { status: 400 });
+    return NextResponse.json(errorResponse, { status });
   }
 };

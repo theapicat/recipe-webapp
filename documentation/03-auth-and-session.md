@@ -31,9 +31,9 @@ JWT-bibliotek er i bruk):
 `agentAuth.ts` og `agentAuthAdmin.ts` er tynne, typede wrappere rundt `agentExternal` — én metode per
 Gateway-endepunkt (login, register, hent profil, lås bruker, svarteliste, ...).
 
-**Viktig:** `agentExternal` gjør **ingen** forsøk på å fornye et utløpt token før den bruker det. Den henter
-bare det som ligger i cookien akkurat nå og sender det av gårde. All fornyelse er `proxy.ts` sitt ansvar
-(se under) — og `proxy.ts` dekker ikke disse kallene.
+**Viktig:** `agentExternal` gjør selv **ingen** forsøk på å fornye et utløpt token før den bruker det — den
+henter bare det som ligger i cookien akkurat nå og sender det av gårde. Fornyelse skjer i to uavhengige lag:
+`proxy.ts` ved sidenavigasjon (se under), og `agentInternal` ved API-kall (se seksjon 5).
 
 ## 3. `proxy.ts` — Next.js' "Proxy" (tidligere Middleware)
 
@@ -108,42 +108,39 @@ opp og oversettes til norske feilmeldinger i `app/(auth)/login/page.tsx` og `app
 `UserMenu.tsx` → `agentInternal.post("/api/auth/logout")` → `app/api/auth/logout/route.ts` kaller kun
 `sessionManager.removeSession()` (ingen kall mot Gateway for å invalidere token/refresh-token server-side).
 
-## 5. Hva `proxy.ts` _ikke_ dekker — rotårsaken til de fleste sesjonsproblemer
+## 5. Token-fornyelse for API-kall (`agentInternal` + `/api/auth/refresh`)
 
-Matcher-en inkluderer ikke `/api/:path*`. Det betyr at **enhver** klient-side `agentInternal`-kall som treffer
-en route handler under `app/api/auth/**` eller `app/api/admin/**` (f.eks. `refreshProfile()`, lagring av
-profil, admin-handlinger) **aldri** trigger token-fornyelsen i `proxy.ts`. Flyten der er i stedet:
+`proxy.ts` sin matcher dekker ikke `/api/:path*` (se punkt 3) — token-fornyelse ved sidenavigasjon alene var
+derfor ikke nok. Et klient-side `agentInternal`-kall som treffer en route handler mens access-tokenet er
+utløpt vil få et ekte **401** tilbake fra Gatewayen, propagert helt ut til klienten takket være `ApiError`
+(se [04 – API-integrasjon, seksjon 6](./04-api-integration-and-data-models.md#6-feilhåndteringsmønster-gjelder-alle-route-handlers)).
+
+`agentInternal.ts` fanger opp nettopp dette:
 
 ```
-Klientkomponent → agentInternal → route handler → agentExternal (leser rått token fra cookie, IKKE fornyet)
-  → Gateway svarer 401 hvis tokenet er utløpt
-  → agentAuth-metoden ser !response.ok → throw new Error(...)
-  → route handler sin catch-blokk → returnerer generisk { statusCode: 400, message: "..." }
+Klientkomponent → agentInternal.get/post/put/delete(...)
+  → fetch mot egen /api/**-rute
+  → svar med status 401?
+      nei → returner svaret som normalt
+      ja  → kall POST /api/auth/refresh (agentAuth.refresh() + sessionManager.setToken/setRefreshToken)
+              lykkes → gjenta det opprinnelige kallet én gang, returner det svaret
+              feiler → returner det opprinnelige 401-svaret uendret
 ```
 
-Konsekvens: hvis en bruker blir stående på f.eks. `/user/mealplan` (client component) uten å navigere til en
-ny matched rute, og access-tokenet utløper mens de fortsatt har en gyldig refresh-token, vil ethvert
-`agentInternal`-kall bare feile med en 400 — **ikke** automatisk fornyelse, **ikke** tvungen redirect til
-`/login`. Brukeren opplever at "ting slutter å virke" uten forklaring, i stedet for enten (a) sømløs fornyelse
-eller (b) en tydelig "du er logget ut"-tilstand.
+`app/api/auth/refresh/route.ts` er den nye ruten — bruker den tidligere ubrukte `agentAuth.refresh()` og
+`sessionManager` sine individuelle settere (`setToken`, `setRefreshToken`). Feiler fornyelsen (refresh-tokenet
+er også utløpt), nullstilles sesjonen (`sessionManager.removeSession()`) og ruten svarer 401.
 
-To ting i koden underbygger at dette var _tiltenkt_ løst, men aldri fullført:
+**Samtidighetsvern:** flere `agentInternal`-kall som feiler med 401 omtrent samtidig (f.eks. flere widgets som
+laster data på en gang) deler ett og samme fornyelsesforsøk via en modul-lokal `refreshPromise` — det trigges
+aldri flere parallelle `POST /api/auth/refresh`-kall for samme utløpte token.
 
-- **`agentAuth.refresh()` finnes** (bygger `grant_type=refresh_token`-kallet mot Gateway), men den **kalles
-  aldri** fra noe sted i kodebasen (verken fra `agentInternal`, en interceptor, eller enkeltsider).
-- **`SessionProvider.refreshProfile()`** finnes for å hente fersk profil, men brukes kun i
-  `app/confirm-email/page.tsx` — ikke som en periodisk sjekk, ikke ved mount av `MainShell`, og ikke som del
-  av noen 401-håndtering.
-
-Det finnes med andre ord **ingen 401-interceptor** noe sted i `agentInternal`/`agentExternal`.
-
-**Mulige retninger for en fix** (til diskusjon, ikke implementert):
-
-1. Legg til en sentral feilhåndtering i `agentInternal` som fanger 401 fra route handlers, kaller et
-   `/api/auth/refresh`-endepunkt (nytt) som bruker `agentAuth.refresh()`, og replayer det opprinnelige kallet.
-2. Utvid `proxy.ts`-matcher til å inkludere `/api/auth/:path*` og `/api/admin/:path*`, slik at samme
-   refresh-før-du-treffer-handleren-logikk gjelder for API-kall også (enklere, men kjører på hvert eneste
-   API-kall, ikke bare sidenavigasjon).
+**Bevisst ikke gjort:** ved mislykket fornyelse tvinges IKKE en redirect til `/login` fra `agentInternal` selv
+(slik `proxy.ts` gjør ved sidenavigasjon). Årsak: `agentInternal` brukes også av anonyme skjemaer (innlogging,
+registrering), og et generelt "fornyelse feilet → send til /login"-grep ville i verste fall sendt en bruker
+som akkurat skrev feil passord på `/login`-siden i en redirect-løkke til samme side. Oppførselen er derfor
+fortsatt "bare vis feilmeldingen som før" for det sjeldne tilfellet der _selve refresh-tokenet_ også er dødt —
+en mulig finpuss senere, ikke en regresjon fra i dag.
 
 ## 6. Rolle-sjekk — hold øye med konsistens
 

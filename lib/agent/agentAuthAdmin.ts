@@ -1,4 +1,5 @@
 import { agentExternal } from "@/lib/agent/agentExternal";
+import { ApiError } from "@/lib/agent/ApiError";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 import { AdminUpdateUserRequest } from "@/lib/models/admin/users/AdminUpdateUserRequest";
@@ -28,7 +29,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke hente brukerliste.");
+      throw new ApiError(errorData.message || "Kunne ikke hente brukerliste.", response.status);
     }
 
     return await response.json();
@@ -40,7 +41,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke hente brukerdetaljer.");
+      throw new ApiError(errorData.message || "Kunne ikke hente brukerdetaljer.", response.status);
     }
 
     return await response.json();
@@ -52,7 +53,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Oppdatering av bruker mislyktes.");
+      throw new ApiError(errorData.message || "Oppdatering av bruker mislyktes.", response.status);
     }
 
     return await response.json();
@@ -64,7 +65,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sperre brukeren.");
+      throw new ApiError(errorData.message || "Kunne ikke sperre brukeren.", response.status);
     }
 
     return await response.json();
@@ -76,7 +77,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke gjenåpne brukeren.");
+      throw new ApiError(errorData.message || "Kunne ikke gjenåpne brukeren.", response.status);
     }
 
     return await response.json();
@@ -90,7 +91,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Manuell bekreftelse av e-post mislyktes.");
+      throw new ApiError(
+        errorData.message || "Manuell bekreftelse av e-post mislyktes.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -104,7 +108,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sende bekreftelsese-post.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke sende bekreftelsese-post.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -119,7 +126,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sende tilbakestillingslenke.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke sende tilbakestillingslenke.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -131,7 +141,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke sende e-post til brukeren.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke sende e-post til brukeren.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -143,7 +156,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Sletting av bruker mislyktes.");
+      throw new ApiError(errorData.message || "Sletting av bruker mislyktes.", response.status);
     }
 
     return await response.json();
@@ -157,7 +170,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Sletting og svartelisting av bruker mislyktes.");
+      throw new ApiError(
+        errorData.message || "Sletting og svartelisting av bruker mislyktes.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -169,7 +185,7 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke hente svartelisten.");
+      throw new ApiError(errorData.message || "Kunne ikke hente svartelisten.", response.status);
     }
 
     return await response.json();
@@ -181,7 +197,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke legge til i svartelisten.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke legge til i svartelisten.",
+        response.status,
+      );
     }
 
     return await response.json();
@@ -193,7 +212,10 @@ export const agentAuthAdmin = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || "Kunne ikke fjerne fra svartelisten.");
+      throw new ApiError(
+        errorData.message || "Kunne ikke fjerne fra svartelisten.",
+        response.status,
+      );
     }
 
     return await response.json();

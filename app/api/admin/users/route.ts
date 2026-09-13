@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
+import { ApiError } from "@/lib/agent/ApiError";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 
@@ -20,15 +21,16 @@ export const GET = async () => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente brukerliste.";
 
     const errorResponse: HttpResponse<undefined> = {
-      statusCode: 400,
+      statusCode: status,
       message: errorMessage,
       timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(errorResponse, { status: 400 });
+    return NextResponse.json(errorResponse, { status });
   }
 };
 
@@ -46,15 +48,16 @@ export const PUT = async (request: Request) => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage =
       error instanceof Error ? error.message : "Oppdatering av bruker mislyktes.";
 
     const errorResponse: HttpResponse<undefined> = {
-      statusCode: 400,
+      statusCode: status,
       message: errorMessage,
       timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(errorResponse, { status: 400 });
+    return NextResponse.json(errorResponse, { status });
   }
 };

@@ -74,6 +74,7 @@ tilgjengelige endepunkter:
 /api/auth/login                          POST
 /api/auth/register                       POST
 /api/auth/logout                         POST
+/api/auth/refresh                        POST  – fornyer access-token, brukt internt av agentInternal.ts
 /api/auth/me                             GET
 /api/auth/google                         GET   – redirect til Gateway sin external-login
 /api/auth/google-callback                GET   – mottar tokens/profil som query-params fra Gateway

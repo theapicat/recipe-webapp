@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
+import { ApiError } from "@/lib/agent/ApiError";
 import { HttpResponse } from "@/lib/models/httpResponse";
 
 // DELETE /api/admin/blacklist/[id]
@@ -19,15 +20,16 @@ export const DELETE = async (
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
+    const status = error instanceof ApiError ? error.status : 400;
     const errorMessage =
       error instanceof Error ? error.message : "Kunne ikke fjerne fra svartelisten.";
 
     const errorResponse: HttpResponse<undefined> = {
-      statusCode: 400,
+      statusCode: status,
       message: errorMessage,
       timestamp: new Date().toISOString(),
     };
 
-    return NextResponse.json(errorResponse, { status: 400 });
+    return NextResponse.json(errorResponse, { status });
   }
 };
