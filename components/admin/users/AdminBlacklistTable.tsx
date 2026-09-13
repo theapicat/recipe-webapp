@@ -28,7 +28,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { BlacklistType } from "@/lib/models/enums/BlacklistType";
-import { BlacklistedEntry } from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
 
 export function AdminBlacklistTable() {
   const [loading, setLoading] = useState(true);

@@ -10,6 +10,9 @@ export const GoogleRegister = () => {
 
   const handleGoogleRegister = () => {
     setLoading(true);
+    // Må være en ekte nettleser-navigasjon (ikke router.push) — /api/auth/google er en
+    // full HTTP-redirect-kjede videre til Googles OAuth-dialog og tilbake via Gatewayen.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/api/auth/google";
   };
 

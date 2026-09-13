@@ -3,7 +3,7 @@ import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import {AdminUserQueryParams} from "@/lib/models/admin/users/AdminUserQueryParams";
 import {AdminUserListItem} from "@/lib/models/admin/users/AdminUserListItem";
-import {PaginatedResponse} from "@/lib/models/admin/users/PaginatedResponse";
+import {PaginatedResponse} from "@/lib/models/paginatedResponse";
 
 
 // GET /api/admin/users

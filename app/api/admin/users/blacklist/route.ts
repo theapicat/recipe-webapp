@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {BlacklistedEntry} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import {BlacklistedEntry} from "@/lib/models/admin/users/BlacklistedEntry";
 
 // GET /api/admin/blacklist
 export const GET = async () => {

@@ -9,8 +9,8 @@ import { ResetPasswordAdminRequest } from "@/lib/models/admin/users/ResetPasswor
 import { DeleteUserAdminRequest } from "@/lib/models/admin/users/DeleteUserAdminRequest";
 import { AddBlacklistRequest } from "@/lib/models/admin/users/AddBlacklistRequest";
 import { SendUserEmailAdminRequest } from "@/lib/models/admin/users/SendUserEmailAdminRequest";
-import {DeleteAndBlacklistUserAdminRequest} from "@/lib/models/admin/users/BlacklistedEntry";
-import {BlacklistedEntry} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import {DeleteAndBlacklistUserAdminRequest} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import {BlacklistedEntry} from "@/lib/models/admin/users/BlacklistedEntry";
 
 const BASE_URL = process.env.AUTH_API;
 

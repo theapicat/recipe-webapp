@@ -136,7 +136,7 @@ function ConfirmEmailContent() {
               <Button
                 variant="subtle"
                 color="gray"
-                onClick={() => router.push("/welcome")}
+                onClick={() => router.push("/user/welcome")}
               >
                 Tilbake til velkomstsiden
               </Button>
