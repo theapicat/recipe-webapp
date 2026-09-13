@@ -9,6 +9,7 @@ import { Logo } from "@/components/layout/header/Logo";
 import { NavLinksContainer } from "@/components/layout/header/NavLinkContainer";
 import { UserMenu } from "@/components/layout/header/UserMenu";
 import { MobileNavDrawer } from "@/components/layout/header/MobileNavDrawer";
+import { ColorSchemeToggle } from "@/components/layout/header/ColorSchemeToggle";
 
 export const Header = () => {
   const session = useSession();
@@ -41,8 +42,9 @@ export const Header = () => {
           {/* Desktop Navigasjon */}
           <NavLinksContainer links={currentLinks} />
 
-          {/* Høyre del (Bruker-meny eller Innlogging) */}
+          {/* Høyre del (Fargetema + Bruker-meny eller Innlogging) */}
           <Group gap="xs" wrap="nowrap">
+            <ColorSchemeToggle />
             {isGuest ? (
               <Group gap="xs" wrap="nowrap">
                 <Button size="xs" variant="subtle" component={Link} href="/login" visibleFrom="xs">
