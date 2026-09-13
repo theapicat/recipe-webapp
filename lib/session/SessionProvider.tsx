@@ -3,14 +3,15 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 import { agentInternal } from "@/lib/agent/agentInternal";
+import { normalizeRole, UserRoleType } from "@/lib/models/types";
 
 interface SessionContextType {
   user?: UserProfileResponse;
   setUser: (user: UserProfileResponse | undefined) => void;
   updateUser: (partialUser: Partial<UserProfileResponse>) => void;
   refreshProfile: () => Promise<void>;
-  role?: string;
-  setRole: (role: string | undefined) => void;
+  role?: UserRoleType;
+  setRole: (role: UserRoleType | undefined) => void;
 }
 
 interface Props {
@@ -22,11 +23,12 @@ const SessionContext = createContext<SessionContextType | null>(null);
 
 export const SessionProvider = ({ initialUser, children }: Props) => {
   const [user, setUserState] = useState<UserProfileResponse | undefined>(initialUser);
-  const [role, setRole] = useState<string | undefined>(initialUser?.role);
+  const [role, setRole] = useState<UserRoleType | undefined>(initialUser?.role);
 
   const setUser = (newUser: UserProfileResponse | undefined) => {
-    setUserState(newUser);
-    setRole(newUser?.role);
+    const normalized = newUser ? { ...newUser, role: normalizeRole(newUser.role) } : undefined;
+    setUserState(normalized);
+    setRole(normalized?.role);
   };
 
   const updateUser = (partialUser: Partial<UserProfileResponse>) => {
@@ -34,7 +36,8 @@ export const SessionProvider = ({ initialUser, children }: Props) => {
       if (!prev) return undefined;
       const updated = { ...prev, ...partialUser };
       if (partialUser.role !== undefined) {
-        setRole(partialUser.role);
+        updated.role = normalizeRole(partialUser.role);
+        setRole(updated.role);
       }
       return updated;
     });

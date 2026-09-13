@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
+import { normalizeRole, UserRoleType } from "@/lib/models/types";
 
 export interface OpenIddictTokenResponse {
   access_token: string;
@@ -47,8 +48,14 @@ const sessionManager = {
       });
     }
 
-    // 3. Brukerprofil (Tilgjengelig for frontend UI)
-    cookieStore.set(USER_KEY, JSON.stringify(userProfile), {
+    // 3. Brukerprofil (Tilgjengelig for frontend UI) — rolle normaliseres til små bokstaver her,
+    // uansett hvilken casing backend sendte (se BACKEND_REQUIREMENTS.md).
+    const normalizedProfile: UserProfileResponse = {
+      ...userProfile,
+      role: normalizeRole(userProfile.role),
+    };
+
+    cookieStore.set(USER_KEY, JSON.stringify(normalizedProfile), {
       httpOnly: false,
       secure: isProd,
       expires: refreshExpiresAt,
@@ -96,7 +103,12 @@ const sessionManager = {
     const cookieStore = await cookies();
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14);
 
-    cookieStore.set(USER_KEY, JSON.stringify(userProfile), {
+    const normalizedProfile: UserProfileResponse = {
+      ...userProfile,
+      role: normalizeRole(userProfile.role),
+    };
+
+    cookieStore.set(USER_KEY, JSON.stringify(normalizedProfile), {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       expires: expiresAt,
@@ -143,7 +155,7 @@ const sessionManager = {
     }
   },
 
-  getUserRole: (token: string): string | undefined => {
+  getUserRole: (token: string): UserRoleType | undefined => {
     try {
       const payloadBase64 = token.split(".")[1];
       if (!payloadBase64) return undefined;
@@ -157,11 +169,9 @@ const sessionManager = {
         claims.roles ||
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-      if (Array.isArray(roleClaim)) {
-        return roleClaim[0];
-      }
+      if (!roleClaim) return undefined;
 
-      return roleClaim;
+      return normalizeRole(Array.isArray(roleClaim) ? roleClaim[0] : roleClaim);
     } catch {
       return undefined;
     }

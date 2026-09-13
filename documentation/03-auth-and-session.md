@@ -105,8 +105,15 @@ opp og oversettes til norske feilmeldinger i `app/(auth)/login/page.tsx` og `app
 
 ### 4.3 Utlogging
 
-`UserMenu.tsx` → `agentInternal.post("/api/auth/logout")` → `app/api/auth/logout/route.ts` kaller kun
-`sessionManager.removeSession()` (ingen kall mot Gateway for å invalidere token/refresh-token server-side).
+`UserMenu.tsx` → `agentInternal.post("/api/auth/logout")` → `app/api/auth/logout/route.ts`:
+
+1. `agentAuth.revokeToken()` — **best-effort** `POST {GATEWAY_URL}/auth/connect/revoke` med refresh-tokenet
+   (RFC 7009-format, samme form-encoding som `/connect/token`). Kaster aldri — feiler kallet (f.eks. fordi
+   Gatewayen ikke har endepunktet ennå), fortsetter utloggingen som normalt. Se `BACKEND_REQUIREMENTS.md` i
+   repo-roten for hva som forventes av backend, inkludert en viktig presisering om at revocation av
+   refresh-tokenet ikke nødvendigvis gjør et allerede utstedt (JWT) access-token ugyldig før det utløper
+   naturlig.
+2. `sessionManager.removeSession()` — sletter de tre lokale cookiene.
 
 ## 5. Token-fornyelse for API-kall (`agentInternal` + `/api/auth/refresh`)
 
@@ -142,12 +149,22 @@ som akkurat skrev feil passord på `/login`-siden i en redirect-løkke til samme
 fortsatt "bare vis feilmeldingen som før" for det sjeldne tilfellet der _selve refresh-tokenet_ også er dødt —
 en mulig finpuss senere, ikke en regresjon fra i dag.
 
-## 6. Rolle-sjekk — hold øye med konsistens
+## 6. Rolle: normalisert til små bokstaver ved kilden
 
-Rollestrengen fra JWT-et sammenlignes forskjellig ulike steder:
+`lib/models/types.ts` definerer `UserRoleType = "admin" | "user"` og en delt `normalizeRole()`-funksjon.
+Backend sender i dag rollen med stor forbokstav (`"Admin"`/`"User"`) tre steder — JWT `role`-claimet,
+`/account/me`-responsen, og Google-callbackens `role`-query-param (se `BACKEND_REQUIREMENTS.md` i repo-roten
+for planen om å flytte normaliseringen dit). Frontend normaliserer defensivt til små bokstaver i alle fire
+punktene der en rolle kommer inn i appens tilstand, slik at resten av kodebasen kan stole på at `session.role`
+alltid er `"admin"` eller `"user"`:
 
-- `proxy.ts`, `login/page.tsx`, `register/page.tsx`, `LoginForm.tsx`: `role?.toLowerCase() === "admin"`.
-- `Header.tsx`: `session.role === "Admin"` (eksakt, case-sensitiv).
+- `sessionManager.getUserRole(token)` — dekoder JWT-claimet.
+- `sessionManager.setSession()` / `setUserData()` — det som lagres i `user_data`-cookien.
+- `SessionProvider.setUser()` / `updateUser()` — det som settes i React-konteksten.
+- `app/api/auth/google-callback/route.ts` — `role`-query-parameteren.
 
-Fungerer i dag fordi backend konsekvent sender `"Admin"`/`"User"` med stor forbokstav, men er skjørt — se
-[07 – Kjente problemer](./07-known-issues-and-tech-debt.md#inkonsistent-rollesjekk-i-header).
+Dette fant sted etter at `Header.tsx` ble oppdaget å sammenligne rollen eksakt (`session.role === "Admin"`)
+mens resten av appen normaliserte med `.toLowerCase()` — en reell, observert inkonsistens (rettet, se
+git-historikk). De øvrige stedene som fortsatt gjør en (nå overflødig, men ufarlig) `.toLowerCase()`-sjekk ved
+sammenligning (`LoginForm.tsx`, `UserMenu.tsx`, `ProfileEditForm.tsx`, `DeleteAccountForm.tsx`, m.fl.) er
+bevisst ikke ryddet opp — de var aldri buggy, bare defensive.

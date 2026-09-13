@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionManager";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
+import { normalizeRole } from "@/lib/models/types";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
     email: email || "",
     firstName: searchParams.get("first_name") || "",
     lastName: searchParams.get("last_name") || "",
-    role: role || "user",
+    role: normalizeRole(role),
     hasPassword: searchParams.get("has_password") === "true",
     isGoogleAccount: true,
     isEmailConfirmed: true,

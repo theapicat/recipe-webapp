@@ -67,6 +67,26 @@ export const agentAuth = {
     return await response.json();
   },
 
+  // --- 2b. OPPHEV TOKEN VED UTLOGGING (OAuth2 Revocation, RFC 7009) ---
+  // Best-effort: utlogging skal aldri feile for brukeren selv om dette kallet feiler
+  // (f.eks. fordi Gatewayen ikke har implementert /connect/revoke ennå — se
+  // BACKEND_REQUIREMENTS.md). Kaster derfor aldri.
+  revokeToken: async (): Promise<void> => {
+    const refreshToken = await sessionManager.getRefreshToken();
+    if (!refreshToken) return;
+
+    const body = new URLSearchParams();
+    body.append("token", refreshToken);
+    body.append("token_type_hint", "refresh_token");
+    body.append("client_id", "recipe-web-app");
+
+    try {
+      await agentExternal.postForm(`${BASE_URL}/connect/revoke`, body);
+    } catch {
+      // Ignorert med vilje — se kommentar over.
+    }
+  },
+
   // --- 3. REGISTRERING ---
   register: async (data: RegisterRequest): Promise<UserProfileResponse> => {
     const body = new URLSearchParams();

@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
+import { agentAuth } from "@/lib/agent/agentAuth";
 import sessionManager from "@/lib/session/sessionManager";
 import { HttpResponse } from "@/lib/models/httpResponse";
 
 export const POST = async () => {
   try {
+    // Best-effort — kaster aldri, se agentAuth.revokeToken(). Må skje FØR removeSession()
+    // siden den leser refreshToken-cookien.
+    await agentAuth.revokeToken();
     await sessionManager.removeSession();
 
     const response: HttpResponse<undefined> = {

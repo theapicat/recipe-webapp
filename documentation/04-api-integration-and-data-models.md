@@ -21,13 +21,13 @@ kaller riktig `agentAuth`/`agentAuthAdmin`-metode, og pakker resultatet i en kon
 
 ## 2. `lib/agent/` — filene
 
-| Fil                 | Ansvar                                                                                                                                                                                                                                                                                                                 |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `agentInternal.ts`  | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk. Fanger opp 401-svar, fornyer tokenet via `POST /api/auth/refresh` og gjentar kallet én gang — se [03](./03-auth-and-session.md#5-token-fornyelse-for-api-kall-agentinternal--apiauthrefresh). |
-| `agentExternal.ts`  | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet).                                                                             |
-| `agentAuth.ts`      | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `ApiError` (melding + Gatewayens faktiske statuskode) ved `!response.ok`.                                                                                                         |
-| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post).                                                                                                                                                                                                                                |
-| `ApiError.ts`       | `Error`-subklasse med et `status`-felt — se seksjon 6.                                                                                                                                                                                                                                                                 |
+| Fil                 | Ansvar                                                                                                                                                                                                                                                                                                                                 |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agentInternal.ts`  | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk. Fanger opp 401-svar, fornyer tokenet via `POST /api/auth/refresh` og gjentar kallet én gang — se [03](./03-auth-and-session.md#5-token-fornyelse-for-api-kall-agentinternal--apiauthrefresh).                 |
+| `agentExternal.ts`  | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet).                                                                                             |
+| `agentAuth.ts`      | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `ApiError` (melding + Gatewayens faktiske statuskode) ved `!response.ok`. `revokeToken()` er unntaket — kaster aldri, best-effort ved utlogging (se [03](./03-auth-and-session.md#43-utlogging)). |
+| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post).                                                                                                                                                                                                                                                |
+| `ApiError.ts`       | `Error`-subklasse med et `status`-felt — se seksjon 6.                                                                                                                                                                                                                                                                                 |
 
 **Regel:** ny funksjonalitet mot backend skal legges til som en ny metode i `agentAuth`/`agentAuthAdmin`, ikke
 som et rått `fetch`-kall inne i en komponent eller route handler. `app/api/public/contact/route.ts` er unntaket
@@ -60,9 +60,8 @@ lib/models/
 ├── admin/users/              # admin-spesifikke request/response-typer
 ├── enums/                    # f.eks. BlacklistType
 ├── public/                   # kontaktskjema o.l.
-├── user/                     # (se advarsel under)
 ├── httpResponse.ts
-└── types.ts
+└── types.ts                  # UserRoleType + normalizeRole() — se 03-auth-and-session.md, seksjon 6
 ```
 
 **Advarsel — filnavn må matche interface-navnet.** `lib/models/admin/users/BlacklistedEntry.ts` og

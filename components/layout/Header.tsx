@@ -16,10 +16,10 @@ export const Header = () => {
 
   const isGuest = !session.role;
   const logoHref =
-    session.role === "Admin" ? "/admin/dashboard" : session.role === "User" ? "/dashboard" : "/";
+    session.role === "admin" ? "/admin/dashboard" : session.role === "user" ? "/dashboard" : "/";
 
   const currentLinks =
-    session.role === "Admin" ? ADMIN_LINKS : session.role === "User" ? USER_LINKS : GUEST_LINKS;
+    session.role === "admin" ? ADMIN_LINKS : session.role === "user" ? USER_LINKS : GUEST_LINKS;
 
   return (
     <>

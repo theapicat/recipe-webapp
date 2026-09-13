@@ -22,6 +22,9 @@ Full technical documentation (architecture, routing, auth deep-dive, API integra
 system, known issues) lives in numbered files under [`documentation/`](./documentation) — read the relevant one
 before making non-trivial changes in that area; it goes into far more depth than this file.
 
+[`BACKEND_REQUIREMENTS.md`](./BACKEND_REQUIREMENTS.md) tracks things this repo currently compensates for on the
+frontend that should really be fixed in `recipe-authentication-api`/the gateway (role casing, token revocation).
+
 ## Commands
 
 - `npm run dev` — start the dev server.
@@ -76,6 +79,14 @@ before making non-trivial changes in that area; it goes into far more depth than
 - `proxy.ts` still separately refreshes the token on page navigation to `/dashboard/*`, `/user/*`, `/admin/*` (see
   `documentation/03-auth-and-session.md`, section 3) — the two refresh paths (page nav vs. API call) are
   independent and both read `GATEWAY_URL`.
+- Role is always normalized to lowercase (`UserRoleType = "admin" | "user"` in `lib/models/types.ts`, via the
+  shared `normalizeRole()`) at every point a role enters app state — `sessionManager.setSession`/`setUserData`,
+  `SessionProvider.setUser`/`updateUser`, `sessionManager.getUserRole`, and the Google OAuth callback. The backend
+  currently sends `"Admin"`/`"User"` capitalized in three places; see `BACKEND_REQUIREMENTS.md`. Don't remove the
+  normalization even after backend changes casing — treat it as defense-in-depth.
+- Logout (`app/api/auth/logout/route.ts`) calls `agentAuth.revokeToken()` (best-effort `POST .../connect/revoke`,
+  never throws) before clearing cookies. The gateway may not implement this endpoint yet — see
+  `BACKEND_REQUIREMENTS.md` for the contract and an important caveat about JWT vs. reference tokens.
 
 ### Route structure
 
