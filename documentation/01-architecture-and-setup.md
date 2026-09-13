@@ -109,3 +109,4 @@ Se [`07-known-issues-and-tech-debt.md`](./07-known-issues-and-tech-debt.md).
 4. [05 – Adminpanelet](./05-admin-panel.md)
 5. [06 – Skjemaer & designsystem](./06-forms-and-design-system.md)
 6. [07 – Kjente problemer & teknisk gjeld](./07-known-issues-and-tech-debt.md)
+7. [08 – Forslag: mappestruktur for modeller & komponenter](./08-model-and-component-structure-proposal.md)

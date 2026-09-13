@@ -40,17 +40,19 @@ Internt benytter frontend-applikasjonen dedikerte HTTP-agenter (`agentInternal` 
 
 ---
 
-## Miljøvariabler (`.env`)
+## Miljøvariabler (`.env.local`)
 
-Konfigurer følgende variabler i din `.env`-fil i rotmappen:
+Konfigurer følgende variabler i din `.env.local`-fil i rotmappen:
 
 ```env
-# URL til sentral autentiserings- og data-API
-AUTH_API=http://localhost:5194
+# Base-URL for autentiserings-endepunktene på Gatewayen
+AUTH_API=http://localhost:5000/api/auth
 
-# URL til oppskrifts-API (kommende)
-RECIPE_API=http://localhost:xxxx
+# Base-URL for kjerne-endepunktene (oppskrifter, måltidsplan m.m.) på Gatewayen
+CORE_API=http://localhost:5000/api
 
+# Google OAuth client-id
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=...
 ```
 
 ---
@@ -79,6 +81,21 @@ npm run dev
 
 
 3. Åpne `http://localhost:3000` i nettleseren.
+
+---
+
+## Teknisk dokumentasjon
+
+Utdypende, oppdatert teknisk dokumentasjon ligger i [`documentation/`](./documentation):
+
+1. [Arkitektur & oppsett](./documentation/01-architecture-and-setup.md)
+2. [Ruting & sider](./documentation/02-routing-and-pages.md)
+3. [Auth & sesjon](./documentation/03-auth-and-session.md)
+4. [API-integrasjon & datamodeller](./documentation/04-api-integration-and-data-models.md)
+5. [Adminpanelet](./documentation/05-admin-panel.md)
+6. [Skjemaer & designsystem](./documentation/06-forms-and-design-system.md)
+7. [Kjente problemer & teknisk gjeld](./documentation/07-known-issues-and-tech-debt.md)
+8. [Forslag: mappestruktur for modeller & komponenter](./documentation/08-model-and-component-structure-proposal.md)
 
 ---
 

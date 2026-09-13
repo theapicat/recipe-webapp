@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# JetBrains IDE (WebStorm/Rider)
+.idea/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
