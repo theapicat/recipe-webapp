@@ -16,8 +16,7 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke sperre brukeren.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke sperre brukeren.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

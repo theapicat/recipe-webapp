@@ -1,32 +1,17 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {AdminUserQueryParams} from "@/lib/models/admin/users/AdminUserQueryParams";
-import {AdminUserListItem} from "@/lib/models/admin/users/AdminUserListItem";
-import {PaginatedResponse} from "@/lib/models/paginatedResponse";
-
+import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 
 // GET /api/admin/users
-export const GET = async (request: Request) => {
+// NB: henter hele brukerlisten flatt — søk/filter/sortering/paginering gjøres client-side i
+// app/admin/users/page.tsx. Server-side paginering er bevisst ikke innført ennå — vurder det
+// når brukerlisten faktisk blir stor nok til å trenge det.
+export const GET = async () => {
   try {
-    const { searchParams } = new URL(request.url);
+    const data = await agentAuthAdmin.getUsers();
 
-    const params: AdminUserQueryParams = {
-      search: searchParams.get("search") || undefined,
-      statusFilter:
-        (searchParams.get("statusFilter") as AdminUserQueryParams["statusFilter"]) ||
-        undefined,
-      page: searchParams.get("page")
-        ? parseInt(searchParams.get("page")!, 10)
-        : undefined,
-      pageSize: searchParams.get("pageSize")
-        ? parseInt(searchParams.get("pageSize")!, 10)
-        : undefined,
-    };
-
-    const data = await agentAuthAdmin.getUsers(params);
-
-    const response: HttpResponse<PaginatedResponse<AdminUserListItem>> = {
+    const response: HttpResponse<AdminUserListItem[]> = {
       statusCode: 200,
       message: "Brukerliste hentet med hell.",
       body: data,
@@ -35,8 +20,7 @@ export const GET = async (request: Request) => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke hente brukerliste.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente brukerliste.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

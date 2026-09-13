@@ -41,11 +41,12 @@ export default function WelcomePage() {
   const { user, setUser } = useSession();
 
   const [resendingEmail, setResendingEmail] = useState(false);
+  // Forblir `true` med vilje i redirect-grenen under (den returnerer før `.finally()` nås),
+  // så `isLoading` holder seg riktig `true` helt til siden navigerer bort — uten behov for en egen ref/state.
   const [isInitializing, setIsInitializing] = useState(true);
 
-  // Refs for å sikre at logikken kun kjører én gang
+  // Ref for å sikre at logikken kun kjører én gang — kun lest/skrevet inni effekten, aldri under render
   const hasHandledWelcomeRef = useRef(false);
-  const isRedirectingRef = useRef(false);
 
   useEffect(() => {
     if (!user) return;
@@ -55,7 +56,6 @@ export default function WelcomePage() {
 
     // 1. Hvis brukeren allerede har fullført velkomsten tidligere, send til dashboard
     if (user.welcomeCompleted) {
-      isRedirectingRef.current = true;
       router.replace("/dashboard");
       return;
     }
@@ -114,7 +114,7 @@ export default function WelcomePage() {
     }
   };
 
-  const isLoading = !user || isRedirectingRef.current || isInitializing;
+  const isLoading = !user || isInitializing;
   const isEmailConfirmed = user?.isEmailConfirmed ?? false;
 
   return (
@@ -174,7 +174,8 @@ export default function WelcomePage() {
                 <Divider />
 
                 <Alert color="orange" icon={<IconAlertTriangle size={20} />} radius="md">
-                  Vi har nylig sendt en aktiveringslenke til <b>{user.email}</b>. Klikk på lenken i e-posten for å bekrefte kontoen din.
+                  Vi har nylig sendt en aktiveringslenke til <b>{user.email}</b>. Klikk på lenken i
+                  e-posten for å bekrefte kontoen din.
                 </Alert>
 
                 <Text size="sm" fw={600} mt="xs">
@@ -191,13 +192,16 @@ export default function WelcomePage() {
                   }
                 >
                   <List.Item>
-                    <b>Påminnelse (1 uke):</b> Du mottar en e-postpåminnelse om du ikke har bekreftet kontoen din innen 7 dager.
+                    <b>Påminnelse (1 uke):</b> Du mottar en e-postpåminnelse om du ikke har
+                    bekreftet kontoen din innen 7 dager.
                   </List.Item>
                   <List.Item>
-                    <b>Konto låses (2 uker):</b> Kontoer som ikke er bekreftet innen 14 dager blir automatisk sperret for innlogging.
+                    <b>Konto låses (2 uker):</b> Kontoer som ikke er bekreftet innen 14 dager blir
+                    automatisk sperret for innlogging.
                   </List.Item>
                   <List.Item>
-                    <b>Sletting (1 måned):</b> Sperrede kontoer som ikke bekreftes slettes permanent fra databasen etter 30 dager.
+                    <b>Sletting (1 måned):</b> Sperrede kontoer som ikke bekreftes slettes permanent
+                    fra databasen etter 30 dager.
                   </List.Item>
                 </List>
 
@@ -241,7 +245,8 @@ export default function WelcomePage() {
                   Din egen samling
                 </Text>
                 <Text size="sm" c="dimmed" lh={1.5}>
-                  Bygg din egen kokebok ved å hente oppskrifter fra favorittsidene dine på nett, opprette egne retter eller ta imot oppskrifter fra venner.
+                  Bygg din egen kokebok ved å hente oppskrifter fra favorittsidene dine på nett,
+                  opprette egne retter eller ta imot oppskrifter fra venner.
                 </Text>
               </Paper>
 
@@ -253,7 +258,8 @@ export default function WelcomePage() {
                   Tøm kjøleskapet
                 </Text>
                 <Text size="sm" c="dimmed" lh={1.5}>
-                  Søk etter oppskrifter i din samling basert på råvarene du allerede har liggende for å redusere matsvinn og spare penger.
+                  Søk etter oppskrifter i din samling basert på råvarene du allerede har liggende
+                  for å redusere matsvinn og spare penger.
                 </Text>
               </Paper>
 
@@ -265,7 +271,8 @@ export default function WelcomePage() {
                   Ukesmeny & Handleliste
                 </Text>
                 <Text size="sm" c="dimmed" lh={1.5}>
-                  Sett sammen en visuell ukesmeny fra mandag til søndag, og la appen automatisk generere en sammenslått handleliste for deg.
+                  Sett sammen en visuell ukesmeny fra mandag til søndag, og la appen automatisk
+                  generere en sammenslått handleliste for deg.
                 </Text>
               </Paper>
 
@@ -277,7 +284,8 @@ export default function WelcomePage() {
                   100 % Privat & Støyfritt
                 </Text>
                 <Text size="sm" c="dimmed" lh={1.5}>
-                  Ingen offentlige vurderinger, kommentarer eller algoritmer. Kjøkkenhylla er et personlig og støyfritt verktøy kun for deg.
+                  Ingen offentlige vurderinger, kommentarer eller algoritmer. Kjøkkenhylla er et
+                  personlig og støyfritt verktøy kun for deg.
                 </Text>
               </Paper>
             </SimpleGrid>
@@ -294,7 +302,8 @@ export default function WelcomePage() {
               <Group gap="xs">
                 <IconLock size={18} color="var(--mantine-color-gray-5)" />
                 <Text size="xs" c="dimmed">
-                  <b>Personvern & inaktivitet:</b> Kontoer som er inaktive i over 1 år sperres og slettes automatisk for å beskytte dine personopplysninger.
+                  <b>Personvern & inaktivitet:</b> Kontoer som er inaktive i over 1 år sperres og
+                  slettes automatisk for å beskytte dine personopplysninger.
                 </Text>
               </Group>
             </Paper>

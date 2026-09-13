@@ -16,33 +16,48 @@ export default function AdminUserDetailsPage() {
   // Henter ut siste segment i URL-en (f.eks. "01a07106-9d47-7f6e-834e-1bfdae55d58f")
   const id = pathname.split("/").pop();
 
-  const [loading, setLoading] = useState(true);
+  // `key={id}` gir et rent remount når brukeren navigerer til en annen bruker, slik at
+  // `loading` starter friskt fra initialiseringen under i stedet for at vi må kalle
+  // setLoading(true) synkront inni en effekt ved id-endring.
+  return <AdminUserDetailsContent key={id} id={id} />;
+}
+
+function AdminUserDetailsContent({ id }: { id?: string }) {
+  // Sjekker at ID faktisk er en gyldig verdi og ikke mappenavnet "users" eller "undefined"
+  const isValidId = Boolean(id && id !== "users" && id !== "undefined");
+
+  const [loading, setLoading] = useState(isValidId);
   const [user, setUser] = useState<AdminUserDetails | null>(null);
 
-  const fetchUserDetails = useCallback(async () => {
-    // Sjekker at ID faktisk er en gyldig verdi og ikke mappenavnet "users" eller "undefined"
-    if (!id || id === "users" || id === "undefined") {
-      setLoading(false);
-      return;
-    }
+  // .then()-kjede (ikke async/await): react-hooks/set-state-in-effect flagger setState etter en
+  // `await` inni en async-funksjon kalt fra en effekt, men ikke samme mønster i en .then()-kjede.
+  const fetchUserDetails = useCallback(() => {
+    if (!isValidId) return;
 
-    setLoading(true);
-    try {
-      const res = await agentInternal.get(`/api/admin/users/${id}`);
-      if (res.ok) {
-        const responseData = await res.json();
-        setUser(responseData.body);
-      }
-    } catch (err) {
-      console.error("Feil ved henting av brukerdetaljer:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
+    agentInternal
+      .get(`/api/admin/users/${id}`)
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          setUser(responseData.body);
+        }
+      })
+      .catch((err) => {
+        console.error("Feil ved henting av brukerdetaljer:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id, isValidId]);
 
   useEffect(() => {
     fetchUserDetails();
   }, [fetchUserDetails]);
+
+  const refetchWithLoading = () => {
+    setLoading(true);
+    fetchUserDetails();
+  };
 
   return (
     <AsyncMainContainer size="md" py={30} loading={loading}>
@@ -52,13 +67,13 @@ export default function AdminUserDetailsPage() {
           <AdminUserHeader user={user} />
 
           {/* 2. Rediger personalia skjema */}
-          <AdminUserEditForm user={user} onUserUpdated={fetchUserDetails} />
+          <AdminUserEditForm user={user} onUserUpdated={refetchWithLoading} />
 
           {/* 3. Tidslinje for kontolivssyklus */}
           <AdminUserTimeline user={user} />
 
           {/* 4. Administrative Handlinger */}
-          <AdminUserActionPanel user={user} onRefreshNeeded={fetchUserDetails} />
+          <AdminUserActionPanel user={user} onRefreshNeeded={refetchWithLoading} />
         </Stack>
       )}
     </AsyncMainContainer>

@@ -41,14 +41,7 @@ export function AdminUserHeader({ user }: Props) {
               <Badge
                 variant="outline"
                 color="gray"
-                leftSection={
-                  <Image
-                    src="/icons/google.svg"
-                    alt="Google"
-                    width={14}
-                    height={14}
-                  />
-                }
+                leftSection={<Image src="/icons/google.svg" alt="Google" width={14} height={14} />}
               >
                 Innkoblet med Google
               </Badge>
@@ -95,12 +88,7 @@ export function AdminUserHeader({ user }: Props) {
             </Text>
 
             <Group gap="xs" mt={4} wrap="wrap">
-              <Badge
-                variant="light"
-                color="gray"
-                size="xs"
-                leftSection={<IconId size={10} />}
-              >
+              <Badge variant="light" color="gray" size="xs" leftSection={<IconId size={10} />}>
                 ID: {user.userId}
               </Badge>
 
@@ -118,11 +106,7 @@ export function AdminUserHeader({ user }: Props) {
                 color={user.isEmailConfirmed ? "sage" : "terracotta"}
                 size="xs"
                 leftSection={
-                  user.isEmailConfirmed ? (
-                    <IconMailCheck size={10} />
-                  ) : (
-                    <IconMailOff size={10} />
-                  )
+                  user.isEmailConfirmed ? <IconMailCheck size={10} /> : <IconMailOff size={10} />
                 }
               >
                 E-post: {user.isEmailConfirmed ? "Bekreftet" : "Ubekreftet"}
@@ -132,9 +116,7 @@ export function AdminUserHeader({ user }: Props) {
                 variant="light"
                 color={user.welcomeCompleted ? "sage" : "gray"}
                 size="xs"
-                leftSection={
-                  user.welcomeCompleted ? <IconCheck size={10} /> : <IconX size={10} />
-                }
+                leftSection={user.welcomeCompleted ? <IconCheck size={10} /> : <IconX size={10} />}
               >
                 Velkomstreise: {user.welcomeCompleted ? "Fullført" : "Ufullstendig"}
               </Badge>

@@ -11,7 +11,6 @@ import {
   IconWorldCheck,
   IconTags,
   IconActivity,
-  IconSettings,
   IconLink,
 } from "@tabler/icons-react";
 import React from "react";

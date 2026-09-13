@@ -28,18 +28,12 @@ import {
   IconMilk,
   IconBread,
   IconDotsVertical,
-  IconCheck,
-  IconRefresh,
   IconClearAll,
 } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
 type CategoryType =
-  | "Frukt & Grønt"
-  | "Kjøtt & Fisk"
-  | "Meieri & Egg"
-  | "Tørrvarer & Hermetikk"
-  | "Annet";
+  "Frukt & Grønt" | "Kjøtt & Fisk" | "Meieri & Egg" | "Tørrvarer & Hermetikk" | "Annet";
 
 interface ShoppingItem {
   id: string;
@@ -56,8 +50,20 @@ const initialItems: ShoppingItem[] = [
   { id: "4", name: "Kjøttdeig 14%", amount: "400 g", category: "Kjøtt & Fisk", checked: false },
   { id: "5", name: "Matfløte", amount: "3 dl", category: "Meieri & Egg", checked: true },
   { id: "6", name: "Helmelk", amount: "1 liter", category: "Meieri & Egg", checked: false },
-  { id: "7", name: "Lasagreplater", amount: "1 pakke", category: "Tørrvarer & Hermetikk", checked: false },
-  { id: "8", name: "Hakkede tomater", amount: "2 bokser", category: "Tørrvarer & Hermetikk", checked: true },
+  {
+    id: "7",
+    name: "Lasagreplater",
+    amount: "1 pakke",
+    category: "Tørrvarer & Hermetikk",
+    checked: false,
+  },
+  {
+    id: "8",
+    name: "Hakkede tomater",
+    amount: "2 bokser",
+    category: "Tørrvarer & Hermetikk",
+    checked: true,
+  },
 ];
 
 const categoryConfig: Record<CategoryType, { color: string; icon: React.ElementType }> = {
@@ -107,9 +113,7 @@ export default function UserShoppingListPage() {
 
   // Toggle avkryssing
   const toggleItem = (id: string) => {
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, checked: !i.checked } : i))
-    );
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, checked: !i.checked } : i)));
   };
 
   // Slett én vare
@@ -138,7 +142,8 @@ export default function UserShoppingListPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>Handlelisten</b>. Her kan du legge til varer manuelt, krysse av mens du handler, og organisere varene etter avdeling.
+          Dette er en visuell skisse for <b>Handlelisten</b>. Her kan du legge til varer manuelt,
+          krysse av mens du handler, og organisere varene etter avdeling.
         </Alert>
 
         {/* Tittel & Handlinger */}
@@ -233,12 +238,17 @@ export default function UserShoppingListPage() {
         {/* Tom liste-melding */}
         {totalCount === 0 && (
           <Paper p="xl" radius="md" withBorder style={{ textAlign: "center" }}>
-            <IconShoppingCart size={48} color="var(--mantine-color-dimmed)" style={{ margin: "0 auto" }} />
+            <IconShoppingCart
+              size={48}
+              color="var(--mantine-color-dimmed)"
+              style={{ margin: "0 auto" }}
+            />
             <Text fw={500} mt="sm">
               Handlelisten din er tom!
             </Text>
             <Text size="sm" c="dimmed">
-              Legg til varer manuelt ovenfor eller overfør ingredienser direkte fra måltidsplanleggeren.
+              Legg til varer manuelt ovenfor eller overfør ingredienser direkte fra
+              måltidsplanleggeren.
             </Text>
           </Paper>
         )}
@@ -256,7 +266,12 @@ export default function UserShoppingListPage() {
               <Stack gap="sm">
                 <Group justify="space-between">
                   <Group gap="xs">
-                    <Badge color={Config.color} variant="light" size="lg" leftSection={<CategoryIcon size={14} />}>
+                    <Badge
+                      color={Config.color}
+                      variant="light"
+                      size="lg"
+                      leftSection={<CategoryIcon size={14} />}
+                    >
                       {cat}
                     </Badge>
                     <Text size="xs" c="dimmed">

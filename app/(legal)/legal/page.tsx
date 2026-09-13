@@ -1,5 +1,5 @@
 const EmptyLegal = () => {
-  return <div></div>
-}
+  return <div></div>;
+};
 
-export default EmptyLegal
+export default EmptyLegal;

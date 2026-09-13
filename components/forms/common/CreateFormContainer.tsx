@@ -41,16 +41,16 @@ export interface FormContainerProps {
  * Felles layout-wrapper for applikasjonens skjemaer.
  */
 export const CreateFormContainer = ({
-                                      title,
-                                      description,
-                                      onSubmit,
-                                      submitText,
-                                      loading = false,
-                                      disabled = false,
-                                      errorMessage,
-                                      footer,
-                                      children,
-                                    }: FormContainerProps) => {
+  title,
+  description,
+  onSubmit,
+  submitText,
+  loading = false,
+  disabled = false,
+  errorMessage,
+  footer,
+  children,
+}: FormContainerProps) => {
   return (
     <Paper radius="md" p="xl" withBorder>
       <Title order={2} ta="center" mb={description ? "xs" : "lg"}>

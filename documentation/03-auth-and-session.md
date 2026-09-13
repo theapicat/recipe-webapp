@@ -8,11 +8,11 @@ oppstår. Les hele dette dokumentet før du gjør endringer i login/proxy/sessio
 All sesjonstilstand ligger i tre cookies, satt/lest utelukkende gjennom `lib/session/sessionManager.ts`.
 **Ingen annen kode skal lese/skrive disse cookiene direkte** — gå alltid via `sessionManager`.
 
-| Cookie | Innhold | `httpOnly` | Levetid |
-| --- | --- | --- | --- |
-| `token` | JWT access-token (OpenIddict) | Ja | `expires_in` fra token-response (default 3600s) |
-| `refreshToken` | OAuth2 refresh-token | Ja | 14 dager |
-| `user_data` | JSON av `UserProfileResponse` — lesbar for UI | Nei | 14 dager |
+| Cookie         | Innhold                                       | `httpOnly` | Levetid                                         |
+| -------------- | --------------------------------------------- | ---------- | ----------------------------------------------- |
+| `token`        | JWT access-token (OpenIddict)                 | Ja         | `expires_in` fra token-response (default 3600s) |
+| `refreshToken` | OAuth2 refresh-token                          | Ja         | 14 dager                                        |
+| `user_data`    | JSON av `UserProfileResponse` — lesbar for UI | Nei        | 14 dager                                        |
 
 `sessionManager` eksponerer også to ren-JWT-hjelpere som dekoder base64-payloaden manuelt (ingen
 JWT-bibliotek er i bruk):
@@ -23,10 +23,10 @@ JWT-bibliotek er i bruk):
 
 ## 2. To HTTP-klienter — ikke bland dem
 
-| Klient | Kjører i | Brukes til | Auth-header |
-| --- | --- | --- | --- |
-| `lib/agent/agentInternal.ts` | Klient (`"use client"`) | Kalle **denne appens egne** `app/api/**`-ruter, same-origin `fetch` | Ingen — cookien følger automatisk med |
-| `lib/agent/agentExternal.ts` | Server (route handlers) | Kalle **Gatewayen** direkte, `mode: "cors"` | `Authorization: Bearer <token fra sessionManager.getToken()>`, satt manuelt per kall |
+| Klient                       | Kjører i                | Brukes til                                                          | Auth-header                                                                          |
+| ---------------------------- | ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `lib/agent/agentInternal.ts` | Klient (`"use client"`) | Kalle **denne appens egne** `app/api/**`-ruter, same-origin `fetch` | Ingen — cookien følger automatisk med                                                |
+| `lib/agent/agentExternal.ts` | Server (route handlers) | Kalle **Gatewayen** direkte, `mode: "cors"`                         | `Authorization: Bearer <token fra sessionManager.getToken()>`, satt manuelt per kall |
 
 `agentAuth.ts` og `agentAuthAdmin.ts` er tynne, typede wrappere rundt `agentExternal` — én metode per
 Gateway-endepunkt (login, register, hent profil, lås bruker, svarteliste, ...).
@@ -113,7 +113,7 @@ opp og oversettes til norske feilmeldinger i `app/(auth)/login/page.tsx` og `app
 `UserMenu.tsx` → `agentInternal.post("/api/auth/logout")` → `app/api/auth/logout/route.ts` kaller kun
 `sessionManager.removeSession()` (ingen kall mot Gateway for å invalidere token/refresh-token server-side).
 
-## 5. Hva `proxy.ts` *ikke* dekker — rotårsaken til de fleste sesjonsproblemer
+## 5. Hva `proxy.ts` _ikke_ dekker — rotårsaken til de fleste sesjonsproblemer
 
 Matcher-en inkluderer ikke `/api/:path*`. Det betyr at **enhver** klient-side `agentInternal`-kall som treffer
 en route handler under `app/api/auth/**` eller `app/api/admin/**` (f.eks. `refreshProfile()`, lagring av
@@ -132,7 +132,7 @@ ny matched rute, og access-tokenet utløper mens de fortsatt har en gyldig refre
 `/login`. Brukeren opplever at "ting slutter å virke" uten forklaring, i stedet for enten (a) sømløs fornyelse
 eller (b) en tydelig "du er logget ut"-tilstand.
 
-To ting i koden underbygger at dette var *tiltenkt* løst, men aldri fullført:
+To ting i koden underbygger at dette var _tiltenkt_ løst, men aldri fullført:
 
 - **`agentAuth.refresh()` finnes** (bygger `grant_type=refresh_token`-kallet mot Gateway), men den **kalles
   aldri** fra noe sted i kodebasen (verken fra `agentInternal`, en interceptor, eller enkeltsider).
@@ -143,6 +143,7 @@ To ting i koden underbygger at dette var *tiltenkt* løst, men aldri fullført:
 Det finnes med andre ord **ingen 401-interceptor** noe sted i `agentInternal`/`agentExternal`.
 
 **Mulige retninger for en fix** (til diskusjon, ikke implementert):
+
 1. Legg til en sentral feilhåndtering i `agentInternal` som fanger 401 fra route handlers, kaller et
    `/api/auth/refresh`-endepunkt (nytt) som bruker `agentAuth.refresh()`, og replayer det opprinnelige kallet.
 2. Utvid `proxy.ts`-matcher til å inkludere `/api/auth/:path*` og `/api/admin/:path*`, slik at samme

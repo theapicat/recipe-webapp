@@ -4,22 +4,22 @@ export const agentExternal = {
   get: async (url: string) => {
     const token = await sessionManager.getToken();
     return await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
+      method: "GET",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   },
   post: async (url: string, body: object) => {
     const token = await sessionManager.getToken();
     return await fetch(url, {
-      method: 'POST',
+      method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     });
@@ -27,11 +27,11 @@ export const agentExternal = {
   postForm: async (url: string, bodyParams: URLSearchParams) => {
     const token = await sessionManager.getToken();
     return await fetch(url, {
-      method: 'POST',
+      method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: bodyParams.toString(),
     });
@@ -39,11 +39,11 @@ export const agentExternal = {
   put: async (url: string, body: object) => {
     const token = await sessionManager.getToken();
     return await fetch(url, {
-      method: 'PUT',
-      mode: 'cors',
+      method: "PUT",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(body),
     });
@@ -51,11 +51,11 @@ export const agentExternal = {
   delete: async (url: string, body?: object) => {
     const token = await sessionManager.getToken();
     return await fetch(url, {
-      method: 'DELETE',
-      mode: 'cors',
+      method: "DELETE",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
     });

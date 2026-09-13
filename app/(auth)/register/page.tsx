@@ -35,7 +35,8 @@ const RegisterPage = () => {
   }, [errorCode]);
 
   useEffect(() => {
-    if (!session || !session.user) return;
+    // `useSession()` kaster om den brukes utenfor providertreet, så `session` er alltid definert her.
+    if (!session.user) return;
 
     if (!session.user.welcomeCompleted) {
       router.push("/user/welcome");
@@ -48,9 +49,9 @@ const RegisterPage = () => {
     } else if (role === "user") {
       router.push("/dashboard");
     }
-  }, [session?.user, session?.role, router]);
+  }, [session.user, session.role, router]);
 
-  const isRedirecting = Boolean(session?.user);
+  const isRedirecting = Boolean(session.user);
 
   return (
     <AsyncMainContainer size={480} py={40} loading={isRedirecting}>

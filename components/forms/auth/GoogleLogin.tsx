@@ -23,14 +23,7 @@ export const GoogleLogin = () => {
         fullWidth
         loading={loading}
         leftSection={
-          !loading && (
-            <Image
-              src="/icons/google.svg"
-              alt="Google"
-              width={18}
-              height={18}
-            />
-          )
+          !loading && <Image src="/icons/google.svg" alt="Google" width={18} height={18} />
         }
         onClick={handleGoogleLogin}
       >

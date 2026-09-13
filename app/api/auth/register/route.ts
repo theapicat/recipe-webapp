@@ -3,7 +3,7 @@ import { agentAuth } from "@/lib/agent/agentAuth";
 import sessionManager from "@/lib/session/sessionManager";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { RegisterRequest } from "@/lib/models/auth/registerRequest";
-import {UserProfileResponse} from "@/lib/models/auth/userProfileResponse";
+import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
 export const POST = async (request: Request) => {
   try {
@@ -31,8 +31,7 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke opprette bruker.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke opprette bruker.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

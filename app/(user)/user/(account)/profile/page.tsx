@@ -1,17 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  Stack,
-  Title,
-  Text,
-  Paper,
-  Group,
-  Badge,
-  Grid,
-  ThemeIcon,
-  Divider,
-} from "@mantine/core";
+import { Stack, Title, Text, Paper, Group, Badge, Grid, ThemeIcon, Divider } from "@mantine/core";
 import {
   IconShield,
   IconCalendar,
@@ -79,12 +69,7 @@ export default function UserProfilePage() {
                   variant="outline"
                   color="gray"
                   leftSection={
-                    <Image
-                      src="/icons/google.svg"
-                      alt="Google logo"
-                      width={14}
-                      height={14}
-                    />
+                    <Image src="/icons/google.svg" alt="Google logo" width={14} height={14} />
                   }
                 >
                   Innkoblet med Google
@@ -132,11 +117,7 @@ export default function UserProfilePage() {
 
             {/* Ekstra status- og ID-metadata */}
             <Group gap="xs" wrap="wrap">
-              <Badge
-                variant="light"
-                color="gray"
-                leftSection={<IconId size={12} />}
-              >
+              <Badge variant="light" color="gray" leftSection={<IconId size={12} />}>
                 ID: {user?.userId || "N/A"}
               </Badge>
 
@@ -151,13 +132,7 @@ export default function UserProfilePage() {
               <Badge
                 variant="light"
                 color={user?.welcomeCompleted ? "sage" : "gray"}
-                leftSection={
-                  user?.welcomeCompleted ? (
-                    <IconCheck size={12} />
-                  ) : (
-                    <IconX size={12} />
-                  )
-                }
+                leftSection={user?.welcomeCompleted ? <IconCheck size={12} /> : <IconX size={12} />}
               >
                 Velkomstreise: {user?.welcomeCompleted ? "Fullført" : "Ikke fullført"}
               </Badge>
@@ -165,7 +140,8 @@ export default function UserProfilePage() {
 
             {user?.isGoogleAccount && (
               <Text size="xs" c="dimmed" mt={2}>
-                💡 Din konto er opprettet via Google OAuth. Du kan fritt opprette et lokalt passord i skjemaet under dersom du også ønsker å logge inn med e-post og passord.
+                💡 Din konto er opprettet via Google OAuth. Du kan fritt opprette et lokalt passord
+                i skjemaet under dersom du også ønsker å logge inn med e-post og passord.
               </Text>
             )}
           </Stack>

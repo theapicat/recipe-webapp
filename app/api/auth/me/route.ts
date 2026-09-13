@@ -11,7 +11,8 @@ export async function GET() {
     await sessionManager.setUserData(profile);
 
     return NextResponse.json(profile);
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 400 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente brukerprofil.";
+    return NextResponse.json({ message: errorMessage }, { status: 400 });
   }
 }

@@ -59,11 +59,13 @@ export const ResendConfirmationForm = () => {
         </Group>
 
         <Alert color="terracotta" variant="light" radius="md">
-          E-postadressen din (<b>{user.email}</b>) er ikke bekreftet ennå. For å holde kontoen din aktiv og forhindre at den sperres etter 14 dager, må e-posten verifiseres.
+          E-postadressen din (<b>{user.email}</b>) er ikke bekreftet ennå. For å holde kontoen din
+          aktiv og forhindre at den sperres etter 14 dager, må e-posten verifiseres.
         </Alert>
 
         <Text size="sm" c="dimmed">
-          Sjekk innboksen din (og eventuelt søppelpost) for aktiveringslenken. Hvis du ikke finner e-posten, kan du be om å få tilsendt en ny ved å trykke på knappen under.
+          Sjekk innboksen din (og eventuelt søppelpost) for aktiveringslenken. Hvis du ikke finner
+          e-posten, kan du be om å få tilsendt en ny ved å trykke på knappen under.
         </Text>
 
         <Group justify="flex-end">

@@ -1,5 +1,5 @@
 // Interface for objektet som returneres når admin henter ut listen (GET /api/auth/admin/blacklist)
-import {BlacklistType} from "@/lib/models/enums/BlacklistType";
+import { BlacklistType } from "@/lib/models/enums/BlacklistType";
 
 export interface BlacklistedEntry {
   id: string;

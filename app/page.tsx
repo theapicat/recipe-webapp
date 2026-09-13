@@ -29,7 +29,9 @@ export default function Home() {
   const session = useSession();
 
   useEffect(() => {
-    if (!session || !session.role) return;
+    // `useSession()` kaster om den brukes utenfor providertreet, så `session` er alltid definert her
+    // — kun `role` (som kan mangle for en gjest) trengs i sjekken.
+    if (!session.role) return;
 
     const role = session.role.toLowerCase();
     if (role === "admin") {
@@ -37,7 +39,7 @@ export default function Home() {
     } else if (role === "user") {
       router.push("/dashboard");
     }
-  }, [session?.role, router]);
+  }, [session.role, router]);
 
   const isRedirecting = Boolean(session?.role);
 
@@ -46,12 +48,7 @@ export default function Home() {
       <Stack gap="xl" py="md">
         {/* Hero Section */}
         <Stack align="center" my="lg" gap="md">
-          <Badge
-            variant="light"
-            color="sage"
-            size="lg"
-            leftSection={<IconSparkles size={14} />}
-          >
+          <Badge variant="light" color="sage" size="lg" leftSection={<IconSparkles size={14} />}>
             Din private digitale kokebok
           </Badge>
 
@@ -63,9 +60,9 @@ export default function Home() {
           </Title>
 
           <Text c="dimmed" size="lg" ta="center" style={{ maxWidth: 650 }}>
-            Kjøkkenhylla samler dine favorittoppskrifter på ett sted. Importer fra
-            godkjente nettsteder, planlegg ukens måltider og generer ferdige
-            handlelister – 100 % privat og reklamefritt.
+            Kjøkkenhylla samler dine favorittoppskrifter på ett sted. Importer fra godkjente
+            nettsteder, planlegg ukens måltider og generer ferdige handlelister – 100 % privat og
+            reklamefritt.
           </Text>
 
           <Group justify="center" mt="md">
@@ -90,8 +87,8 @@ export default function Home() {
             </Text>
 
             <Text size="sm" c="dimmed">
-              Dine oppskrifter tilhører deg. Ingen vurderinger, støy eller
-              sosiale innslag fra andre brukere.
+              Dine oppskrifter tilhører deg. Ingen vurderinger, støy eller sosiale innslag fra andre
+              brukere.
             </Text>
           </Card>
 
@@ -105,8 +102,8 @@ export default function Home() {
             </Text>
 
             <Text size="sm" c="dimmed">
-              Lim inn lenker fra godkjente matblogger. Vi skreller bort lange
-              innledningstekster og reklame for deg.
+              Lim inn lenker fra godkjente matblogger. Vi skreller bort lange innledningstekster og
+              reklame for deg.
             </Text>
           </Card>
 
@@ -120,8 +117,8 @@ export default function Home() {
             </Text>
 
             <Text size="sm" c="dimmed">
-              Strukturering av ukens middager og automatisk sammenslåing av
-              ingredienser til en ferdig handleliste.
+              Strukturering av ukens middager og automatisk sammenslåing av ingredienser til en
+              ferdig handleliste.
             </Text>
           </Card>
         </SimpleGrid>
@@ -141,13 +138,7 @@ export default function Home() {
               </Text>
             </Stack>
 
-            <Button
-              component={Link}
-              href="/about"
-              variant="subtle"
-              color="sage"
-              size="sm"
-            >
+            <Button component={Link} href="/about" variant="subtle" color="sage" size="sm">
               Les mer om prosjektet →
             </Button>
           </Group>

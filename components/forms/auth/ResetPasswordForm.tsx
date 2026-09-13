@@ -32,8 +32,7 @@ export const ResetPasswordForm = () => {
       confirmPassword: "",
     },
     validate: {
-      newPassword: (val) =>
-        val.length < 6 ? "Passordet må være på minst 6 tegn" : null,
+      newPassword: (val) => (val.length < 6 ? "Passordet må være på minst 6 tegn" : null),
       confirmPassword: (val, values) =>
         val !== values.newPassword ? "Passordene er ikke like" : null,
     },
@@ -42,13 +41,9 @@ export const ResetPasswordForm = () => {
   if (!email || !token) {
     return (
       <Stack gap="md">
-        <Alert
-          color="red"
-          title="Ugyldig lenke"
-          icon={<IconAlertCircle size={18} />}
-        >
-          Lenken for tilbakestilling av passord er ugyldig eller mangler
-          nødvendige parametere. Vennligst be om en ny lenke.
+        <Alert color="red" title="Ugyldig lenke" icon={<IconAlertCircle size={18} />}>
+          Lenken for tilbakestilling av passord er ugyldig eller mangler nødvendige parametere.
+          Vennligst be om en ny lenke.
         </Alert>
         <Text size="sm" ta="center">
           <Anchor component={Link} href="/recover">
@@ -72,9 +67,7 @@ export const ResetPasswordForm = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        setErrorMessage(
-          errorData.message || "Tilbakestilling mislyktes. Lenken kan være utløpt."
-        );
+        setErrorMessage(errorData.message || "Tilbakestilling mislyktes. Lenken kan være utløpt.");
         return;
       }
 
@@ -89,13 +82,8 @@ export const ResetPasswordForm = () => {
   if (isSuccess) {
     return (
       <Stack gap="md">
-        <Alert
-          color="sage"
-          title="Passord tilbakestilt"
-          icon={<IconCheck size={18} />}
-        >
-          Ditt passord har blitt oppdatert. Du kan nå logge inn med ditt nye
-          passord.
+        <Alert color="sage" title="Passord tilbakestilt" icon={<IconCheck size={18} />}>
+          Ditt passord har blitt oppdatert. Du kan nå logge inn med ditt nye passord.
         </Alert>
         <Text size="sm" ta="center">
           <Anchor component={Link} href="/login" fw={600}>

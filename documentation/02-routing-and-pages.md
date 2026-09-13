@@ -5,14 +5,14 @@
 Alle sider ligger under `app/`. Mappenavn i parenteser er **route groups** — de påvirker layout/organisering,
 men vises aldri i URL-en:
 
-| Route group | Formål | Eksempel-URL |
-| --- | --- | --- |
-| `(auth)` | Innlogging, registrering, gjenoppretting | `/login`, `/register`, `/recover`, `/reset-password` |
-| `(info)` | Offentlig informasjon | `/about`, `/contact`, `/faq`, `/features`, `/status` |
-| `(legal)` | Juridiske dokumenter, med egen sidemeny-layout | `/legal`, `/legal/terms`, `/legal/privacy`, ... |
-| `(user)` | Alt bak innlogging for vanlige brukere | `/dashboard`, `/user/recipes`, `/user/mealplan`, ... |
-| — (ingen gruppe) | `app/confirm-email`, `app/page.tsx` (forside), `app/error.tsx`, `app/not-found.tsx` | `/confirm-email`, `/` |
-| `app/admin/` | Adminpanelet (egen top-level-mappe, ikke en route group) | `/admin/dashboard`, `/admin/users`, ... |
+| Route group      | Formål                                                                              | Eksempel-URL                                         |
+| ---------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `(auth)`         | Innlogging, registrering, gjenoppretting                                            | `/login`, `/register`, `/recover`, `/reset-password` |
+| `(info)`         | Offentlig informasjon                                                               | `/about`, `/contact`, `/faq`, `/features`, `/status` |
+| `(legal)`        | Juridiske dokumenter, med egen sidemeny-layout                                      | `/legal`, `/legal/terms`, `/legal/privacy`, ...      |
+| `(user)`         | Alt bak innlogging for vanlige brukere                                              | `/dashboard`, `/user/recipes`, `/user/mealplan`, ... |
+| — (ingen gruppe) | `app/confirm-email`, `app/page.tsx` (forside), `app/error.tsx`, `app/not-found.tsx` | `/confirm-email`, `/`                                |
+| `app/admin/`     | Adminpanelet (egen top-level-mappe, ikke en route group)                            | `/admin/dashboard`, `/admin/users`, ...              |
 
 `(user)/user` har i tillegg en nøstet gruppe `(account)` for `/user/profile` og `/user/settings` — samme
 mønster, bare ett nivå dypere.
@@ -30,7 +30,7 @@ export const config = {
 
 - Alt annet (forsiden, `(auth)`, `(info)`, `(legal)`, `/confirm-email`) er offentlig og krever ingen token.
 - `/admin/*` krever i tillegg at JWT-ets rolle-claim er `admin` — ellers redirectes brukeren til `/404`.
-- **Merk:** matcher'en dekker ikke `/api/:path*`. Route handlers under `app/api/**` er *ikke* beskyttet av
+- **Merk:** matcher'en dekker ikke `/api/:path*`. Route handlers under `app/api/**` er _ikke_ beskyttet av
   proxyen — de stoler på at cookien inneholder et gyldig token når `agentExternal` kaller Gatewayen, og
   Gatewayen selv avviser ugyldige/utløpte tokens. Dette har praktiske konsekvenser for sesjonshåndtering,
   se [03](./03-auth-and-session.md#hva-proxyts-ikke-dekker).
@@ -45,13 +45,13 @@ for kjernedomene-sidene (oppskrifter/måltidsplan/handleliste) — se avviket do
 
 ## 4. Spesialfiler
 
-| Fil | Rolle |
-| --- | --- |
-| `app/layout.tsx` | Root layout. Setter opp `MantineProvider`, `Notifications`, `SessionProvider` (seedet server-side fra `sessionManager.getUserData()`) og `MainShell` (header/footer). |
-| `app/error.tsx` | Global error boundary (client component, Next.js-konvensjon). Viser feilmelding + "Prøv igjen"/"Tilbake". |
-| `app/not-found.tsx` | Global 404-side. Brukes bl.a. når `proxy.ts` avviser en ikke-admin fra `/admin/*`. |
-| `app/(legal)/legal/layout.tsx` | Egen to-kolonne-layout (sidemeny + innhold) kun for `/legal/*`-rutene. |
-| `app/confirm-email/page.tsx` | Ligger bevisst **utenfor** `(auth)`-gruppen siden lenken kommer fra e-post og ikke skal ha samme layout-kontekst som innloggingssidene. |
+| Fil                            | Rolle                                                                                                                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/layout.tsx`               | Root layout. Setter opp `MantineProvider`, `Notifications`, `SessionProvider` (seedet server-side fra `sessionManager.getUserData()`) og `MainShell` (header/footer). |
+| `app/error.tsx`                | Global error boundary (client component, Next.js-konvensjon). Viser feilmelding + "Prøv igjen"/"Tilbake".                                                             |
+| `app/not-found.tsx`            | Global 404-side. Brukes bl.a. når `proxy.ts` avviser en ikke-admin fra `/admin/*`.                                                                                    |
+| `app/(legal)/legal/layout.tsx` | Egen to-kolonne-layout (sidemeny + innhold) kun for `/legal/*`-rutene.                                                                                                |
+| `app/confirm-email/page.tsx`   | Ligger bevisst **utenfor** `(auth)`-gruppen siden lenken kommer fra e-post og ikke skal ha samme layout-kontekst som innloggingssidene.                               |
 
 ## 5. Navigasjonslenker
 

@@ -131,7 +131,7 @@ export default function RecipeEditPage() {
   const handleIngredientChange = (
     index: number,
     field: keyof IngredientInput,
-    value: string | number
+    value: string | number,
   ) => {
     setForm((prev) => {
       const updated = [...prev.ingredients];
@@ -158,11 +158,7 @@ export default function RecipeEditPage() {
   };
 
   // --- STEG-HÅNDTERING ---
-  const handleStepChange = (
-    index: number,
-    field: keyof StepInput,
-    value: string | number
-  ) => {
+  const handleStepChange = (index: number, field: keyof StepInput, value: string | number) => {
     setForm((prev) => {
       const updated = [...prev.steps];
       updated[index] = { ...updated[index], [field]: value };
@@ -248,7 +244,8 @@ export default function RecipeEditPage() {
             icon={<IconInfoCircle size={20} />}
             radius="md"
           >
-            Endringer du gjør her lagres i din private samling. Kildeoppskriften på nettet påvirkes aldri.
+            Endringer du gjør her lagres i din private samling. Kildeoppskriften på nettet påvirkes
+            aldri.
           </Alert>
 
           {/* HEADER MED APARTMENT UTGANG OG LAGRE-KNAPP */}
@@ -510,7 +507,9 @@ export default function RecipeEditPage() {
                       <Textarea
                         placeholder="Forklar hva som skal gjøres i dette steget..."
                         value={step.instruction}
-                        onChange={(e) => handleStepChange(idx, "instruction", e.currentTarget.value)}
+                        onChange={(e) =>
+                          handleStepChange(idx, "instruction", e.currentTarget.value)
+                        }
                         rows={2}
                         required
                       />
@@ -540,11 +539,7 @@ export default function RecipeEditPage() {
 
           {/* NEDERSTE HANDLINGSBAR */}
           <Group justify="flex-end" gap="sm" mt="md">
-            <Button
-              component={Link}
-              href={`/user/recipes/${recipeId}`}
-              variant="default"
-            >
+            <Button component={Link} href={`/user/recipes/${recipeId}`} variant="default">
               Avbryt
             </Button>
             <Button

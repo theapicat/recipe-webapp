@@ -3,7 +3,7 @@ import { agentAuth } from "@/lib/agent/agentAuth";
 import sessionManager from "@/lib/session/sessionManager";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
-import {UpdateProfileRequest} from "@/lib/models/auth/updateProfileRequest";
+import { UpdateProfileRequest } from "@/lib/models/auth/updateProfileRequest";
 
 export const PUT = async (request: Request) => {
   try {
@@ -24,8 +24,7 @@ export const PUT = async (request: Request) => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke oppdatere profilen.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke oppdatere profilen.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

@@ -64,7 +64,8 @@ const mockRecipes: Recipe[] = [
     category: "Middag",
     prepTime: "30 min",
     servings: 4,
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80",
+    image:
+      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80",
     isFavorite: true,
     timesCooked: 14,
     lastCooked: "I går",
@@ -76,7 +77,8 @@ const mockRecipes: Recipe[] = [
     category: "Middag",
     prepTime: "60 min",
     servings: 6,
-    image: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=80",
+    image:
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=80",
     isFavorite: true,
     timesCooked: 8,
     lastCooked: "For 5 dager siden",
@@ -88,7 +90,8 @@ const mockRecipes: Recipe[] = [
     category: "Frokost & Lunsj",
     prepTime: "20 min",
     servings: 4,
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80",
+    image:
+      "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80",
     isFavorite: false,
     timesCooked: 22,
     lastCooked: "For 2 uker siden",
@@ -100,7 +103,8 @@ const mockRecipes: Recipe[] = [
     category: "Middag",
     prepTime: "25 min",
     servings: 2,
-    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+    image:
+      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
     isFavorite: false,
     timesCooked: 3,
     lastCooked: "For 1 måned siden",
@@ -126,9 +130,7 @@ export default function UserRecipesPage() {
 
   // Toggle Favoritt
   const toggleFavorite = (id: string) => {
-    setRecipes((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, isFavorite: !r.isFavorite } : r))
-    );
+    setRecipes((prev) => prev.map((r) => (r.id === id ? { ...r, isFavorite: !r.isFavorite } : r)));
   };
 
   // Åpne delingsmodal
@@ -191,8 +193,8 @@ export default function UserRecipesPage() {
       selectedIngredients.length === 0
         ? true
         : selectedIngredients.every((ing) =>
-          r.ingredients.some((i) => i.toLowerCase().includes(ing.toLowerCase()))
-        );
+            r.ingredients.some((i) => i.toLowerCase().includes(ing.toLowerCase())),
+          );
 
     return matchesSearch && matchesTab && matchesFridge;
   });
@@ -208,7 +210,8 @@ export default function UserRecipesPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er din personlige oppskriftssamling. Herfra kan du navigere til detaljside, opprette nye retter, starte kokkemodus, redigere eller dele direkte via e-post.
+          Dette er din personlige oppskriftssamling. Herfra kan du navigere til detaljside, opprette
+          nye retter, starte kokkemodus, redigere eller dele direkte via e-post.
         </Alert>
 
         {/* Overskrift & Handlingsknapper med Ruting */}
@@ -267,10 +270,7 @@ export default function UserRecipesPage() {
             <Tabs value={activeTab} onChange={setActiveTab} color="sage">
               <Tabs.List>
                 <Tabs.Tab value="all">Alle ({recipes.length})</Tabs.Tab>
-                <Tabs.Tab
-                  value="favorites"
-                  leftSection={<IconStarFilled size={14} color="gold" />}
-                >
+                <Tabs.Tab value="favorites" leftSection={<IconStarFilled size={14} color="gold" />}>
                   Favoritter ({recipes.filter((r) => r.isFavorite).length})
                 </Tabs.Tab>
                 <Tabs.Tab value="frequent" leftSection={<IconHistory size={14} />}>
@@ -284,7 +284,11 @@ export default function UserRecipesPage() {
         {/* Oppskriftskort Grid */}
         {filteredRecipes.length === 0 ? (
           <Paper p="xl" radius="md" withBorder style={{ textAlign: "center" }}>
-            <IconChefHat size={48} color="var(--mantine-color-dimmed)" style={{ margin: "0 auto" }} />
+            <IconChefHat
+              size={48}
+              color="var(--mantine-color-dimmed)"
+              style={{ margin: "0 auto" }}
+            />
             <Text fw={500} mt="sm">
               Ingen oppskrifter funnet
             </Text>
@@ -295,7 +299,13 @@ export default function UserRecipesPage() {
         ) : (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 2 }} spacing="lg">
             {filteredRecipes.map((recipe) => (
-              <Card key={recipe.id} withBorder radius="md" padding="md" style={{ overflow: "hidden" }}>
+              <Card
+                key={recipe.id}
+                withBorder
+                radius="md"
+                padding="md"
+                style={{ overflow: "hidden" }}
+              >
                 <Card.Section style={{ position: "relative" }}>
                   <Image src={recipe.image} height={180} alt={recipe.title} />
                   <ActionIcon
@@ -385,11 +395,15 @@ export default function UserRecipesPage() {
                           {recipe.prepTime}
                         </Text>
                       </Group>
-                      <Text size="xs" c="dimmed">•</Text>
+                      <Text size="xs" c="dimmed">
+                        •
+                      </Text>
                       <Text size="xs" c="dimmed">
                         Laget {recipe.timesCooked} ganger
                       </Text>
-                      <Text size="xs" c="dimmed">•</Text>
+                      <Text size="xs" c="dimmed">
+                        •
+                      </Text>
                       <Text size="xs" c="dimmed">
                         Sist: {recipe.lastCooked}
                       </Text>
@@ -437,7 +451,8 @@ export default function UserRecipesPage() {
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            Velg råvarene du har tilgjengelig i kjøleskapet eller skuffen, så viser vi oppskriftene fra samlingen din du kan lage!
+            Velg råvarene du har tilgjengelig i kjøleskapet eller skuffen, så viser vi oppskriftene
+            fra samlingen din du kan lage!
           </Text>
 
           <MultiSelect
@@ -465,11 +480,7 @@ export default function UserRecipesPage() {
           />
 
           <Group justify="space-between" mt="md">
-            <Button
-              variant="subtle"
-              color="gray"
-              onClick={() => setSelectedIngredients([])}
-            >
+            <Button variant="subtle" color="gray" onClick={() => setSelectedIngredients([])}>
               Tøm utvalg
             </Button>
             <Button color="sage" onClick={closeFridge}>
@@ -490,7 +501,8 @@ export default function UserRecipesPage() {
         <form onSubmit={handleSendShare}>
           <Stack gap="md">
             <Text size="sm" c="dimmed">
-              Send en kopi av <b>{activeRecipe?.title}</b> direkte til en venn eller et familiemedlem.
+              Send en kopi av <b>{activeRecipe?.title}</b> direkte til en venn eller et
+              familiemedlem.
             </Text>
 
             <TextInput
@@ -524,7 +536,8 @@ export default function UserRecipesPage() {
       >
         <Stack gap="md">
           <Text size="sm">
-            Er du sikker på at du vil slette <b>{activeRecipe?.title}</b> fra oppskriftene dine? Handlingen kan ikke angres.
+            Er du sikker på at du vil slette <b>{activeRecipe?.title}</b> fra oppskriftene dine?
+            Handlingen kan ikke angres.
           </Text>
 
           <Group justify="flex-end" mt="md">

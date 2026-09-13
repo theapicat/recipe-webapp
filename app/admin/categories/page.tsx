@@ -45,11 +45,23 @@ const mockCategories = [
 ];
 
 const mockIngredients = [
-  { id: "ing-1", name: "Kyllingfilet", category: "Kjøtt & Fjell", allergens: "Ingen", defaultUnit: "g" },
+  {
+    id: "ing-1",
+    name: "Kyllingfilet",
+    category: "Kjøtt & Fjell",
+    allergens: "Ingen",
+    defaultUnit: "g",
+  },
   { id: "ing-2", name: "Hvetemel", category: "Tørrvarer", allergens: "Gluten", defaultUnit: "g" },
   { id: "ing-3", name: "Helmelk", category: "Meieri", allergens: "Laktose", defaultUnit: "dl" },
   { id: "ing-4", name: "Egg", category: "Meieri/Egg", allergens: "Egg", defaultUnit: "stk" },
-  { id: "ing-5", name: "Olivenolje", category: "Olje & Krydder", allergens: "Ingen", defaultUnit: "ss" },
+  {
+    id: "ing-5",
+    name: "Olivenolje",
+    category: "Olje & Krydder",
+    allergens: "Ingen",
+    defaultUnit: "ss",
+  },
 ];
 
 const mockUnits = [
@@ -77,7 +89,9 @@ export default function AdminCategoriesPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>Kategori- og Råvareregisteret</b>. Herfra kan admin styre de globale masterdataene som brukes til kategorisering, søk og ingrediensberegninger i oppskriftene.
+          Dette er en visuell skisse for <b>Kategori- og Råvareregisteret</b>. Herfra kan admin
+          styre de globale masterdataene som brukes til kategorisering, søk og ingrediensberegninger
+          i oppskriftene.
         </Alert>
 
         {/* Header */}
@@ -246,7 +260,9 @@ export default function AdminCategoriesPage() {
                           </Badge>
                         </Table.Td>
                         <Table.Td>
-                          <Badge variant="outline" color="gray">{ing.defaultUnit}</Badge>
+                          <Badge variant="outline" color="gray">
+                            {ing.defaultUnit}
+                          </Badge>
                         </Table.Td>
                         <Table.Td>
                           <Menu position="bottom-end" shadow="md">
@@ -355,7 +371,11 @@ export default function AdminCategoriesPage() {
             <>
               <TextInput label="Fullt navn" placeholder="f.eks. Milliliter" required />
               <TextInput label="Forkortelse" placeholder="f.eks. ml" required />
-              <Select label="Type" placeholder="Velg typografi" data={["Vekt", "Volum", "Mål", "Antall"]} />
+              <Select
+                label="Type"
+                placeholder="Velg typografi"
+                data={["Vekt", "Volum", "Mål", "Antall"]}
+              />
             </>
           )}
 

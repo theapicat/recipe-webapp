@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {BlacklistedEntry} from "@/lib/models/admin/users/BlacklistedEntry";
+import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
 
 // GET /api/admin/blacklist
 export const GET = async () => {
@@ -17,8 +17,7 @@ export const GET = async () => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke hente svartelisten.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente svartelisten.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

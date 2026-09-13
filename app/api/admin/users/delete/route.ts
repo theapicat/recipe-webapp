@@ -16,8 +16,7 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Sletting av bruker mislyktes.";
+    const errorMessage = error instanceof Error ? error.message : "Sletting av bruker mislyktes.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

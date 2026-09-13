@@ -14,16 +14,11 @@ export default function NotFound() {
         <Title order={2}>Side ikke funnet</Title>
 
         <Text size="sm" c="dimmed" maw={360}>
-          Beklager, siden du leter etter eksisterer ikke, har blitt flyttet eller er midlertidig utilgjengelig.
+          Beklager, siden du leter etter eksisterer ikke, har blitt flyttet eller er midlertidig
+          utilgjengelig.
         </Text>
 
-        <Button
-          component={Link}
-          href="/dashboard"
-          variant="light"
-          color="sage"
-          mt="sm"
-        >
+        <Button component={Link} href="/dashboard" variant="light" color="sage" mt="sm">
           Tilbake til oversikten
         </Button>
       </Stack>

@@ -46,26 +46,14 @@ import {
   IconFlame,
   IconChartPie,
 } from "@tabler/icons-react";
-import Link from "next/link";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
 // --- TYPER ---
 export type MealCategory =
-  | "Frokost"
-  | "Brunsj"
-  | "Lunsj"
-  | "Middag"
-  | "Kveldsmat"
-  | "Mellommåltid / Snacks";
+  "Frokost" | "Brunsj" | "Lunsj" | "Middag" | "Kveldsmat" | "Mellommåltid / Snacks";
 
 export type DayOfWeek =
-  | "Mandag"
-  | "Tirsdag"
-  | "Onsdag"
-  | "Torsdag"
-  | "Fredag"
-  | "Lørdag"
-  | "Søndag";
+  "Mandag" | "Tirsdag" | "Onsdag" | "Torsdag" | "Fredag" | "Lørdag" | "Søndag";
 
 export type ViewMode = "day" | "week" | "month";
 
@@ -320,7 +308,7 @@ export default function MealPlannerPage() {
   // Forbered handleliste-generering ut fra valgte dager
   const handlePrepareShoppingList = () => {
     const selectedDayNames = (Object.keys(shoppingDays) as DayOfWeek[]).filter(
-      (d) => shoppingDays[d]
+      (d) => shoppingDays[d],
     );
 
     const extractedItems: {
@@ -385,7 +373,7 @@ export default function MealPlannerPage() {
       });
       return acc;
     },
-    { calories: 0, protein: 0, carbs: 0, fat: 0 }
+    { calories: 0, protein: 0, carbs: 0, fat: 0 },
   );
 
   return (
@@ -399,7 +387,8 @@ export default function MealPlannerPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Planlegg med fleksible måltidstyper, bytt mellom Dag-, Uke- og Månedsvisning, og følg med på det samlede næringsinnholdet.
+          Planlegg med fleksible måltidstyper, bytt mellom Dag-, Uke- og Månedsvisning, og følg med
+          på det samlede næringsinnholdet.
         </Alert>
 
         {/* OVERSSKRIFT OG HANDLINGSBAR */}
@@ -458,7 +447,9 @@ export default function MealPlannerPage() {
                 leftSection={<IconCalendar size={16} />}
                 placeholder="Velg dato"
                 value={selectedDate}
-                onChange={setSelectedDate}
+                // Mantine v9 sin DatePickerInput returnerer en ISO-dato-streng (ikke lenger et
+                // Date-objekt) i onChange — konverterer her siden resten av siden bruker Date.
+                onChange={(value) => setSelectedDate(value ? new Date(value) : new Date())}
                 style={{ width: 180 }}
                 size="sm"
               />
@@ -467,7 +458,12 @@ export default function MealPlannerPage() {
                 <IconChevronRight size={18} />
               </ActionIcon>
 
-              <Button variant="subtle" color="gray" size="xs" onClick={() => setSelectedDate(new Date())}>
+              <Button
+                variant="subtle"
+                color="gray"
+                size="xs"
+                onClick={() => setSelectedDate(new Date())}
+              >
                 I dag
               </Button>
             </Group>
@@ -511,7 +507,12 @@ export default function MealPlannerPage() {
                               {meal.category}
                             </Badge>
                             {meal.time && (
-                              <Badge size="md" variant="light" color="gray" leftSection={<IconClock size={12} />}>
+                              <Badge
+                                size="md"
+                                variant="light"
+                                color="gray"
+                                leftSection={<IconClock size={12} />}
+                              >
                                 Kl. {meal.time}
                               </Badge>
                             )}
@@ -721,7 +722,11 @@ export default function MealPlannerPage() {
                         <Text size="xs" fw={700}>
                           {dateNum}.
                         </Text>
-                        {hasMeal && <Badge size="xs" color="sage">Måltid</Badge>}
+                        {hasMeal && (
+                          <Badge size="xs" color="sage">
+                            Måltid
+                          </Badge>
+                        )}
                       </Group>
 
                       {hasMeal && (
@@ -776,7 +781,8 @@ export default function MealPlannerPage() {
                 ta="center"
                 withBorder
                 style={{
-                  borderColor: "light-dark(var(--mantine-color-terracotta-2), var(--mantine-color-terracotta-8))",
+                  borderColor:
+                    "light-dark(var(--mantine-color-terracotta-2), var(--mantine-color-terracotta-8))",
                 }}
               >
                 <ThemeIcon color="terracotta" variant="light" radius="xl" mb={4}>
@@ -785,7 +791,11 @@ export default function MealPlannerPage() {
                 <Text size="xs" c="dimmed">
                   Total Energi
                 </Text>
-                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-terracotta-9), var(--mantine-color-terracotta-3))">
+                <Text
+                  fw={800}
+                  size="xl"
+                  c="light-dark(var(--mantine-color-terracotta-9), var(--mantine-color-terracotta-3))"
+                >
                   {totalNutrition.calories} kcal
                 </Text>
               </Paper>
@@ -797,13 +807,18 @@ export default function MealPlannerPage() {
                 ta="center"
                 withBorder
                 style={{
-                  borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-sage-8))",
+                  borderColor:
+                    "light-dark(var(--mantine-color-sage-2), var(--mantine-color-sage-8))",
                 }}
               >
                 <Text size="xs" c="dimmed" mt={8}>
                   Proteiner
                 </Text>
-                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-3))">
+                <Text
+                  fw={800}
+                  size="xl"
+                  c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-3))"
+                >
                   {totalNutrition.protein} g
                 </Text>
               </Paper>
@@ -815,13 +830,18 @@ export default function MealPlannerPage() {
                 ta="center"
                 withBorder
                 style={{
-                  borderColor: "light-dark(var(--mantine-color-blue-2), var(--mantine-color-blue-8))",
+                  borderColor:
+                    "light-dark(var(--mantine-color-blue-2), var(--mantine-color-blue-8))",
                 }}
               >
                 <Text size="xs" c="dimmed" mt={8}>
                   Karbohydrater
                 </Text>
-                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-3))">
+                <Text
+                  fw={800}
+                  size="xl"
+                  c="light-dark(var(--mantine-color-blue-9), var(--mantine-color-blue-3))"
+                >
                   {totalNutrition.carbs} g
                 </Text>
               </Paper>
@@ -833,13 +853,18 @@ export default function MealPlannerPage() {
                 ta="center"
                 withBorder
                 style={{
-                  borderColor: "light-dark(var(--mantine-color-grape-2), var(--mantine-color-grape-8))",
+                  borderColor:
+                    "light-dark(var(--mantine-color-grape-2), var(--mantine-color-grape-8))",
                 }}
               >
                 <Text size="xs" c="dimmed" mt={8}>
                   Fett
                 </Text>
-                <Text fw={800} size="xl" c="light-dark(var(--mantine-color-grape-9), var(--mantine-color-grape-3))">
+                <Text
+                  fw={800}
+                  size="xl"
+                  c="light-dark(var(--mantine-color-grape-9), var(--mantine-color-grape-3))"
+                >
                   {totalNutrition.fat} g
                 </Text>
               </Paper>
@@ -868,14 +893,7 @@ export default function MealPlannerPage() {
 
             <Select
               label="Måltidstype"
-              data={[
-                "Frokost",
-                "Brunsj",
-                "Lunsj",
-                "Middag",
-                "Kveldsmat",
-                "Mellommåltid / Snacks",
-              ]}
+              data={["Frokost", "Brunsj", "Lunsj", "Middag", "Kveldsmat", "Mellommåltid / Snacks"]}
               value={selectedCategory}
               onChange={(val) => setSelectedCategory((val as MealCategory) || "Middag")}
             />
@@ -931,7 +949,8 @@ export default function MealPlannerPage() {
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            Velg hvilke dager du skal handle for, og fjern eventuelt ingredienser du allerede har i skapet.
+            Velg hvilke dager du skal handle for, og fjern eventuelt ingredienser du allerede har i
+            skapet.
           </Text>
 
           {/* DAG-VELGER FOR HANDEL */}
@@ -964,7 +983,9 @@ export default function MealPlannerPage() {
           {/* PÅMINNELSESBOKS */}
           <Alert color="terracotta" variant="light" icon={<IconInfoCircle size={18} />} radius="md">
             <Text size="xs">
-              <b>Tips:</b> Du kan fjerne varer du har fra før direkte i listen under. Du kan også finjustere mengder, kategorier og krysse av varer på den dedikerte handlelistesiden etterpå.
+              <b>Tips:</b> Du kan fjerne varer du har fra før direkte i listen under. Du kan også
+              finjustere mengder, kategorier og krysse av varer på den dedikerte handlelistesiden
+              etterpå.
             </Text>
           </Alert>
 

@@ -33,10 +33,8 @@ export const ChangePasswordForm = () => {
       confirmPassword: "",
     },
     validate: {
-      currentPassword: (val) =>
-        hasPassword && !val ? "Nåværende passord må oppgis" : null,
-      newPassword: (val) =>
-        !val || val.length < 8 ? "Passordet må bestå av minst 8 tegn" : null,
+      currentPassword: (val) => (hasPassword && !val ? "Nåværende passord må oppgis" : null),
+      newPassword: (val) => (!val || val.length < 8 ? "Passordet må bestå av minst 8 tegn" : null),
       confirmPassword: (val, values) =>
         val !== values.newPassword ? "Passordene er ikke identiske" : null,
     },
@@ -47,18 +45,16 @@ export const ChangePasswordForm = () => {
     setErrorMessage(undefined);
 
     // Velger dynamisk endepunkt og payload basert på om brukeren har passord
-    const endpoint = hasPassword
-      ? "/api/auth/change-password"
-      : "/api/auth/set-password";
+    const endpoint = hasPassword ? "/api/auth/change-password" : "/api/auth/set-password";
 
     const payload = hasPassword
       ? {
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
-      }
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        }
       : {
-        newPassword: values.newPassword,
-      };
+          newPassword: values.newPassword,
+        };
 
     try {
       const res = await agentInternal.post(endpoint, payload);
@@ -78,7 +74,7 @@ export const ChangePasswordForm = () => {
       } else {
         setErrorMessage(
           data.message ||
-          "Kunne ikke oppdatere passord. Sjekk at oppgitte opplysninger er korrekte."
+            "Kunne ikke oppdatere passord. Sjekk at oppgitte opplysninger er korrekte.",
         );
       }
     } catch {
@@ -102,9 +98,7 @@ export const ChangePasswordForm = () => {
         submitText={hasPassword ? "Oppdater passord" : "Opprett passord"}
         loading={loading}
         errorMessage={errorMessage}
-        confirmTitle={
-          hasPassword ? "Bekreft passordbytte" : "Bekreft opprettelse av passord"
-        }
+        confirmTitle={hasPassword ? "Bekreft passordbytte" : "Bekreft opprettelse av passord"}
         confirmMessage="Er du sikker på at du vil lagre dette passordet?"
       >
         {!hasPassword && (

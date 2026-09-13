@@ -91,7 +91,7 @@ export default function RecipeCreatePage() {
   const handleIngredientChange = (
     index: number,
     field: keyof IngredientInput,
-    value: string | number
+    value: string | number,
   ) => {
     setForm((prev) => {
       const updated = [...prev.ingredients];
@@ -118,11 +118,7 @@ export default function RecipeCreatePage() {
   };
 
   // --- STEG-HÅNDTERING ---
-  const handleStepChange = (
-    index: number,
-    field: keyof StepInput,
-    value: string | number
-  ) => {
+  const handleStepChange = (index: number, field: keyof StepInput, value: string | number) => {
     setForm((prev) => {
       const updated = [...prev.steps];
       updated[index] = { ...updated[index], [field]: value };
@@ -208,7 +204,8 @@ export default function RecipeCreatePage() {
             icon={<IconInfoCircle size={20} />}
             radius="md"
           >
-            Legg inn din egen favorittoppskrift helt fra bunnen. Alt du registrerer lagres 100 % privat på din konto.
+            Legg inn din egen favorittoppskrift helt fra bunnen. Alt du registrerer lagres 100 %
+            privat på din konto.
           </Alert>
 
           {/* HEADER MED AVBRYT OG LAGRE-KNAPP */}
@@ -470,7 +467,9 @@ export default function RecipeCreatePage() {
                       <Textarea
                         placeholder="Forklar hva som skal gjøres i dette steget..."
                         value={step.instruction}
-                        onChange={(e) => handleStepChange(idx, "instruction", e.currentTarget.value)}
+                        onChange={(e) =>
+                          handleStepChange(idx, "instruction", e.currentTarget.value)
+                        }
                         rows={2}
                         required
                       />

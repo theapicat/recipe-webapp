@@ -6,10 +6,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const result = await agentAuth.recovery(body);
     return NextResponse.json(result);
-  } catch (error: any) {
-    return NextResponse.json(
-      { message: error.message || "Kunne ikke sende gjenopprettingslenke." },
-      { status: 400 }
-    );
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Kunne ikke sende gjenopprettingslenke.";
+    return NextResponse.json({ message: errorMessage }, { status: 400 });
   }
 }

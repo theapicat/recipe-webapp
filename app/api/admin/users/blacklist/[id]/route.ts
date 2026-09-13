@@ -5,7 +5,7 @@ import { HttpResponse } from "@/lib/models/httpResponse";
 // DELETE /api/admin/blacklist/[id]
 export const DELETE = async (
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) => {
   try {
     const { id } = await params;

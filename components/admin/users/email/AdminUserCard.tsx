@@ -12,13 +12,8 @@ export function AdminUserCard({ user }: Props) {
     <Card withBorder radius="md" p="sm">
       <Group justify="space-between" align="center" wrap="wrap">
         <Group gap="sm">
-          <Avatar
-            color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"}
-            radius="xl"
-          >
-            {user.fullName
-              ? user.fullName.substring(0, 2).toUpperCase()
-              : "U"}
+          <Avatar color={user.role.toLowerCase() === "admin" ? "terracotta" : "sage"} radius="xl">
+            {user.fullName ? user.fullName.substring(0, 2).toUpperCase() : "U"}
           </Avatar>
 
           <div>
@@ -32,19 +27,11 @@ export function AdminUserCard({ user }: Props) {
         </Group>
 
         <Group gap={6}>
-          <Badge
-            color={user.isLocked ? "red" : "sage"}
-            variant="dot"
-            size="xs"
-          >
+          <Badge color={user.isLocked ? "red" : "sage"} variant="dot" size="xs">
             {user.isLocked ? "Låst" : "Aktiv"}
           </Badge>
 
-          <Badge
-            color={user.isEmailConfirmed ? "sage" : "terracotta"}
-            variant="subtle"
-            size="xs"
-          >
+          <Badge color={user.isEmailConfirmed ? "sage" : "terracotta"} variant="subtle" size="xs">
             {user.isEmailConfirmed ? "Bekreftet" : "Ubekreftet"}
           </Badge>
         </Group>

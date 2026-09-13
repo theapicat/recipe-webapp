@@ -42,12 +42,12 @@ cookies flyter gjennom dette.
 
 ## 3. Teknologistack
 
-| Kategori | Teknologi |
-| --- | --- |
-| Rammeverk & språk | Next.js 16 (App Router, **Proxy**-konvensjon — se boks under), React 19, TypeScript |
-| UI & styling | Mantine v9 (`@mantine/core`, `@mantine/form`, `@mantine/notifications`, `@mantine/dates`), PostCSS |
-| Datavisualisering | Mantine Charts, Recharts |
-| Ikoner & verktøy | Tabler Icons, Dayjs, React Markdown |
+| Kategori          | Teknologi                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Rammeverk & språk | Next.js 16 (App Router, **Proxy**-konvensjon — se boks under), React 19, TypeScript                |
+| UI & styling      | Mantine v9 (`@mantine/core`, `@mantine/form`, `@mantine/notifications`, `@mantine/dates`), PostCSS |
+| Datavisualisering | Mantine Charts, Recharts                                                                           |
+| Ikoner & verktøy  | Tabler Icons, Dayjs, React Markdown                                                                |
 
 > **⚠️ Denne Next.js-versjonen er nyere enn det du kjenner fra opplæring/minne.**
 > `middleware.ts` heter nå **`proxy.ts`** (se root av repoet). Før du gjør endringer i routing, caching eller
@@ -89,17 +89,17 @@ Se [`07-known-issues-and-tech-debt.md`](./07-known-issues-and-tech-debt.md).
 
 ## 6. Mappeoversikt (høyt nivå)
 
-| Mappe | Ansvar |
-| --- | --- |
-| `app/` | Next.js App Router — sider, route handlers (`api/`), route groups |
-| `components/` | React-komponenter, gruppert etter `forms/`, `admin/`, `layout/`, `containers/` |
-| `lib/agent/` | HTTP-klienter mot egne API-ruter og mot Gatewayen (se [04](./04-api-integration-and-data-models.md)) |
-| `lib/session/` | Cookie-/sesjonshåndtering og React-context for innlogget bruker |
-| `lib/models/` | TypeScript-modeller/DTO-er, gruppert etter domene (`auth/`, `admin/users/`, ...) |
-| `documentation/` | Denne dokumentasjonen |
-| `public/docs/legal/` | Juridiske dokumenter servert direkte til brukere (speiles av `(legal)`-rutene) |
-| `proxy.ts` | Next.js "Proxy" (tidligere Middleware) — auth-gating og token-refresh på sidenavigasjon |
-| `theme.ts` | Mantine-tema (se [`06-forms-and-design-system.md`](./06-forms-and-design-system.md)) |
+| Mappe                | Ansvar                                                                                               |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| `app/`               | Next.js App Router — sider, route handlers (`api/`), route groups                                    |
+| `components/`        | React-komponenter, gruppert etter `forms/`, `admin/`, `layout/`, `containers/`                       |
+| `lib/agent/`         | HTTP-klienter mot egne API-ruter og mot Gatewayen (se [04](./04-api-integration-and-data-models.md)) |
+| `lib/session/`       | Cookie-/sesjonshåndtering og React-context for innlogget bruker                                      |
+| `lib/models/`        | TypeScript-modeller/DTO-er, gruppert etter domene (`auth/`, `admin/users/`, ...)                     |
+| `documentation/`     | Denne dokumentasjonen                                                                                |
+| `public/docs/legal/` | Juridiske dokumenter servert direkte til brukere (speiles av `(legal)`-rutene)                       |
+| `proxy.ts`           | Next.js "Proxy" (tidligere Middleware) — auth-gating og token-refresh på sidenavigasjon              |
+| `theme.ts`           | Mantine-tema (se [`06-forms-and-design-system.md`](./06-forms-and-design-system.md))                 |
 
 ## 7. Videre lesning
 

@@ -11,21 +11,9 @@ interface MobileNavDrawerProps {
   isGuest: boolean;
 }
 
-export const MobileNavDrawer = ({
-                                  opened,
-                                  onClose,
-                                  links,
-                                  isGuest,
-                                }: MobileNavDrawerProps) => {
+export const MobileNavDrawer = ({ opened, onClose, links, isGuest }: MobileNavDrawerProps) => {
   return (
-    <Drawer
-      opened={opened}
-      onClose={onClose}
-      size="xs"
-      padding="md"
-      title="Meny"
-      hiddenFrom="md"
-    >
+    <Drawer opened={opened} onClose={onClose} size="xs" padding="md" title="Meny" hiddenFrom="md">
       <Stack gap="xs" mt="md">
         {links.map((link) => {
           const Icon = link.icon;

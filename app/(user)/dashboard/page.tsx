@@ -42,25 +42,29 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "prof_auth_security",
         label: "Sikkerhet & Google OAuth",
-        description: "Registrering og innlogging med Google, lokal passordopprettelse og JWT-sesjoner.",
+        description:
+          "Registrering og innlogging med Google, lokal passordopprettelse og JWT-sesjoner.",
         completed: true,
       },
       {
         id: "prof_email_verification",
         label: "E-postverifisering & Notifikasjonssystem",
-        description: "Utsending av bekreftelseslenker, 7/14-dagers påminnelser og automatiske e-postvarsler.",
+        description:
+          "Utsending av bekreftelseslenker, 7/14-dagers påminnelser og automatiske e-postvarsler.",
         completed: true,
       },
       {
         id: "prof_google_lock_alert",
         label: "Varsel for sperret Google-konto",
-        description: "Tydelig tilbakemelding i innloggingsskjermen dersom en sperret Google-bruker forsøker å logge inn.",
+        description:
+          "Tydelig tilbakemelding i innloggingsskjermen dersom en sperret Google-bruker forsøker å logge inn.",
         completed: false,
       },
       {
         id: "prof_gdpr_export",
         label: "GDPR-datainnsyn & Eksport",
-        description: "Mulighet for brukeren til å hente ut og laste ned alle sine registrerte personopplysninger.",
+        description:
+          "Mulighet for brukeren til å hente ut og laste ned alle sine registrerte personopplysninger.",
         completed: false,
       },
       {
@@ -89,20 +93,21 @@ const initialRoadmap: CategoryTodos[] = [
       },
       {
         id: "rec_fridge_search",
-        label: "Avansert Søk (\"Tøm Kjøleskapet\")",
+        label: 'Avansert Søk ("Tøm Kjøleskapet")',
         description: "Søk på navn, kategori eller ingredienser du har tilgjengelig.",
         completed: false,
       },
       {
         id: "rec_stats_fav",
         label: "Brukshistorikk & Favoritter",
-        description: "Stjernemerking, teller for antall ganger laget og \"sist laget\"-dato.",
+        description: 'Stjernemerking, teller for antall ganger laget og "sist laget"-dato.',
         completed: false,
       },
       {
         id: "rec_cook_mode",
         label: "Kokkemodus & Timer",
-        description: "Skjerm-keepalive, porsjonskalkulator og innebygd nedtellingsur for koketider.",
+        description:
+          "Skjerm-keepalive, porsjonskalkulator og innebygd nedtellingsur for koketider.",
         completed: false,
       },
     ],
@@ -148,7 +153,7 @@ const UserDashboardPage = () => {
       return {
         ...cat,
         items: cat.items.map((item) =>
-          item.id === itemId ? { ...item, completed: !item.completed } : item
+          item.id === itemId ? { ...item, completed: !item.completed } : item,
         ),
       };
     });
@@ -159,7 +164,7 @@ const UserDashboardPage = () => {
   const totalItems = roadmap.reduce((acc, cat) => acc + cat.items.length, 0);
   const completedItems = roadmap.reduce(
     (acc, cat) => acc + cat.items.filter((i) => i.completed).length,
-    0
+    0,
   );
   const progressPercentage = Math.round((completedItems / totalItems) * 100);
 

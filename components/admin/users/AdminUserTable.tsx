@@ -45,13 +45,7 @@ interface Props {
   onSortChange?: (field: string) => void;
 }
 
-export function AdminUserTable({
-                                 users,
-                                 onRefreshNeeded,
-                                 sortBy,
-                                 sortOrder,
-                                 onSortChange,
-                               }: Props) {
+export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSortChange }: Props) {
   const router = useRouter();
 
   // Tilstander for handlings-dialoger
@@ -181,10 +175,9 @@ export function AdminUserTable({
 
   const handleResetPassword = async (user: AdminUserListItem) => {
     try {
-      const res = await agentInternal.post(
-        "/api/admin/users/reset-password-request",
-        { userId: user.userId }
-      );
+      const res = await agentInternal.post("/api/admin/users/reset-password-request", {
+        userId: user.userId,
+      });
 
       if (res.ok) {
         notifications.show({
@@ -291,7 +284,9 @@ export function AdminUserTable({
             <Table.Th>
               <UnstyledButton onClick={() => onSortChange && onSortChange("name")}>
                 <Group gap={4}>
-                  <Text fw={700} size="xs">Bruker</Text>
+                  <Text fw={700} size="xs">
+                    Bruker
+                  </Text>
                   {renderSortIcon("name")}
                 </Group>
               </UnstyledButton>
@@ -302,7 +297,9 @@ export function AdminUserTable({
             <Table.Th>
               <UnstyledButton onClick={() => onSortChange && onSortChange("createdAt")}>
                 <Group gap={4}>
-                  <Text fw={700} size="xs">Opprettet</Text>
+                  <Text fw={700} size="xs">
+                    Opprettet
+                  </Text>
                   {renderSortIcon("createdAt")}
                 </Group>
               </UnstyledButton>
@@ -340,12 +337,7 @@ export function AdminUserTable({
                           {user.fullName || "Navnløs bruker"}
                         </Text>
                         {user.isGoogleAccount && (
-                          <Image
-                            src="/icons/google.svg"
-                            alt="Google"
-                            width={12}
-                            height={12}
-                          />
+                          <Image src="/icons/google.svg" alt="Google" width={12} height={12} />
                         )}
                       </Group>
                       <Text size="xs" c="dimmed">
@@ -361,9 +353,7 @@ export function AdminUserTable({
                     color={user.role.toLowerCase() === "admin" ? "terracotta" : "gray"}
                     variant="light"
                     leftSection={
-                      user.role.toLowerCase() === "admin" ? (
-                        <IconShield size={12} />
-                      ) : undefined
+                      user.role.toLowerCase() === "admin" ? <IconShield size={12} /> : undefined
                     }
                   >
                     {user.role.toUpperCase()}
@@ -372,20 +362,14 @@ export function AdminUserTable({
 
                 {/* Konto status */}
                 <Table.Td>
-                  <Badge
-                    color={user.isLocked ? "red" : "sage"}
-                    variant="dot"
-                  >
+                  <Badge color={user.isLocked ? "red" : "sage"} variant="dot">
                     {user.isLocked ? "Låst" : "Aktiv"}
                   </Badge>
                 </Table.Td>
 
                 {/* E-post status */}
                 <Table.Td>
-                  <Badge
-                    color={user.isEmailConfirmed ? "sage" : "terracotta"}
-                    variant="subtle"
-                  >
+                  <Badge color={user.isEmailConfirmed ? "sage" : "terracotta"} variant="subtle">
                     {user.isEmailConfirmed ? "Bekreftet" : "Ubekreftet"}
                   </Badge>
                 </Table.Td>
@@ -492,7 +476,8 @@ export function AdminUserTable({
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            Når du låser denne kontoen vil brukeren bli utestengt fra innlogging inntil sperren oppheves.
+            Når du låser denne kontoen vil brukeren bli utestengt fra innlogging inntil sperren
+            oppheves.
           </Text>
 
           <Textarea
@@ -508,11 +493,7 @@ export function AdminUserTable({
               Avbryt
             </Button>
 
-            <Button
-              color="terracotta"
-              onClick={handleLockUser}
-              loading={actionLoading}
-            >
+            <Button color="terracotta" onClick={handleLockUser} loading={actionLoading}>
               Bekreft sperring
             </Button>
           </Group>
@@ -533,8 +514,8 @@ export function AdminUserTable({
           </Group>
 
           <Text size="sm">
-            Er du sikker på at du vil slette brukerkontoen til{" "}
-            <b>{deleteTarget?.email}</b>? Alle tilknyttede brukerdata vil også bli oppryddet.
+            Er du sikker på at du vil slette brukerkontoen til <b>{deleteTarget?.email}</b>? Alle
+            tilknyttede brukerdata vil også bli oppryddet.
           </Text>
 
           <Group justify="flex-end" mt="sm">
@@ -542,11 +523,7 @@ export function AdminUserTable({
               Avbryt
             </Button>
 
-            <Button
-              color="red"
-              onClick={handleDeleteUser}
-              loading={actionLoading}
-            >
+            <Button color="red" onClick={handleDeleteUser} loading={actionLoading}>
               Slett bruker
             </Button>
           </Group>
@@ -567,7 +544,8 @@ export function AdminUserTable({
           </Group>
 
           <Text size="sm">
-            Er du sikker på at du vil slette kontoen til <b>{blacklistTarget?.email}</b> OG legge e-posten inn i svartelisten?
+            Er du sikker på at du vil slette kontoen til <b>{blacklistTarget?.email}</b> OG legge
+            e-posten inn i svartelisten?
           </Text>
 
           <Textarea
@@ -583,11 +561,7 @@ export function AdminUserTable({
               Avbryt
             </Button>
 
-            <Button
-              color="red"
-              onClick={handleDeleteAndBlacklistUser}
-              loading={actionLoading}
-            >
+            <Button color="red" onClick={handleDeleteAndBlacklistUser} loading={actionLoading}>
               Slett & Svartelist
             </Button>
           </Group>

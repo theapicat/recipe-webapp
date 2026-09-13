@@ -37,7 +37,9 @@ export const ProfileEditForm = () => {
     },
   });
 
-  // Synkroniser skjema med sesjonsdata
+  // Synkroniser skjema med sesjonsdata. `form` er bevisst utelatt fra dependency-listen — Mantines
+  // `useForm()` returnerer et nytt objekt hver render, så å inkludere det ville trigget effekten
+  // (og dermed et nytt `form`-objekt) på hver eneste render.
   useEffect(() => {
     if (user) {
       form.setValues({
@@ -46,6 +48,7 @@ export const ProfileEditForm = () => {
         email: user.email || "",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleSubmit = async (values: ProfileFormValues) => {
@@ -105,15 +108,12 @@ export const ProfileEditForm = () => {
       >
         {isAdmin && (
           <Alert color="terracotta" icon={<IconLock size={20} />} mb="md" radius="md">
-            Systemadministrator sin profilinformasjon er skrivebeskyttet og kan ikke endres via grensesnittet.
+            Systemadministrator sin profilinformasjon er skrivebeskyttet og kan ikke endres via
+            grensesnittet.
           </Alert>
         )}
 
-        <FormField
-          name="email"
-          label="E-postadresse"
-          disabled
-        />
+        <FormField name="email" label="E-postadresse" disabled />
 
         <FormField
           name="firstName"

@@ -3,19 +3,8 @@
 import { useSession } from "@/lib/session/SessionProvider";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { useRouter } from "next/navigation";
-import {
-  Avatar,
-  Badge,
-  Group,
-  Menu,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
-import {
-  IconSettings,
-  IconUser,
-  IconLogout,
-} from "@tabler/icons-react";
+import { Avatar, Badge, Group, Menu, Text, UnstyledButton } from "@mantine/core";
+import { IconSettings, IconUser, IconLogout } from "@tabler/icons-react";
 import Link from "next/link";
 
 export const UserMenu = () => {
@@ -47,11 +36,7 @@ export const UserMenu = () => {
     <Menu position="bottom-end" shadow="md" width={220} radius="md">
       <Menu.Target>
         <UnstyledButton style={{ borderRadius: "50%" }}>
-          <Avatar
-            color="sage"
-            radius="xl"
-            size="md"
-          >
+          <Avatar color="sage" radius="xl" size="md">
             {getInitials()}
           </Avatar>
         </UnstyledButton>
@@ -73,29 +58,17 @@ export const UserMenu = () => {
 
         <Menu.Divider />
 
-        <Menu.Item
-          leftSection={<IconSettings size={16} />}
-          component={Link}
-          href="/user/settings"
-        >
+        <Menu.Item leftSection={<IconSettings size={16} />} component={Link} href="/user/settings">
           Innstillinger
         </Menu.Item>
 
-        <Menu.Item
-          leftSection={<IconUser size={16} />}
-          component={Link}
-          href="/user/profile"
-        >
+        <Menu.Item leftSection={<IconUser size={16} />} component={Link} href="/user/profile">
           Profil
         </Menu.Item>
 
         <Menu.Divider />
 
-        <Menu.Item
-          color="red"
-          leftSection={<IconLogout size={16} />}
-          onClick={handleLogout}
-        >
+        <Menu.Item color="red" leftSection={<IconLogout size={16} />} onClick={handleLogout}>
           Logg ut
         </Menu.Item>
       </Menu.Dropdown>

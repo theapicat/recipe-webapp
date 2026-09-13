@@ -22,7 +22,6 @@ import {
   SegmentedControl,
 } from "@mantine/core";
 import {
-  IconSettings,
   IconAlertTriangle,
   IconUsers,
   IconBell,
@@ -52,9 +51,7 @@ export default function UserSettingsPage() {
   // Sharing / Household
   const [sharedUsers, setSharedUsers] = useState<
     { email: string; role: string; accepted: boolean }[]
-  >([
-    { email: "samboer@eksempel.no", role: "Full tilgang", accepted: true },
-  ]);
+  >([{ email: "samboer@eksempel.no", role: "Full tilgang", accepted: true }]);
   const [inviteEmail, setInviteEmail] = useState("");
 
   const handleAddUser = () => {
@@ -80,7 +77,8 @@ export default function UserSettingsPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>App-innstillinger</b>. Her setter du opp kostholds- og allergipreferanser, deling av ukesmeny og handleliste i husholdningen, samt påminnelser.
+          Dette er en visuell skisse for <b>App-innstillinger</b>. Her setter du opp kostholds- og
+          allergipreferanser, deling av ukesmeny og handleliste i husholdningen, samt påminnelser.
         </Alert>
 
         {/* Overskrift */}
@@ -108,7 +106,8 @@ export default function UserSettingsPage() {
                   Kosthold & Allergier
                 </Text>
                 <Text size="xs" c="dimmed">
-                  Allergier du velger her vil automatisk flagges med advarsel ved import av oppskrifter
+                  Allergier du velger her vil automatisk flagges med advarsel ved import av
+                  oppskrifter
                 </Text>
               </div>
             </Group>
@@ -118,14 +117,7 @@ export default function UserSettingsPage() {
             <Select
               label="Kostholdstype"
               description="Hvilken matprofil passer deg best?"
-              data={[
-                "Altetende",
-                "Vegetar",
-                "Vegansk",
-                "Pesketar",
-                "Lavkarbo / Keto",
-                "Melkefri",
-              ]}
+              data={["Altetende", "Vegetar", "Vegansk", "Pesketar", "Lavkarbo / Keto", "Melkefri"]}
               value={dietType}
               onChange={(val) => setDietType(val || "Altetende")}
             />
@@ -153,8 +145,8 @@ export default function UserSettingsPage() {
 
             {allergies.length > 0 && (
               <Alert color="terracotta" variant="light" icon={<IconAlertTriangle size={18} />}>
-                Når du importerer nye oppskrifter vil systemet sjekke ingrediensene og si fra dersom de inneholder:{" "}
-                <b>{allergies.join(", ")}</b>.
+                Når du importerer nye oppskrifter vil systemet sjekke ingrediensene og si fra dersom
+                de inneholder: <b>{allergies.join(", ")}</b>.
               </Alert>
             )}
           </Stack>
@@ -172,7 +164,8 @@ export default function UserSettingsPage() {
                   Standard porsjoner
                 </Text>
                 <Text size="xs" c="dimmed">
-                  Oppskrifter og mengder i ukesmenyen blir automatisk skalert til dette antall porsjoner
+                  Oppskrifter og mengder i ukesmenyen blir automatisk skalert til dette antall
+                  porsjoner
                 </Text>
               </div>
             </Group>
@@ -221,17 +214,14 @@ export default function UserSettingsPage() {
                 onChange={(e) => setInviteEmail(e.currentTarget.value)}
                 style={{ flex: 1 }}
               />
-              <Button
-                color="sage"
-                leftSection={<IconUserPlus size={16} />}
-                onClick={handleAddUser}
-              >
+              <Button color="sage" leftSection={<IconUserPlus size={16} />} onClick={handleAddUser}>
                 Send Invitasjon
               </Button>
             </Group>
 
             <Text size="xs" c="dimmed">
-              Medlemmer i din husholdning vil se og kunne redigere din felles ukesmeny og handleliste. Importerte/egne oppskrifter vil merkes med hvem som opprettet dem.
+              Medlemmer i din husholdning vil se og kunne redigere din felles ukesmeny og
+              handleliste. Importerte/egne oppskrifter vil merkes med hvem som opprettet dem.
             </Text>
 
             <Stack gap="xs" mt="xs">
@@ -332,21 +322,15 @@ export default function UserSettingsPage() {
                 color="sage"
                 data={[
                   {
-                    label: (
-                      <CenterGroup icon={IconSun} text="Lyst" />
-                    ),
+                    label: <CenterGroup icon={IconSun} text="Lyst" />,
                     value: "light",
                   },
                   {
-                    label: (
-                      <CenterGroup icon={IconMoon} text="Mørkt" />
-                    ),
+                    label: <CenterGroup icon={IconMoon} text="Mørkt" />,
                     value: "dark",
                   },
                   {
-                    label: (
-                      <CenterGroup icon={IconDeviceDesktop} text="System" />
-                    ),
+                    label: <CenterGroup icon={IconDeviceDesktop} text="System" />,
                     value: "system",
                   },
                 ]}

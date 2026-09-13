@@ -87,7 +87,7 @@ export default function AdminWhitelistPage() {
   const filteredDomains = mockDomainsData.filter(
     (d) =>
       d.domain.toLowerCase().includes(search.toLowerCase()) ||
-      d.name.toLowerCase().includes(search.toLowerCase())
+      d.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -100,7 +100,8 @@ export default function AdminWhitelistPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>Godkjente Nettsider (Domene-Whitelist)</b>. Core API vil bruke denne databasen til å avvise ugyldige skrapeforespørsler.
+          Dette er en visuell skisse for <b>Godkjente Nettsider (Domene-Whitelist)</b>. Core API vil
+          bruke denne databasen til å avvise ugyldige skrapeforespørsler.
         </Alert>
 
         {/* Overskrift og Handling */}
@@ -111,11 +112,7 @@ export default function AdminWhitelistPage() {
               Styr hvilke domener skraperen har lov til å hente oppskrifter fra
             </Text>
           </div>
-          <Button
-            leftSection={<IconPlus size={16} />}
-            color="sage"
-            onClick={open}
-          >
+          <Button leftSection={<IconPlus size={16} />} color="sage" onClick={open}>
             Legg til domene
           </Button>
         </Group>
@@ -215,10 +212,7 @@ export default function AdminWhitelistPage() {
                       </div>
                     </Table.Td>
                     <Table.Td>
-                      <Badge
-                        color={item.status === "Aktiv" ? "sage" : "gray"}
-                        variant="dot"
-                      >
+                      <Badge color={item.status === "Aktiv" ? "sage" : "gray"} variant="dot">
                         {item.status}
                       </Badge>
                     </Table.Td>
@@ -247,15 +241,10 @@ export default function AdminWhitelistPage() {
                               )
                             }
                           >
-                            {item.status === "Aktiv"
-                              ? "Deaktiver"
-                              : "Aktiver"}
+                            {item.status === "Aktiv" ? "Deaktiver" : "Aktiver"}
                           </Menu.Item>
                           <Menu.Divider />
-                          <Menu.Item
-                            leftSection={<IconTrash size={14} />}
-                            color="red"
-                          >
+                          <Menu.Item leftSection={<IconTrash size={14} />} color="red">
                             Fjern domene
                           </Menu.Item>
                         </Menu.Dropdown>
@@ -291,11 +280,7 @@ export default function AdminWhitelistPage() {
             value={newName}
             onChange={(e) => setNewName(e.currentTarget.value)}
           />
-          <Switch
-            label="Aktivert umiddelbart"
-            defaultChecked
-            color="sage"
-          />
+          <Switch label="Aktivert umiddelbart" defaultChecked color="sage" />
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={close}>
               Avbryt

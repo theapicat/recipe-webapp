@@ -14,11 +14,7 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import Link from "next/link";
-import {
-  IconChefHat,
-  IconLock,
-  IconCircleCheck,
-} from "@tabler/icons-react";
+import { IconChefHat, IconLock, IconCircleCheck } from "@tabler/icons-react";
 import { useSession } from "@/lib/session/SessionProvider";
 
 export const Footer = () => {
@@ -45,7 +41,9 @@ export const Footer = () => {
             </Group>
 
             <Text size="xs" c="dimmed" lh={1.6}>
-              Din personlige, digitale kokebok. Samle egne oppskrifter, importer fra favorittblogger, planlegg ukesmenyen og generer handlelister – helt støyfritt og privat.
+              Din personlige, digitale kokebok. Samle egne oppskrifter, importer fra
+              favorittblogger, planlegg ukesmenyen og generer handlelister – helt støyfritt og
+              privat.
             </Text>
 
             <Group gap={6} mt={4}>
@@ -65,7 +63,12 @@ export const Footer = () => {
                 Min Kjøkkenhylle
               </Text>
               {!userActive && (
-                <Badge size="xs" color="gray" variant="outline" leftSection={<IconLock size={10} />}>
+                <Badge
+                  size="xs"
+                  color="gray"
+                  variant="outline"
+                  leftSection={<IconLock size={10} />}
+                >
                   Krever konto
                 </Badge>
               )}
@@ -80,7 +83,13 @@ export const Footer = () => {
             <Anchor component={Link} href="/user/mealplan" size="sm" c="dimmed" underline="hover">
               Måltidsplanlegger
             </Anchor>
-            <Anchor component={Link} href="/user/shoppinglist" size="sm" c="dimmed" underline="hover">
+            <Anchor
+              component={Link}
+              href="/user/shoppinglist"
+              size="sm"
+              c="dimmed"
+              underline="hover"
+            >
               Handleliste
             </Anchor>
           </Stack>
@@ -120,7 +129,13 @@ export const Footer = () => {
             <Anchor component={Link} href="/legal/cookies" size="sm" c="dimmed" underline="hover">
               Informasjonskapsler
             </Anchor>
-            <Anchor component={Link} href="/legal/accessibility" size="sm" c="dimmed" underline="hover">
+            <Anchor
+              component={Link}
+              href="/legal/accessibility"
+              size="sm"
+              c="dimmed"
+              underline="hover"
+            >
               Tilgjengelighet
             </Anchor>
           </Stack>
@@ -132,13 +147,19 @@ export const Footer = () => {
         <Group justify="space-between" align="center" pt="xs">
           <Group gap="xs">
             <Text size="xs" c="dimmed">
-              © {new Date().getFullYear()} Kjøkkenhylla. Utviklet som et støyfritt og personlig verktøy.
+              © {new Date().getFullYear()} Kjøkkenhylla. Utviklet som et støyfritt og personlig
+              verktøy.
             </Text>
           </Group>
 
           <Group gap="md">
             {userActive ? (
-              <Badge variant="light" color="sage" size="xs" leftSection={<IconCircleCheck size={12} />}>
+              <Badge
+                variant="light"
+                color="sage"
+                size="xs"
+                leftSection={<IconCircleCheck size={12} />}
+              >
                 Innlogget som {session.user?.firstName || "bruker"}
               </Badge>
             ) : (

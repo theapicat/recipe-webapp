@@ -17,9 +17,7 @@ export const POST = async (request: Request) => {
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Kunne ikke sende bekreftelsese-post på nytt.";
+      error instanceof Error ? error.message : "Kunne ikke sende bekreftelsese-post på nytt.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

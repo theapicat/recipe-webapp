@@ -1,4 +1,4 @@
-import {BlacklistType} from "@/lib/models/enums/BlacklistType";
+import { BlacklistType } from "@/lib/models/enums/BlacklistType";
 
 export interface AddBlacklistRequest {
   pattern: string;

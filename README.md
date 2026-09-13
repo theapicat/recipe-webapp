@@ -6,14 +6,14 @@
 
 ## Funksjonalitet
 
-* **Oppskriftshåndtering:** Lagre egne oppskrifter manuelt eller importer direkte fra et utvalg godkjente nettsteder.
-* **Måltidsplanlegging:** Planlegg måltider på dags- og ukesbasis.
-* **Handleliste:** Generer strukturerte handlelister basert på lagrede måltidsplaner.
-* **Næringsinnhold & Veiledning:** Få oversikt over energi, makronæringsstoffer (proteiner, fett, karbohydrater, fiber), sukker og vitaminer – både per ingrediens, per måltid og akkummulert på ukesbasis.
+- **Oppskriftshåndtering:** Lagre egne oppskrifter manuelt eller importer direkte fra et utvalg godkjente nettsteder.
+- **Måltidsplanlegging:** Planlegg måltider på dags- og ukesbasis.
+- **Handleliste:** Generer strukturerte handlelister basert på lagrede måltidsplaner.
+- **Næringsinnhold & Veiledning:** Få oversikt over energi, makronæringsstoffer (proteiner, fett, karbohydrater, fiber), sukker og vitaminer – både per ingrediens, per måltid og akkummulert på ukesbasis.
+
 > **Merk:** Næringsberegningene er kun veiledende og utgjør ikke medisinsk eller helsefaglig rådgivning. Se brukervilkår for mer detaljer.
 
-
-* **Brukeradministrasjon:** Opprettelse, oppdatering og sletting av brukerkonto samt personlige innstillinger.
+- **Brukeradministrasjon:** Opprettelse, oppdatering og sletting av brukerkonto samt personlige innstillinger.
 
 ---
 
@@ -31,12 +31,12 @@ Internt benytter frontend-applikasjonen dedikerte HTTP-agenter (`agentInternal` 
 
 ## Teknologistakk
 
-| Kategori | Teknologi |
-| --- | --- |
-| **Rammeverk & Språk** | Next.js 16 (App Router), React 19, TypeScript |
-| **UI & Styling** | Mantine v9 (`@mantine/core`, `@mantine/form`, `@mantine/notifications`), PostCSS |
-| **Datavisualisering** | Mantine Charts, Recharts |
-| **Ikoner & Verktøy** | Tabler Icons, Dayjs, React Markdown |
+| Kategori              | Teknologi                                                                        |
+| --------------------- | -------------------------------------------------------------------------------- |
+| **Rammeverk & Språk** | Next.js 16 (App Router), React 19, TypeScript                                    |
+| **UI & Styling**      | Mantine v9 (`@mantine/core`, `@mantine/form`, `@mantine/notifications`), PostCSS |
+| **Datavisualisering** | Mantine Charts, Recharts                                                         |
+| **Ikoner & Verktøy**  | Tabler Icons, Dayjs, React Markdown                                              |
 
 ---
 
@@ -61,24 +61,24 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=...
 
 ### Forutsetninger
 
-* Node.js (versjon 20 eller nyere anbefales)
-* `npm`
+- Node.js (versjon 20 eller nyere anbefales)
+- `npm`
 
 ### Installasjon
 
 1. **Klon repositoriet og installer avhengigheter:**
+
 ```bash
 npm install
 
 ```
 
-
 2. **Start utviklingsserveren:**
+
 ```bash
 npm run dev
 
 ```
-
 
 3. Åpne `http://localhost:3000` i nettleseren.
 
@@ -109,9 +109,9 @@ Prosjektet er klargjort for containerisering. Dockerfile og `docker-compose.yml`
 
 Offentlig informasjon og vilkår ligger tilgjengelig under `public/docs/legal/`:
 
-* `accessibility.md` – Tilgjengelighetserklæring
-* `cookies.md` – Informasjon om informasjonskapsler
-* `privacy.md` – Personvernerklæring
-* `terms.md` – Brukervilkår
+- `accessibility.md` – Tilgjengelighetserklæring
+- `cookies.md` – Informasjon om informasjonskapsler
+- `privacy.md` – Personvernerklæring
+- `terms.md` – Brukervilkår
 
 Ytterligere informasjonsdokumenter blir tilgjengelig under `public/docs/info/`.

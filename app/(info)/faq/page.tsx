@@ -163,9 +163,7 @@ export default function FaqPage() {
     return FAQ_DATA.map((cat) => ({
       ...cat,
       items: cat.items.filter(
-        (item) =>
-          item.q.toLowerCase().includes(query) ||
-          item.a.toLowerCase().includes(query)
+        (item) => item.q.toLowerCase().includes(query) || item.a.toLowerCase().includes(query),
       ),
     })).filter((cat) => cat.items.length > 0);
   }, [search]);
@@ -184,7 +182,8 @@ export default function FaqPage() {
           </Title>
 
           <Text size="md" c="dimmed" style={{ maxWidth: 580 }}>
-            Finner du ikke svaret du leter etter? Søk i spørsmålene under, sjekk våre juridiske dokumenter eller ta kontakt med oss.
+            Finner du ikke svaret du leter etter? Søk i spørsmålene under, sjekk våre juridiske
+            dokumenter eller ta kontakt med oss.
           </Text>
 
           {/* Søkefelt */}
@@ -255,13 +254,7 @@ export default function FaqPage() {
               <Text size="sm" c="dimmed">
                 Prøv å søke med andre ord eller ta kontakt med oss direkte.
               </Text>
-              <Button
-                variant="light"
-                color="sage"
-                size="xs"
-                mt="xs"
-                onClick={() => setSearch("")}
-              >
+              <Button variant="light" color="sage" size="xs" mt="xs" onClick={() => setSearch("")}>
                 Nullstill søk
               </Button>
             </Stack>
@@ -279,7 +272,8 @@ export default function FaqPage() {
                 </Text>
               </Group>
               <Text size="sm" c="dimmed">
-                Vi hjelper deg gjerne! Send oss en melding via kontaktskjemaet eller les våre juridiske brukervilkår.
+                Vi hjelper deg gjerne! Send oss en melding via kontaktskjemaet eller les våre
+                juridiske brukervilkår.
               </Text>
             </Stack>
 

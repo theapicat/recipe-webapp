@@ -12,23 +12,14 @@ import { MobileNavDrawer } from "@/components/layout/header/MobileNavDrawer";
 
 export const Header = () => {
   const session = useSession();
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   const isGuest = !session.role;
   const logoHref =
-    session.role === "Admin"
-      ? "/admin/dashboard"
-      : session.role === "User"
-        ? "/dashboard"
-        : "/";
+    session.role === "Admin" ? "/admin/dashboard" : session.role === "User" ? "/dashboard" : "/";
 
   const currentLinks =
-    session.role === "Admin"
-      ? ADMIN_LINKS
-      : session.role === "User"
-        ? USER_LINKS
-        : GUEST_LINKS;
+    session.role === "Admin" ? ADMIN_LINKS : session.role === "User" ? USER_LINKS : GUEST_LINKS;
 
   return (
     <>
@@ -36,12 +27,7 @@ export const Header = () => {
         <Group justify="space-between" align="center" h="100%" wrap="nowrap">
           {/* Burger og Desktop-logo */}
           <Group gap="xs" wrap="nowrap">
-            <Burger
-              opened={drawerOpened}
-              onClick={toggleDrawer}
-              hiddenFrom="md"
-              size="sm"
-            />
+            <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="md" size="sm" />
             <Group visibleFrom="md">
               <Logo href={logoHref} />
             </Group>
@@ -59,21 +45,10 @@ export const Header = () => {
           <Group gap="xs" wrap="nowrap">
             {isGuest ? (
               <Group gap="xs" wrap="nowrap">
-                <Button
-                  size="xs"
-                  variant="subtle"
-                  component={Link}
-                  href="/login"
-                  visibleFrom="xs"
-                >
+                <Button size="xs" variant="subtle" component={Link} href="/login" visibleFrom="xs">
                   Logg inn
                 </Button>
-                <Button
-                  size="xs"
-                  variant="filled"
-                  component={Link}
-                  href="/register"
-                >
+                <Button size="xs" variant="filled" component={Link} href="/register">
                   Opprett konto
                 </Button>
               </Group>

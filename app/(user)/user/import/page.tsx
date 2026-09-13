@@ -69,7 +69,7 @@ export default function UserImportPage() {
       !url.includes("trinesmatblogg.no")
     ) {
       setError(
-        "Denne siden er ikke tilgjengelig for oppskrifter. Kun godkjente nettsider (f.eks. matprat.no, godt.no) kan skrapes."
+        "Denne siden er ikke tilgjengelig for oppskrifter. Kun godkjente nettsider (f.eks. matprat.no, godt.no) kan skrapes.",
       );
       return;
     }
@@ -127,7 +127,9 @@ export default function UserImportPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>Oppskriftsimporteren</b>. Her limer brukeren inn lenker fra godkjente matblogger/nettsider. Scraper-tjenesten henter ut tittel, bilde, ingredienser og steg automatisk.
+          Dette er en visuell skisse for <b>Oppskriftsimporteren</b>. Her limer brukeren inn lenker
+          fra godkjente matblogger/nettsider. Scraper-tjenesten henter ut tittel, bilde,
+          ingredienser og steg automatisk.
         </Alert>
 
         {/* Overskrift */}
@@ -135,7 +137,8 @@ export default function UserImportPage() {
           <div>
             <Title order={2}>🔗 Importer Oppskrift</Title>
             <Text c="dimmed" size="sm">
-              Lim inn en nettadresse fra en godkjent oppskriftsside for å legge den til i din samling
+              Lim inn en nettadresse fra en godkjent oppskriftsside for å legge den til i din
+              samling
             </Text>
           </div>
           <Badge size="lg" variant="light" color="sage" leftSection={<IconWorldCheck size={16} />}>
@@ -161,15 +164,23 @@ export default function UserImportPage() {
                 <Text size="xs" c="dimmed">
                   Eksempler på trygge kilder:
                 </Text>
-                <Badge size="xs" variant="outline" color="gray">matprat.no</Badge>
-                <Badge size="xs" variant="outline" color="gray">godt.no</Badge>
-                <Badge size="xs" variant="outline" color="gray">trinesmatblogg.no</Badge>
+                <Badge size="xs" variant="outline" color="gray">
+                  matprat.no
+                </Badge>
+                <Badge size="xs" variant="outline" color="gray">
+                  godt.no
+                </Badge>
+                <Badge size="xs" variant="outline" color="gray">
+                  trinesmatblogg.no
+                </Badge>
               </Group>
 
               <Button
                 color="sage"
                 size="md"
-                leftSection={isLoading ? <Loader size="xs" color="white" /> : <IconDownload size={18} />}
+                leftSection={
+                  isLoading ? <Loader size="xs" color="white" /> : <IconDownload size={18} />
+                }
                 onClick={handleImport}
                 disabled={isLoading}
               >
@@ -188,9 +199,13 @@ export default function UserImportPage() {
             onClose={() => setSavedSuccess(false)}
           >
             Oppskriften er lagret i din samling. Du finner den under{" "}
-            <Link href="/user/recipes" style={{ color: "var(--mantine-color-sage-7)", fontWeight: 600 }}>
+            <Link
+              href="/user/recipes"
+              style={{ color: "var(--mantine-color-sage-7)", fontWeight: 600 }}
+            >
               Mine Oppskrifter
-            </Link>.
+            </Link>
+            .
           </Notification>
         )}
 
@@ -231,10 +246,20 @@ export default function UserImportPage() {
                   </Card>
 
                   <Group gap="md">
-                    <Badge size="lg" variant="light" color="sage" leftSection={<IconClock size={16} />}>
+                    <Badge
+                      size="lg"
+                      variant="light"
+                      color="sage"
+                      leftSection={<IconClock size={16} />}
+                    >
                       {scrapedRecipe.prepTime}
                     </Badge>
-                    <Badge size="lg" variant="light" color="sage" leftSection={<IconUsers size={16} />}>
+                    <Badge
+                      size="lg"
+                      variant="light"
+                      color="sage"
+                      leftSection={<IconUsers size={16} />}
+                    >
                       {scrapedRecipe.servings} porsjoner
                     </Badge>
                   </Group>
@@ -249,7 +274,11 @@ export default function UserImportPage() {
                         Ingredienser
                       </Text>
                     </Group>
-                    <List spacing="xs" size="sm" icon={<IconCheck size={14} color="var(--mantine-color-sage-6)" />}>
+                    <List
+                      spacing="xs"
+                      size="sm"
+                      icon={<IconCheck size={14} color="var(--mantine-color-sage-6)" />}
+                    >
                       {scrapedRecipe.ingredients.map((ing, idx) => (
                         <List.Item key={idx}>{ing}</List.Item>
                       ))}

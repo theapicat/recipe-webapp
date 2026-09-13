@@ -19,18 +19,18 @@ interface FormFieldProps {
 }
 
 export const FormField = ({
-                            name,
-                            label,
-                            placeholder,
-                            type = "text",
-                            required = false,
-                            disabled = false,
-                            span = 12,
-                            minRows = 8,
-                            maxRows = 16,
-                            autosize = true,
-                            extra,
-                          }: FormFieldProps) => {
+  name,
+  label,
+  placeholder,
+  type = "text",
+  required = false,
+  disabled = false,
+  span = 12,
+  minRows = 8,
+  maxRows = 16,
+  autosize = true,
+  extra,
+}: FormFieldProps) => {
   const form = useAppFormContext();
 
   let InputComponent: React.ElementType = TextInput;

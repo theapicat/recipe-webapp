@@ -55,7 +55,9 @@ export const LoginForm = () => {
         if (res.status === 400) {
           setLoginFailedMessage(data.message || "Feil e-post eller passord!");
         } else {
-          setLoginFailedMessage("Pålogging ikke mulig grunnet feil på server. Prøv igjen senere...");
+          setLoginFailedMessage(
+            "Pålogging ikke mulig grunnet feil på server. Prøv igjen senere...",
+          );
         }
       }
     } catch {

@@ -1,6 +1,16 @@
 "use client";
 
-import { Title, Text, Paper, Stack, Badge, ThemeIcon, Group, SimpleGrid, Card } from "@mantine/core";
+import {
+  Title,
+  Text,
+  Paper,
+  Stack,
+  Badge,
+  ThemeIcon,
+  Group,
+  SimpleGrid,
+  Card,
+} from "@mantine/core";
 import {
   IconShieldCheck,
   IconLock,
@@ -21,7 +31,8 @@ export default function PrivacyPage() {
             Personvernerklæring for Kjøkkenhylla
           </Title>
           <Text size="sm" c="dimmed" mt={4}>
-            Kjøkkenhylla tar ditt personvern på alvor. Vi praktiserer <b>dataminimering</b>, noe som betyr at vi kun samler inn og behandler informasjon som er absolutt nødvendig.
+            Kjøkkenhylla tar ditt personvern på alvor. Vi praktiserer <b>dataminimering</b>, noe som
+            betyr at vi kun samler inn og behandler informasjon som er absolutt nødvendig.
           </Text>
         </div>
 
@@ -37,13 +48,16 @@ export default function PrivacyPage() {
             <Paper p="sm" radius="sm" withBorder>
               <Stack gap={4}>
                 <Text size="xs">
-                  • <b>E-postadresse:</b> Brukes som din unike identifikator for innlogging, kontogjenoppretting og viktige systemmeldinger.
+                  • <b>E-postadresse:</b> Brukes som din unike identifikator for innlogging,
+                  kontogjenoppretting og viktige systemmeldinger.
                 </Text>
                 <Text size="xs">
-                  • <b>Navn (Fornavn og etternavn):</b> Brukes for å gi deg en personlig brukeropplevelse.
+                  • <b>Navn (Fornavn og etternavn):</b> Brukes for å gi deg en personlig
+                  brukeropplevelse.
                 </Text>
                 <Text size="xs">
-                  • <b>Innloggingsinformasjon fra Google (OAuth):</b> Dersom du benytter Google-innlogging, henter vi kun e-postadresse og navn fra Google-profilen din.
+                  • <b>Innloggingsinformasjon fra Google (OAuth):</b> Dersom du benytter
+                  Google-innlogging, henter vi kun e-postadresse og navn fra Google-profilen din.
                 </Text>
               </Stack>
             </Paper>
@@ -61,7 +75,8 @@ export default function PrivacyPage() {
                 </Text>
               </Group>
               <Text size="xs" c="dimmed" lh={1.5}>
-                Egne og skrapte oppskrifter, måltidsplaner, handlelister og ernæringsmål er helt skjermet. Ingen andre brukere har tilgang til dine data.
+                Egne og skrapte oppskrifter, måltidsplaner, handlelister og ernæringsmål er helt
+                skjermet. Ingen andre brukere har tilgang til dine data.
               </Text>
             </Card>
 
@@ -75,7 +90,8 @@ export default function PrivacyPage() {
                 </Text>
               </Group>
               <Text size="xs" c="dimmed" lh={1.5}>
-                Vi selger eller deler aldri personopplysninger. Vi benytter ingen sporingsteknologier fra tredjepart (som Google Analytics eller Facebook Pixel).
+                Vi selger eller deler aldri personopplysninger. Vi benytter ingen
+                sporingsteknologier fra tredjepart (som Google Analytics eller Facebook Pixel).
               </Text>
             </Card>
           </SimpleGrid>
@@ -86,7 +102,8 @@ export default function PrivacyPage() {
               2. Datasikkerhet og Rettigheter (GDPR)
             </Title>
             <Text size="sm" lh={1.6} mb="xs">
-              Passord lagres kryptert via vår .NET Identity-backend, og all kommunikasjon sikres med SSL/TLS. I henhold til GDPR har du følgende rettigheter:
+              Passord lagres kryptert via vår .NET Identity-backend, og all kommunikasjon sikres med
+              SSL/TLS. I henhold til GDPR har du følgende rettigheter:
             </Text>
             <Stack gap="xs">
               {/* Datainnsyn og dataportabilitet */}
@@ -98,7 +115,9 @@ export default function PrivacyPage() {
                       Rett til innsyn og dataportabilitet (Selvbetjent eksport)
                     </Text>
                     <Text size="xs" c="dimmed">
-                      Du har rett til fullt innsyn i alle personopplysninger og brukerdata vi har registrert om deg. Du kan når som helst hente ut og laste ned en komplett kopi av dine data direkte fra profilinnstillingene dine (`/user/profile`).
+                      Du har rett til fullt innsyn i alle personopplysninger og brukerdata vi har
+                      registrert om deg. Du kan når som helst hente ut og laste ned en komplett kopi
+                      av dine data direkte fra profilinnstillingene dine (`/user/profile`).
                     </Text>
                   </div>
                 </Group>
@@ -110,10 +129,12 @@ export default function PrivacyPage() {
                   <IconTrash size={20} color="var(--mantine-color-red-filled)" />
                   <div>
                     <Text fw={600} size="sm">
-                      Rett til sletting ("Rett til å bli glemt")
+                      Rett til sletting (&laquo;Rett til å bli glemt&raquo;)
                     </Text>
                     <Text size="xs" c="dimmed">
-                      Du kan når som helst slette kontoen din permanent under profilsiden din (`/user/profile`). Dette utfører en umiddelbar kaskadesletting av alle dine oppskrifter, ukeplaner og personalia fra databasen.
+                      Du kan når som helst slette kontoen din permanent under profilsiden din
+                      (`/user/profile`). Dette utfører en umiddelbar kaskadesletting av alle dine
+                      oppskrifter, ukeplaner og personalia fra databasen.
                     </Text>
                   </div>
                 </Group>
@@ -128,7 +149,9 @@ export default function PrivacyPage() {
                       Rett til retting og øvrige henvendelser
                     </Text>
                     <Text size="xs" c="dimmed">
-                      Du kan selv oppdatere din profilinformasjon i applikasjonen. Dersom du har spørsmål om denne personvernerklæringen eller dine rettigheter som ikke løses på profilsiden, kan du kontakte oss via kontaktskjemaet på nettstedet.
+                      Du kan selv oppdatere din profilinformasjon i applikasjonen. Dersom du har
+                      spørsmål om denne personvernerklæringen eller dine rettigheter som ikke løses
+                      på profilsiden, kan du kontakte oss via kontaktskjemaet på nettstedet.
                     </Text>
                   </div>
                 </Group>

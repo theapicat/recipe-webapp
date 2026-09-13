@@ -46,7 +46,9 @@ import { AsyncMainContainer } from "@/components/containers/MainContainer";
 // Syntetiserer et behagelig "pling" via nettleserens Web Audio API uten eksterne lydfiler
 const playKitchenChime = () => {
   try {
-    const AudioContext = window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
+    const AudioContext =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
     if (!AudioContext) return;
 
     const audioCtx = new AudioContext();
@@ -317,7 +319,7 @@ export default function RecipeCookPage() {
           withBorder
           bg="light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-6))"
           style={{
-            borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-dark-4))"
+            borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-dark-4))",
           }}
         >
           <Group justify="space-between" align="center">
@@ -332,7 +334,12 @@ export default function RecipeCookPage() {
               >
                 Avslutt Kokkemodus
               </Button>
-              <Badge color="sage" variant="filled" size="lg" leftSection={<IconChefHat size={14} />}>
+              <Badge
+                color="sage"
+                variant="filled"
+                size="lg"
+                leftSection={<IconChefHat size={14} />}
+              >
                 Kokkemodus
               </Badge>
             </Group>
@@ -388,7 +395,13 @@ export default function RecipeCookPage() {
 
         {/* GLOBALE AKTIVE TIMER-OVERSIKT */}
         {activeTimerList.length > 0 && (
-          <Paper p="md" radius="md" withBorder bg="orange.0" style={{ borderColor: "var(--mantine-color-orange-3)" }}>
+          <Paper
+            p="md"
+            radius="md"
+            withBorder
+            bg="orange.0"
+            style={{ borderColor: "var(--mantine-color-orange-3)" }}
+          >
             <Stack gap="xs">
               <Group justify="space-between">
                 <Group gap="xs">
@@ -419,7 +432,11 @@ export default function RecipeCookPage() {
                           variant="light"
                           onClick={() => handleTogglePause(t.stepNumber)}
                         >
-                          {t.isRunning ? <IconPlayerPause size={14} /> : <IconPlayerPlay size={14} />}
+                          {t.isRunning ? (
+                            <IconPlayerPause size={14} />
+                          ) : (
+                            <IconPlayerPlay size={14} />
+                          )}
                         </ActionIcon>
 
                         <ActionIcon
@@ -472,7 +489,9 @@ export default function RecipeCookPage() {
                   color="orange"
                   size="xs"
                   leftSection={<IconClock size={16} />}
-                  onClick={() => handleStartTimer(currentStep.stepNumber, currentStep.suggestedTimerMinutes!)}
+                  onClick={() =>
+                    handleStartTimer(currentStep.stepNumber, currentStep.suggestedTimerMinutes!)
+                  }
                 >
                   Start timer ({currentStep.suggestedTimerMinutes} min)
                 </Button>
@@ -485,7 +504,13 @@ export default function RecipeCookPage() {
 
             {/* DEDIKERT TIMERKORT FOR AKTUELT STEG */}
             {currentStepTimer && (
-              <Paper p="md" radius="md" bg="orange.0" style={{ borderColor: "var(--mantine-color-orange-3)" }} withBorder>
+              <Paper
+                p="md"
+                radius="md"
+                bg="orange.0"
+                style={{ borderColor: "var(--mantine-color-orange-3)" }}
+                withBorder
+              >
                 <Group justify="space-between" align="center" wrap="wrap" gap="md">
                   <Group gap="md">
                     <RingProgress
@@ -495,12 +520,20 @@ export default function RecipeCookPage() {
                       color="orange"
                       sections={[
                         {
-                          value: (currentStepTimer.remainingSeconds / currentStepTimer.initialSeconds) * 100,
+                          value:
+                            (currentStepTimer.remainingSeconds / currentStepTimer.initialSeconds) *
+                            100,
                           color: "orange",
                         },
                       ]}
                       label={
-                        <ThemeIcon color="orange" variant="light" radius="xl" size="sm" style={{ margin: "0 auto" }}>
+                        <ThemeIcon
+                          color="orange"
+                          variant="light"
+                          radius="xl"
+                          size="sm"
+                          style={{ margin: "0 auto" }}
+                        >
                           <IconClock size={12} />
                         </ThemeIcon>
                       }
@@ -519,7 +552,13 @@ export default function RecipeCookPage() {
                     <Button
                       color="orange"
                       size="sm"
-                      leftSection={currentStepTimer.isRunning ? <IconPlayerPause size={16} /> : <IconPlayerPlay size={16} />}
+                      leftSection={
+                        currentStepTimer.isRunning ? (
+                          <IconPlayerPause size={16} />
+                        ) : (
+                          <IconPlayerPlay size={16} />
+                        )
+                      }
                       onClick={() => handleTogglePause(currentStep.stepNumber)}
                     >
                       {currentStepTimer.isRunning ? "Pause" : "Start"}
@@ -535,7 +574,9 @@ export default function RecipeCookPage() {
                     </ActionIcon>
 
                     <Tooltip
-                      label={currentStepTimer.isRunning ? "Pause timeren for å slette" : "Slett timer"}
+                      label={
+                        currentStepTimer.isRunning ? "Pause timeren for å slette" : "Slett timer"
+                      }
                       position="top"
                     >
                       <span>
@@ -632,7 +673,10 @@ export default function RecipeCookPage() {
                         color: isChecked ? "var(--mantine-color-dimmed)" : "inherit",
                       }}
                     >
-                      <b>{scaledAmount} {ing.unit}</b> {ing.name}
+                      <b>
+                        {scaledAmount} {ing.unit}
+                      </b>{" "}
+                      {ing.name}
                     </Text>
                   }
                   color="sage"
@@ -664,7 +708,13 @@ export default function RecipeCookPage() {
               const isChecked = checkedIngredients[ing.id];
 
               return (
-                <Paper key={ing.id} p="xs" radius="sm" withBorder bg={isChecked ? "gray.0" : "white"}>
+                <Paper
+                  key={ing.id}
+                  p="xs"
+                  radius="sm"
+                  withBorder
+                  bg={isChecked ? "gray.0" : "white"}
+                >
                   <Checkbox
                     checked={isChecked || false}
                     onChange={() => toggleIngredient(ing.id)}
@@ -676,7 +726,10 @@ export default function RecipeCookPage() {
                           color: isChecked ? "var(--mantine-color-dimmed)" : "inherit",
                         }}
                       >
-                        <b>{scaledAmount} {ing.unit}</b> {ing.name}
+                        <b>
+                          {scaledAmount} {ing.unit}
+                        </b>{" "}
+                        {ing.name}
                       </Text>
                     }
                     color="sage"

@@ -2,5 +2,4 @@
 
 import { createFormContext } from "@mantine/form";
 
-export const [AppFormProvider, useAppFormContext, useAppForm] =
-  createFormContext<unknown>();
+export const [AppFormProvider, useAppFormContext, useAppForm] = createFormContext<unknown>();

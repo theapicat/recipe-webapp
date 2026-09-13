@@ -2,17 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Paper,
-  Title,
-  Text,
-  Group,
-  Button,
-  Modal,
-  Textarea,
-  Stack,
-  Divider,
-} from "@mantine/core";
+import { Paper, Title, Text, Group, Button, Modal, Textarea, Stack, Divider } from "@mantine/core";
 import {
   IconLock,
   IconLockOpen,
@@ -187,10 +177,9 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
   const handleResetPassword = async () => {
     setLoading(true);
     try {
-      const res = await agentInternal.post(
-        "/api/admin/users/reset-password-request",
-        { userId: user.userId }
-      );
+      const res = await agentInternal.post("/api/admin/users/reset-password-request", {
+        userId: user.userId,
+      });
 
       if (res.ok) {
         notifications.show({
@@ -257,7 +246,8 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
     try {
       const res = await agentInternal.post("/api/admin/users/delete-and-blacklist", {
         userId: user.userId,
-        reason: blacklistReason || "Slettet og svartelistet av administrator pga. brudd på brukervilkår.",
+        reason:
+          blacklistReason || "Slettet og svartelistet av administrator pga. brudd på brukervilkår.",
       });
 
       if (res.ok) {
@@ -468,7 +458,9 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
           </Group>
 
           <Text size="sm">
-            Er du sikker på at du vil slette kontoen til <b>{user.email}</b> permanent OG legge e-postadressen inn i svartelisten? Brukeren vil bli varslet via e-post og utestengt fra å registrere seg på nytt.
+            Er du sikker på at du vil slette kontoen til <b>{user.email}</b> permanent OG legge
+            e-postadressen inn i svartelisten? Brukeren vil bli varslet via e-post og utestengt fra
+            å registrere seg på nytt.
           </Text>
 
           <Textarea

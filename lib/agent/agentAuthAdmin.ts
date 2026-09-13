@@ -9,8 +9,8 @@ import { ResetPasswordAdminRequest } from "@/lib/models/admin/users/ResetPasswor
 import { DeleteUserAdminRequest } from "@/lib/models/admin/users/DeleteUserAdminRequest";
 import { AddBlacklistRequest } from "@/lib/models/admin/users/AddBlacklistRequest";
 import { SendUserEmailAdminRequest } from "@/lib/models/admin/users/SendUserEmailAdminRequest";
-import {DeleteAndBlacklistUserAdminRequest} from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
-import {BlacklistedEntry} from "@/lib/models/admin/users/BlacklistedEntry";
+import { DeleteAndBlacklistUserAdminRequest } from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
+import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
 
 const BASE_URL = process.env.AUTH_API;
 
@@ -33,9 +33,7 @@ export const agentAuthAdmin = {
 
   // --- 2. HENT DETALJERT BRUKERPROFIL ---
   getUserDetails: async (userId: string): Promise<AdminUserDetails> => {
-    const response = await agentExternal.get(
-      `${BASE_URL}/admin/users/${userId}`
-    );
+    const response = await agentExternal.get(`${BASE_URL}/admin/users/${userId}`);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -46,9 +44,7 @@ export const agentAuthAdmin = {
   },
 
   // --- 3. REDIGER BRUKERPERSONALIA ---
-  updateUser: async (
-    data: AdminUpdateUserRequest
-  ): Promise<{ message: string }> => {
+  updateUser: async (data: AdminUpdateUserRequest): Promise<{ message: string }> => {
     const response = await agentExternal.put(`${BASE_URL}/admin/users`, data);
 
     if (!response.ok) {
@@ -61,10 +57,7 @@ export const agentAuthAdmin = {
 
   // --- 4. SPERR BRUKER MANUELT (Lock) ---
   lockUser: async (data: LockUserRequest): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/lock`,
-      data
-    );
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/lock`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -75,13 +68,8 @@ export const agentAuthAdmin = {
   },
 
   // --- 5. GJENÅPNE SPERRET BRUKER (Unlock) ---
-  unlockUser: async (
-    data: UnlockUserRequest
-  ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/unlock`,
-      data
-    );
+  unlockUser: async (data: UnlockUserRequest): Promise<{ message: string }> => {
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/unlock`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -93,18 +81,13 @@ export const agentAuthAdmin = {
 
   // --- 6. MANUELL BEKREFTELSE AV E-POST ---
   manuallyConfirmEmail: async (
-    data: ResendConfirmationAdminRequest
+    data: ResendConfirmationAdminRequest,
   ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/confirm-email`,
-      data
-    );
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/confirm-email`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Manuell bekreftelse av e-post mislyktes."
-      );
+      throw new Error(errorData.message || "Manuell bekreftelse av e-post mislyktes.");
     }
 
     return await response.json();
@@ -112,69 +95,48 @@ export const agentAuthAdmin = {
 
   // --- 7. SEND BEKREFTELSESE-POST PÅ VEGNE AV BRUKER ---
   resendConfirmation: async (
-    data: ResendConfirmationAdminRequest
+    data: ResendConfirmationAdminRequest,
   ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/resend-confirmation`,
-      data
-    );
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/resend-confirmation`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Kunne ikke sende bekreftelsese-post."
-      );
+      throw new Error(errorData.message || "Kunne ikke sende bekreftelsese-post.");
     }
 
     return await response.json();
   },
 
   // --- 8. SEND PASSORD-TILBAKESTILLING PÅ VEGNE AV BRUKER ---
-  sendPasswordReset: async (
-    data: ResetPasswordAdminRequest
-  ): Promise<{ message: string }> => {
+  sendPasswordReset: async (data: ResetPasswordAdminRequest): Promise<{ message: string }> => {
     const response = await agentExternal.post(
       `${BASE_URL}/admin/users/reset-password-request`,
-      data
+      data,
     );
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Kunne ikke sende tilbakestillingslenke."
-      );
+      throw new Error(errorData.message || "Kunne ikke sende tilbakestillingslenke.");
     }
 
     return await response.json();
   },
 
   // --- 9. SEND MANUELL E-POST TIL BRUKER ---
-  sendUserEmail: async (
-    data: SendUserEmailAdminRequest
-  ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/send-email`,
-      data
-    );
+  sendUserEmail: async (data: SendUserEmailAdminRequest): Promise<{ message: string }> => {
+    const response = await agentExternal.post(`${BASE_URL}/admin/send-email`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Kunne ikke sende e-post til brukeren."
-      );
+      throw new Error(errorData.message || "Kunne ikke sende e-post til brukeren.");
     }
 
     return await response.json();
   },
 
   // --- 10. SLETT BRUKER (Admin-sletting) ---
-  deleteUser: async (
-    data: DeleteUserAdminRequest
-  ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/delete`,
-      data
-    );
+  deleteUser: async (data: DeleteUserAdminRequest): Promise<{ message: string }> => {
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/delete`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -186,18 +148,13 @@ export const agentAuthAdmin = {
 
   // --- 11. SLETT OG SVARTELIST BRUKER ---
   deleteAndBlacklistUser: async (
-    data: DeleteAndBlacklistUserAdminRequest
+    data: DeleteAndBlacklistUserAdminRequest,
   ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/users/delete-and-blacklist`,
-      data
-    );
+    const response = await agentExternal.post(`${BASE_URL}/admin/users/delete-and-blacklist`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Sletting og svartelisting av bruker mislyktes."
-      );
+      throw new Error(errorData.message || "Sletting og svartelisting av bruker mislyktes.");
     }
 
     return await response.json();
@@ -216,19 +173,12 @@ export const agentAuthAdmin = {
   },
 
   // --- 13. LEGG TIL I SVARTELISTE (DIREKTE) ---
-  addToBlacklist: async (
-    data: AddBlacklistRequest
-  ): Promise<{ message: string }> => {
-    const response = await agentExternal.post(
-      `${BASE_URL}/admin/blacklist`,
-      data
-    );
+  addToBlacklist: async (data: AddBlacklistRequest): Promise<{ message: string }> => {
+    const response = await agentExternal.post(`${BASE_URL}/admin/blacklist`, data);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Kunne ikke legge til i svartelisten."
-      );
+      throw new Error(errorData.message || "Kunne ikke legge til i svartelisten.");
     }
 
     return await response.json();
@@ -236,15 +186,11 @@ export const agentAuthAdmin = {
 
   // --- 14. FJERN FRA SVARTELISTE ---
   removeFromBlacklist: async (id: string): Promise<{ message: string }> => {
-    const response = await agentExternal.delete(
-      `${BASE_URL}/admin/blacklist/${id}`
-    );
+    const response = await agentExternal.delete(`${BASE_URL}/admin/blacklist/${id}`);
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || "Kunne ikke fjerne fra svartelisten."
-      );
+      throw new Error(errorData.message || "Kunne ikke fjerne fra svartelisten.");
     }
 
     return await response.json();

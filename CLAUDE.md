@@ -101,7 +101,7 @@ Strict layering, page → container → form → field:
   brand/nav/primary actions) and `terracotta` (accent — CTAs, category badges, warnings), with different
   `primaryShade` per light/dark mode.
 - Convention: category badges use `color="terracotta" variant="light"`; status/admin badges use `color="sage"
-  variant="filled"`; destructive actions use `red` or `terracotta`.
+variant="filled"`; destructive actions use `red` or `terracotta`.
 - Accessibility is a hard requirement (deuteranopia/protanopia considered explicitly): never encode meaning in color
   alone — pair with icons (`@tabler/icons-react`) and text labels.
 

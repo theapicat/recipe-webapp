@@ -13,13 +13,7 @@ export const Logo = ({ href = "/", size = 32 }: LogoProps) => {
   return (
     <UnstyledButton component={Link} href={href} style={{ textDecoration: "none" }}>
       <Group gap="xs" align="center" wrap="nowrap">
-        <Image
-          src="/icons/logo.svg"
-          alt="Kjøkkenhylla logo"
-          width={size}
-          height={size}
-          priority
-        />
+        <Image src="/icons/logo.svg" alt="Kjøkkenhylla logo" width={size} height={size} priority />
         <Text fw={800} size="lg" style={{ letterSpacing: "-0.5px" }}>
           Kjøkkenhylla
         </Text>

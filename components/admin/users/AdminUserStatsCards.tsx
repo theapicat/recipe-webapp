@@ -1,11 +1,7 @@
 "use client";
 
 import { SimpleGrid, Card, Group, Text, Title } from "@mantine/core";
-import {
-  IconUserCheck,
-  IconUsers,
-  IconMailQuestion,
-} from "@tabler/icons-react";
+import { IconUserCheck, IconUsers, IconMailQuestion } from "@tabler/icons-react";
 
 interface Props {
   totalItems: number;

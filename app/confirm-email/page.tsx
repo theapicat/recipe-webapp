@@ -2,23 +2,8 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Title,
-  Text,
-  Paper,
-  Stack,
-  Group,
-  Button,
-  Alert,
-  ThemeIcon,
-  Divider,
-} from "@mantine/core";
-import {
-  IconCheck,
-  IconAlertCircle,
-  IconArrowRight,
-  IconLogin,
-} from "@tabler/icons-react";
+import { Title, Text, Paper, Stack, Group, Button, Alert, ThemeIcon, Divider } from "@mantine/core";
+import { IconCheck, IconAlertCircle, IconArrowRight, IconLogin } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { useSession } from "@/lib/session/SessionProvider";
@@ -32,18 +17,19 @@ function ConfirmEmailContent() {
 
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
+  const hasValidLink = Boolean(userId && token);
 
-  const [status, setStatus] = useState<Status>("loading");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Ugyldig lenke er kjent allerede ved første render — settes i initial-verdien i stedet for
+  // via en effekt, så vi slipper en synkron setState-i-effekt for en rent avledet verdi.
+  const [status, setStatus] = useState<Status>(hasValidLink ? "loading" : "error");
+  const [errorMessage, setErrorMessage] = useState<string | null>(
+    hasValidLink ? null : "Ugyldig eller manglende bekreftelseslenke.",
+  );
 
   const hasExecutedRef = useRef(false);
 
   useEffect(() => {
-    if (!userId || !token) {
-      setStatus("error");
-      setErrorMessage("Ugyldig eller manglende bekreftelseslenke.");
-      return;
-    }
+    if (!hasValidLink) return;
 
     if (hasExecutedRef.current) return;
     hasExecutedRef.current = true;
@@ -58,9 +44,7 @@ function ConfirmEmailContent() {
           await refreshProfile();
         } else {
           const data = await res.json().catch(() => null);
-          setErrorMessage(
-            data?.message || "Ugyldig eller utløpt bekreftelseskode."
-          );
+          setErrorMessage(data?.message || "Ugyldig eller utløpt bekreftelseskode.");
           setStatus("error");
         }
       })
@@ -69,7 +53,7 @@ function ConfirmEmailContent() {
         setErrorMessage("Nettverksfeil. Kunne ikke koble til serveren.");
         setStatus("error");
       });
-  }, [userId, token, refreshProfile, updateUser]);
+  }, [hasValidLink, userId, token, refreshProfile, updateUser]);
 
   return (
     <AsyncMainContainer size="sm" py={60} loading={status === "loading"}>
@@ -85,7 +69,8 @@ function ConfirmEmailContent() {
                 E-posten din er bekreftet! 🎉
               </Title>
               <Text size="sm" c="dimmed">
-                Takk for at du bekreftet e-postadressen din. Kontoen din er nå fullstendig aktivert og klar til bruk.
+                Takk for at du bekreftet e-postadressen din. Kontoen din er nå fullstendig aktivert
+                og klar til bruk.
               </Text>
             </Stack>
 
@@ -127,17 +112,14 @@ function ConfirmEmailContent() {
             </Alert>
 
             <Text size="sm" c="dimmed">
-              Lenken kan være utløpt, eller e-posten kan allerede være bekreftet. Du kan logge inn for å sjekke din kontostatus eller be om en ny bekreftelseslenke.
+              Lenken kan være utløpt, eller e-posten kan allerede være bekreftet. Du kan logge inn
+              for å sjekke din kontostatus eller be om en ny bekreftelseslenke.
             </Text>
 
             <Divider my="xs" />
 
             <Group justify="space-between" align="center">
-              <Button
-                variant="subtle"
-                color="gray"
-                onClick={() => router.push("/user/welcome")}
-              >
+              <Button variant="subtle" color="gray" onClick={() => router.push("/user/welcome")}>
                 Tilbake til velkomstsiden
               </Button>
 

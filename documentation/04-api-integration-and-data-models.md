@@ -21,12 +21,12 @@ kaller riktig `agentAuth`/`agentAuthAdmin`-metode, og pakker resultatet i en kon
 
 ## 2. `lib/agent/` — de fire filene
 
-| Fil | Ansvar |
-| --- | --- |
-| `agentInternal.ts` | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk. |
-| `agentExternal.ts` | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet). |
-| `agentAuth.ts` | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `Error` med norsk melding fra `errorData.message`/`error_description` ved `!response.ok`. |
-| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post). |
+| Fil                 | Ansvar                                                                                                                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `agentInternal.ts`  | `"use client"`. Same-origin `fetch` mot denne appens egne `/api/*`-ruter. Ingen auth-header — cookien følger automatisk.                                                                                                                   |
+| `agentExternal.ts`  | Server-only. `fetch` med `mode: "cors"` mot Gatewayen. Henter token via `sessionManager.getToken()` og setter `Authorization: Bearer`. Har også `postForm()` for `x-www-form-urlencoded` (OAuth2 token-endepunktet krever dette formatet). |
+| `agentAuth.ts`      | Typet wrapper for alle `/account/*`- og `/connect/token`-kall (login, refresh, register, profil, passord, e-postbekreftelse). Kaster `Error` med norsk melding fra `errorData.message`/`error_description` ved `!response.ok`.             |
+| `agentAuthAdmin.ts` | Samme mønster for `/admin/*`-kall (brukerliste, lås/lås opp, svarteliste, send e-post).                                                                                                                                                    |
 
 **Regel:** ny funksjonalitet mot backend skal legges til som en ny metode i `agentAuth`/`agentAuthAdmin`, ikke
 som et rått `fetch`-kall inne i en komponent eller route handler. `app/api/public/contact/route.ts` er unntaket
@@ -69,7 +69,7 @@ lib/models/
 det andre interfacet). Dette er nå rettet — men understreker regelen: når du lager en ny modellfil, dobbeltsjekk
 at filnavn og `export interface`-navn er identiske, ellers blir det umulig å navigere kodebasen etter navn.
 
-## 5. Datamodeller som *ikke* finnes ennå
+## 5. Datamodeller som _ikke_ finnes ennå
 
 Det finnes ingen `lib/models`-filer for oppskrifter, måltidsplaner eller handlelister. Dette er ikke en
 forglemmelse i dokumentasjonen — de sidene har heller ingen ekte API-integrasjon ennå. Se

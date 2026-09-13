@@ -10,7 +10,7 @@ import { HttpResponse } from "@/lib/models/httpResponse";
 import { CreateFormContainer } from "@/components/forms/common/CreateFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { AppFormProvider } from "@/components/forms/common/FormContext";
-import {RecoverRequest} from "@/lib/models/auth/recoverRequest";
+import { RecoverRequest } from "@/lib/models/auth/recoverRequest";
 
 export const RecoverPassword = () => {
   const [requestActive, setRequestActive] = useState<boolean>(false);
@@ -39,7 +39,7 @@ export const RecoverPassword = () => {
       if (res.ok) {
         setSuccessMessage(
           data.message ||
-          "Dersom e-postadressen eksisterer i systemet, har vi sendt instruksjoner for å tilbakestille passordet."
+            "Dersom e-postadressen eksisterer i systemet, har vi sendt instruksjoner for å tilbakestille passordet.",
         );
         form.reset();
       } else {

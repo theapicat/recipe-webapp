@@ -45,7 +45,8 @@ export const RegisterForm = ({ onRegistered }: RegisterFormProps) => {
         if (!/[A-Z]/.test(value)) return "Passordet må inneholde minst én stor bokstav";
         if (!/[a-z]/.test(value)) return "Passordet må inneholde minst én liten bokstav";
         if (!/[0-9]/.test(value)) return "Passordet må inneholde minst ett tall";
-        if (!/[^a-zA-Z0-9]/.test(value)) return "Passordet må inneholde minst ett spesialtegn (!@#$%^&*)";
+        if (!/[^a-zA-Z0-9]/.test(value))
+          return "Passordet må inneholde minst ett spesialtegn (!@#$%^&*)";
         return null;
       },
       confirmPassword: (value, values) =>

@@ -11,7 +11,8 @@ const ForgotPasswordPage = () => {
   const session = useSession();
 
   useEffect(() => {
-    if (!session || !session.role) return;
+    // `useSession()` kaster om den brukes utenfor providertreet, så `session` er alltid definert her.
+    if (!session.role) return;
 
     const role = session.role.toLowerCase();
     if (role === "admin") {
@@ -19,9 +20,9 @@ const ForgotPasswordPage = () => {
     } else if (role === "user") {
       router.push("/dashboard");
     }
-  }, [session?.role, router]);
+  }, [session.role, router]);
 
-  const isRedirecting = Boolean(session?.role);
+  const isRedirecting = Boolean(session.role);
 
   return (
     <AsyncMainContainer size={420} py={40} loading={isRedirecting}>

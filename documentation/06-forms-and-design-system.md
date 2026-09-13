@@ -59,13 +59,13 @@ Dette lar underkomponenter (som `FormField`) hente verdier/feilmeldinger/endring
 
 **`CreateFormContainer` vs. `EditFormContainer`:**
 
-| Egenskap | `CreateFormContainer` | `EditFormContainer` |
-| --- | --- | --- |
-| Primærbruk | Nyopprettelse, innlogging, registrering | Redigering av profiler, innstillinger, oppskrifter |
-| Lagreknapp | Sender inn skjemaet umiddelbart | Åpner bekreftelsesdialog (`Modal`) først |
-| Nullstillingsknapp | Ingen | Valgfri `onReset`-knapp |
-| Bekreftelsesmodal | Nei | Ja (`confirmTitle`, `confirmMessage`) |
-| Feilmelding | Rød `Alert` øverst | Rød `Alert` øverst |
+| Egenskap           | `CreateFormContainer`                   | `EditFormContainer`                                |
+| ------------------ | --------------------------------------- | -------------------------------------------------- |
+| Primærbruk         | Nyopprettelse, innlogging, registrering | Redigering av profiler, innstillinger, oppskrifter |
+| Lagreknapp         | Sender inn skjemaet umiddelbart         | Åpner bekreftelsesdialog (`Modal`) først           |
+| Nullstillingsknapp | Ingen                                   | Valgfri `onReset`-knapp                            |
+| Bekreftelsesmodal  | Nei                                     | Ja (`confirmTitle`, `confirmMessage`)              |
+| Feilmelding        | Rød `Alert` øverst                      | Rød `Alert` øverst                                 |
 
 ### A.3 Steg-for-steg: nytt skjema
 
@@ -80,7 +80,10 @@ import { EditFormContainer } from "@/components/forms/common/EditFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { agentInternal } from "@/lib/agent/agentInternal";
 
-interface ProfileFormValues { firstName: string; lastName: string; }
+interface ProfileFormValues {
+  firstName: string;
+  lastName: string;
+}
 
 export const ProfileEditForm = ({ initialData }: { initialData: ProfileFormValues }) => {
   const [loading, setLoading] = useState(false);
@@ -121,8 +124,20 @@ export const ProfileEditForm = ({ initialData }: { initialData: ProfileFormValue
         loading={loading}
         errorMessage={errorMessage}
       >
-        <FormField name="firstName" label="Fornavn" placeholder="Ditt fornavn" required disabled={loading} />
-        <FormField name="lastName" label="Etternavn" placeholder="Ditt etternavn" required disabled={loading} />
+        <FormField
+          name="firstName"
+          label="Fornavn"
+          placeholder="Ditt fornavn"
+          required
+          disabled={loading}
+        />
+        <FormField
+          name="lastName"
+          label="Etternavn"
+          placeholder="Ditt etternavn"
+          required
+          disabled={loading}
+        />
       </EditFormContainer>
     </AppFormProvider>
   );
@@ -180,15 +195,29 @@ Mantine v9 krever en 10-trinns fargetuppel per egendefinert farge. `sage` (mose/
 import { createTheme, MantineColorsTuple } from "@mantine/core";
 
 const sage: MantineColorsTuple = [
-  "#f2f6f3", "#e3ece5", "#c5d9c9", "#a4c4ab", "#7ca386", // 4 = Dark Mode Primary
-  "#5e8869", "#4a6b53", // 6 = Light Mode Primary
-  "#3a5441", "#2a3e30", "#18261c",
+  "#f2f6f3",
+  "#e3ece5",
+  "#c5d9c9",
+  "#a4c4ab",
+  "#7ca386", // 4 = Dark Mode Primary
+  "#5e8869",
+  "#4a6b53", // 6 = Light Mode Primary
+  "#3a5441",
+  "#2a3e30",
+  "#18261c",
 ];
 
 const terracotta: MantineColorsTuple = [
-  "#fdf5f3", "#f9ebe6", "#f1d3ca", "#e6b2a2", "#dd8a6e", // 4 = Dark Mode Accent
-  "#d07052", "#c86a4b", // 6 = Light Mode Accent
-  "#a34e34", "#7e3a25", "#4e2114",
+  "#fdf5f3",
+  "#f9ebe6",
+  "#f1d3ca",
+  "#e6b2a2",
+  "#dd8a6e", // 4 = Dark Mode Accent
+  "#d07052",
+  "#c86a4b", // 6 = Light Mode Accent
+  "#a34e34",
+  "#7e3a25",
+  "#4e2114",
 ];
 
 export const theme = createTheme({
@@ -197,24 +226,24 @@ export const theme = createTheme({
   colors: { sage, terracotta },
   defaultRadius: "md",
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-  headings: { fontFamily: '-apple-system, ...', fontWeight: "700" },
+  headings: { fontFamily: "-apple-system, ...", fontWeight: "700" },
 });
 ```
 
 ### B.3 Fargekoder per modus
 
-| Element | Light | Dark | Beskrivelse |
-| --- | --- | --- | --- |
-| Bakgrunn (60%) | `#f7f6f2` | `#151a16` | Hovedbakgrunn |
-| Kort / flate | `#ffffff` | `#1e241f` | Card, Paper, Modal |
-| Border / skillelinje | `#e2e5df` | `#2c352d` | Myk ramme, ingen hard kontrast |
-| Hovedtekst | `#222920` | `#e7ece6` | Unngår ren hvit/svart |
-| Sekundærtekst | `#596356` | `#949f93` | Metadata (tid, kcal, ingredienser) |
-| Primary (30%) | `#4a6b53` | `#7ca386` | Knapper, aktive lenker, primær-badges |
-| Primary hover | `#38523f` | `#93b79c` | Mus-over |
-| Accent (10%) | `#c86a4b` | `#dd8a6e` | Viktige CTA-er, spesielle tagger |
-| Accent bg/light | `#f9ebe6` | `rgba(221,138,110,.15)` | Bakgrunn for kategorier |
-| Alert bakgrunn | `#edf2ee` | `rgba(124,163,134,.12)` | Varselbokser |
+| Element              | Light     | Dark                    | Beskrivelse                           |
+| -------------------- | --------- | ----------------------- | ------------------------------------- |
+| Bakgrunn (60%)       | `#f7f6f2` | `#151a16`               | Hovedbakgrunn                         |
+| Kort / flate         | `#ffffff` | `#1e241f`               | Card, Paper, Modal                    |
+| Border / skillelinje | `#e2e5df` | `#2c352d`               | Myk ramme, ingen hard kontrast        |
+| Hovedtekst           | `#222920` | `#e7ece6`               | Unngår ren hvit/svart                 |
+| Sekundærtekst        | `#596356` | `#949f93`               | Metadata (tid, kcal, ingredienser)    |
+| Primary (30%)        | `#4a6b53` | `#7ca386`               | Knapper, aktive lenker, primær-badges |
+| Primary hover        | `#38523f` | `#93b79c`               | Mus-over                              |
+| Accent (10%)         | `#c86a4b` | `#dd8a6e`               | Viktige CTA-er, spesielle tagger      |
+| Accent bg/light      | `#f9ebe6` | `rgba(221,138,110,.15)` | Bakgrunn for kategorier               |
+| Alert bakgrunn       | `#edf2ee` | `rgba(124,163,134,.12)` | Varselbokser                          |
 
 ### B.4 Komponentretningslinjer
 

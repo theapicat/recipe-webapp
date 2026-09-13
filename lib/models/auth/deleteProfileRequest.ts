@@ -1,3 +1,0 @@
-interface DeleteProfileRequest {
-  userId: string;
-}

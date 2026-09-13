@@ -88,8 +88,7 @@ const INCIDENT_HISTORY: IncidentReport[] = [
     title: "Planlagt databaseservice",
     status: "Planlagt",
     impact: "Ingen",
-    summary:
-      "Rutinemessig oppgradering av databasen ble gjennomført uten nedtid for brukerne.",
+    summary: "Rutinemessig oppgradering av databasen ble gjennomført uten nedtid for brukerne.",
   },
 ];
 
@@ -97,13 +96,29 @@ const INCIDENT_HISTORY: IncidentReport[] = [
 function getStatusBadge(status: PublicStatus) {
   switch (status) {
     case "OPERATIONAL":
-      return <Badge color="sage" variant="light">Operativ</Badge>;
+      return (
+        <Badge color="sage" variant="light">
+          Operativ
+        </Badge>
+      );
     case "DEGRADED":
-      return <Badge color="terracotta" variant="light">Redusert ytelse</Badge>;
+      return (
+        <Badge color="terracotta" variant="light">
+          Redusert ytelse
+        </Badge>
+      );
     case "OUTAGE":
-      return <Badge color="red" variant="light">Ute av drift</Badge>;
+      return (
+        <Badge color="red" variant="light">
+          Ute av drift
+        </Badge>
+      );
     case "MAINTENANCE":
-      return <Badge color="blue" variant="light">Vedlikehold</Badge>;
+      return (
+        <Badge color="blue" variant="light">
+          Vedlikehold
+        </Badge>
+      );
   }
 }
 
@@ -142,7 +157,8 @@ export default function PublicStatusPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er kun en visuell prototype av statussiden. Dataene som vises her er for øyeblikket ikke reelle. I fremtiden vil denne siden koble seg automatisk mot faktiske helsesjekker.
+          Dette er kun en visuell prototype av statussiden. Dataene som vises her er for øyeblikket
+          ikke reelle. I fremtiden vil denne siden koble seg automatisk mot faktiske helsesjekker.
         </Alert>
 
         {/* --- HEADER --- */}

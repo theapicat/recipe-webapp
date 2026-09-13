@@ -16,12 +16,7 @@ import {
   Alert,
   ThemeIcon,
 } from "@mantine/core";
-import {
-  IconCrown,
-  IconServer,
-  IconExternalLink,
-  IconCheck,
-} from "@tabler/icons-react";
+import { IconCrown, IconServer, IconExternalLink, IconCheck } from "@tabler/icons-react";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 
 interface TodoItem {
@@ -69,31 +64,36 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "usr_google_lock_alert",
         label: "Feilvarsel for låste Google-brukere",
-        description: "Gi tydelig feilmelding/varsel når en sperret eller svartelistet Google-bruker forsøker å logge inn.",
+        description:
+          "Gi tydelig feilmelding/varsel når en sperret eller svartelistet Google-bruker forsøker å logge inn.",
         completed: true,
       },
       {
         id: "usr_custom_email",
         label: "Direkte e-postsending fra Admin",
-        description: "Mulighet til å sende tilpassede e-poster til brukere direkte fra admin-grensesnittet.",
+        description:
+          "Mulighet til å sende tilpassede e-poster til brukere direkte fra admin-grensesnittet.",
         completed: true,
       },
       {
         id: "usr_blacklist",
         label: "Svartelisting (E-post & Domener)",
-        description: "Sperre spesifikke e-postadresser eller hele e-postdomener fra å registrere seg igjen.",
+        description:
+          "Sperre spesifikke e-postadresser eller hele e-postdomener fra å registrere seg igjen.",
         completed: true,
       },
       {
         id: "usr_status_filter",
         label: "Filtrering på Påminnelser & Inaktivitet",
-        description: "Søke og filtrere på brukere basert på aktiveringspåminnelser og inaktivitetsstatus.",
+        description:
+          "Søke og filtrere på brukere basert på aktiveringspåminnelser og inaktivitetsstatus.",
         completed: true,
       },
       {
         id: "usr_auth_api_docs",
         label: "Auth API Dokumentasjon, Refaktorering & README",
-        description: "Grundig kodedokumentasjon, refaktorering, kommentarer og ny README.md for Auth API.",
+        description:
+          "Grundig kodedokumentasjon, refaktorering, kommentarer og ny README.md for Auth API.",
         completed: false,
       },
     ],
@@ -105,25 +105,29 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "ui_theme",
         label: "Helhetlig profil & Mantine Theme",
-        description: "Standardisere farger, typografi og komponenter i Mantine for et konsistent uttrykk i hele løsningen.",
+        description:
+          "Standardisere farger, typografi og komponenter i Mantine for et konsistent uttrykk i hele løsningen.",
         completed: true,
       },
       {
         id: "ui_darkmode",
         label: "Mørk modus (Dark Mode)",
-        description: "Dedikert Dark Mode-knapp i meny/header. Standardiseres mot systeminnstillinger med lagring i localStorage.",
+        description:
+          "Dedikert Dark Mode-knapp i meny/header. Standardiseres mot systeminnstillinger med lagring i localStorage.",
         completed: false,
       },
       {
         id: "ui_logo_favicon",
         label: "Standardisere Logoer & Favicon",
-        description: "Samkjøre logo-SVG for header, footer og ikoner, samt legge til favicons for alle enheter.",
+        description:
+          "Samkjøre logo-SVG for header, footer og ikoner, samt legge til favicons for alle enheter.",
         completed: false,
       },
       {
         id: "ui_email_templates",
         label: "E-postmaler i Notification Service",
-        description: "Styre opp og standardisere HTML-malene som sendes ut slik at de matcher nettsidens visuelle profil.",
+        description:
+          "Styre opp og standardisere HTML-malene som sendes ut slik at de matcher nettsidens visuelle profil.",
         completed: false,
       },
     ],
@@ -135,7 +139,8 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "log_chrono_audit",
         label: "Audit-logg for Chrono Worker",
-        description: "Loggføre automatiske bakgrunnsjobber (påminnelser sendt, kontoer sperret/slettet).",
+        description:
+          "Loggføre automatiske bakgrunnsjobber (påminnelser sendt, kontoer sperret/slettet).",
         completed: false,
       },
       {
@@ -147,19 +152,22 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "stats_user_metrics",
         label: "Brukerstatistikk & Aktivitet",
-        description: "Oversikt over totalt antall brukere, aktive brukere (siste 24t / 7d / 30d basert på LastActiveAt) og snitttall.",
+        description:
+          "Oversikt over totalt antall brukere, aktive brukere (siste 24t / 7d / 30d basert på LastActiveAt) og snitttall.",
         completed: false,
       },
       {
         id: "sec_gateway_rate_limit",
         label: "Rate Limiting & Throttling i API Gateway",
-        description: "Begrense antall forespørsler per IP og sette strengere grenser på innloggingsendepunkter.",
+        description:
+          "Begrense antall forespørsler per IP og sette strengere grenser på innloggingsendepunkter.",
         completed: false,
       },
       {
         id: "sec_gateway_headers",
         label: "Sikkerhets-headere i API Gateway",
-        description: "Konfigurere HSTS, X-Frame-Options og stramme inn request body-størrelser sentralt i Gateway.",
+        description:
+          "Konfigurere HSTS, X-Frame-Options og stramme inn request body-størrelser sentralt i Gateway.",
         completed: false,
       },
     ],
@@ -171,7 +179,8 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "rec_whitelist",
         label: "Godkjente Nettsider (Domene-Whitelist)",
-        description: "Administrere liste over domener Core API tillater skraping fra (f.eks. matprat.no).",
+        description:
+          "Administrere liste over domener Core API tillater skraping fra (f.eks. matprat.no).",
         completed: false,
       },
       {
@@ -213,7 +222,8 @@ const initialRoadmap: CategoryTodos[] = [
       {
         id: "sc_error_logs",
         label: "Scraper Feillogger",
-        description: "Oversikt over feilede skrapeforsøk (f.eks. endret HTML-struktur på eksterne sider).",
+        description:
+          "Oversikt over feilede skrapeforsøk (f.eks. endret HTML-struktur på eksterne sider).",
         completed: false,
       },
     ],
@@ -229,7 +239,7 @@ const AdminDashboardPage = () => {
       return {
         ...cat,
         items: cat.items.map((item) =>
-          item.id === itemId ? { ...item, completed: !item.completed } : item
+          item.id === itemId ? { ...item, completed: !item.completed } : item,
         ),
       };
     });
@@ -240,7 +250,7 @@ const AdminDashboardPage = () => {
   const totalItems = roadmap.reduce((acc, cat) => acc + cat.items.length, 0);
   const completedItems = roadmap.reduce(
     (acc, cat) => acc + cat.items.filter((i) => i.completed).length,
-    0
+    0,
   );
   const progressPercentage = Math.round((completedItems / totalItems) * 100);
 
@@ -348,9 +358,7 @@ const AdminDashboardPage = () => {
                             size="sm"
                             style={{
                               textDecoration: item.completed ? "line-through" : "none",
-                              color: item.completed
-                                ? "var(--mantine-color-dimmed)"
-                                : "inherit",
+                              color: item.completed ? "var(--mantine-color-dimmed)" : "inherit",
                             }}
                           >
                             {item.label}

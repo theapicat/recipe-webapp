@@ -1,22 +1,22 @@
-import {defineConfig, globalIgnores} from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier";
 
 const eslintConfig = defineConfig([
-    ...nextVitals,
-    ...nextTs,
-    // Slår av ESLint-stilregler som kolliderer med Prettier. Formatering håndteres av
-    // `npm run format`/`format:check`, ikke av ESLint — må stå sist for å override reglene over.
-    prettierConfig,
-    // Override default ignores of eslint-config-next.
-    globalIgnores([
-        // Default ignores of eslint-config-next:
-        ".next/**",
-        "out/**",
-        "build/**",
-        "next-env.d.ts",
-    ]),
+  ...nextVitals,
+  ...nextTs,
+  // Slår av ESLint-stilregler som kolliderer med Prettier. Formatering håndteres av
+  // `npm run format`/`format:check`, ikke av ESLint — må stå sist for å override reglene over.
+  prettierConfig,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
 ]);
 
 export default eslintConfig;

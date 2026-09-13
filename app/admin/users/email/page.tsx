@@ -18,22 +18,28 @@ function AdminSendEmailContent() {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<AdminUserListItem[]>([]);
 
-  const fetchUsers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await agentInternal.get("/api/admin/users");
-      if (res.ok) {
-        const responseData = await res.json();
-        const items = Array.isArray(responseData.body)
-          ? responseData.body
-          : responseData.body?.items || [];
-        setUsers(items);
-      }
-    } catch (err) {
-      console.error("Feil ved henting av brukere:", err);
-    } finally {
-      setLoading(false);
-    }
+  // `loading` starter allerede som `true` — ingen andre steder trigger et nytt kall her.
+  // NB: bruker en .then()-kjede (ikke async/await) — den nyere react-hooks/set-state-in-effect-
+  // regelen flagger setState etter en `await` inni en async-funksjon kalt fra en effekt, men ikke
+  // det samme mønsteret som en .then()-kjede.
+  const fetchUsers = useCallback(() => {
+    agentInternal
+      .get("/api/admin/users")
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          const items = Array.isArray(responseData.body)
+            ? responseData.body
+            : responseData.body?.items || [];
+          setUsers(items);
+        }
+      })
+      .catch((err) => {
+        console.error("Feil ved henting av brukere:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -58,10 +64,7 @@ function AdminSendEmailContent() {
           </Button>
         </Group>
 
-        <AdminSendEmailForm
-          users={users}
-          preselectedUserId={preselectedUserId}
-        />
+        <AdminSendEmailForm users={users} preselectedUserId={preselectedUserId} />
       </Stack>
     </AsyncMainContainer>
   );

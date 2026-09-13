@@ -1,7 +1,9 @@
 # 08 – Forslag: Mappestruktur for Modeller & Komponenter
 
-**Status: forslag til diskusjon, ikke gjennomført.** Dette dokumentet beskriver hvordan `lib/models/` og
-`components/` bør utvides *før* oppskrifter, måltidsplan, handleliste og de resterende admin-sidene
+**Status: kjerneopprydningen i seksjon 2 og `ContactForm`-flyttingen i seksjon 4 er gjennomført
+(2026-09-13).** Domenemappene i seksjon 3 og 5 er fortsatt bare et forslag — opprettes når hvert domene
+faktisk bygges. Dette dokumentet beskriver hvordan `lib/models/` og
+`components/` bør utvides _før_ oppskrifter, måltidsplan, handleliste og de resterende admin-sidene
 (kategorier, whitelist, system) migreres fra mock-data til ekte backend-integrasjon. Målet er å unngå å
 gjenta mønsteret som allerede finnes for disse sidene i dag: ~4300 linjer fordelt på 8 sider, alt inline i
 `page.tsx`, ingen delte modeller, ingen delte komponenter (se
@@ -15,33 +17,30 @@ det samme mønsteret for de nye domenene, ikke noe nytt.
 
 ```
 lib/models/
-├── auth/                       # 12 filer — login, registrering, passord, profil
-├── admin/users/                # 14 filer — inkl. PaginatedResponse.ts (se pkt. 2)
+├── auth/                       # login, registrering, passord, profil
+├── admin/users/                # brukerdata, lås/svarteliste-requests
 ├── enums/                      # BlacklistType
 ├── public/                     # ContactRequest
-├── user/                       # user.ts — ubrukt alias, se 07
 ├── httpResponse.ts             # delt, ligger i rot
 └── types.ts                    # UserRoleType, ligger i rot
 ```
 
-## 2. To små, presise opprydninger før noe nytt legges til
+## 2. Opprydning før noe nytt legges til
 
-Disse er billige (få importsteder) og bør gjøres *før* nye domener legger seg oppå samme mønster, ellers
-arves skjevheten videre:
-
-1. **Flytt `lib/models/admin/users/PaginatedResponse.ts` → `lib/models/paginatedResponse.ts`.** Den er en
-   generisk wrapper (`PaginatedResponse<T>`), ikke admin/users-spesifikk — akkurat som `HttpResponse<T>`
-   allerede ligger i rot av `lib/models/`, ikke i en domenemappe. Med oppskrift-/måltidsplan-lister på vei
-   trenger flere domener denne samtidig. 3 importsteder å oppdatere i dag
-   (`app/api/admin/users/route.ts`, og der `agentAuthAdmin.getUsers` til slutt kobles riktig — se
-   [07](./07-known-issues-and-tech-debt.md#halvferdig-paginering-av-brukerlisten--brutt-i-alle-tre-lag)).
-2. **Stram inn `UserRoleType`** fra `"Admin" | "User" | string` til `"Admin" | "User"` i `lib/models/types.ts`.
-   `| string` nuller ut hele poenget med unionen og er trolig rotårsaken til at `Header.tsx` sammenligner rollen
-   annerledes enn resten av appen. Når typen er strammet inn vil TypeScript selv fange fremtidige
-   feilskrivinger.
-
-Og to trivielle sletting-kandidater (ingen bruk noe sted, bekreftet med grep):
-`lib/models/auth/openIddictResponse.ts`, `lib/models/auth/deleteProfileRequest.ts`, `lib/models/user/user.ts`.
+- ✅ **`PaginatedResponse` og `AdminUserQueryParams` er slettet, ikke flyttet.** Den opprinnelige planen var å
+  flytte `PaginatedResponse.ts` til `lib/models/`-rot (parallelt med `HttpResponse.ts`), men den halvferdige
+  paginerings-migreringen den hørte til ble i stedet rullet tilbake til dagens fungerende client-side
+  filtrering (se [07](./07-known-issues-and-tech-debt.md)). Begge modellene er derfor slettet siden ingenting
+  bruker dem lenger. **Når** server-side paginering faktisk bygges senere (for brukerlisten, eller for en ny
+  liste som oppskrifter), gjelder fortsatt prinsippet: en generisk `PaginatedResponse<T>`-wrapper hører hjemme
+  i `lib/models/`-rot, ikke i en domenemappe.
+- ✅ **`lib/models/auth/openIddictResponse.ts`, `lib/models/auth/deleteProfileRequest.ts`,
+  `lib/models/user/user.ts`** — alle ubrukte, slettet.
+- ⏳ **`UserRoleType`** (`"Admin" | "User" | string"` → `"Admin" | "User"`) er **ikke** strammet inn ennå.
+  `| string` nuller ut hele poenget med unionen og er trolig rotårsaken til at `Header.tsx` sammenligner
+  rollen annerledes enn resten av appen. Innstramming utløser en reell type-feil i `google-callback/route.ts`
+  (rollen kommer uvalidert fra en query-param) som krever en bevisst normaliseringsbeslutning — se
+  [07](./07-known-issues-and-tech-debt.md).
 
 ## 3. Ny struktur — legg til domenemapper etter behov, ikke på forskudd
 
@@ -85,14 +84,13 @@ components/
 ├── forms/
 │   ├── auth/
 │   ├── common/                       # FormContext, FormField, CreateFormContainer, EditFormContainer
-│   └── ContactForm.tsx               # ← løs fil direkte i forms/, ikke i en undermappe
+│   └── public/                       # ContactForm.tsx — flyttet hit, speiler lib/models/public/
 └── layout/
     └── header/
 ```
 
-**Liten inkonsistens å rydde nå:** `ContactForm.tsx` ligger direkte i `components/forms/`, mens alt annet er
-gruppert i en domeneundermappe (`auth/`). Flytt til `components/forms/public/ContactForm.tsx` for å speile
-`lib/models/public/` — étt importsted å oppdatere (`app/(info)/contact/page.tsx`).
+✅ `ContactForm.tsx` er flyttet fra `components/forms/ContactForm.tsx` til
+`components/forms/public/ContactForm.tsx` for å speile `lib/models/public/`.
 
 ## 5. Ny struktur for kommende domener
 
@@ -138,7 +136,7 @@ Anbefalt rekkefølge — start med oppskrifter siden måltidsplan og handleliste
    `Recipe`-modell.
 5. Deretter måltidsplan (`lib/models/mealplan/*`, `agentMealplan.ts`) — den refererer allerede til
    oppskrifter (`MOCK_USER_RECIPES` peker på recipe-data), så den bør komme etter punkt 1–4.
-6. Til slutt handleliste, som typisk genereres *fra* måltidsplanen.
+6. Til slutt handleliste, som typisk genereres _fra_ måltidsplanen.
 
 Adminsidene (`whitelist`, `categories`, `system`) kan tas uavhengig av dette løpet — de har ingen avhengighet
 til oppskrifts-domenet.

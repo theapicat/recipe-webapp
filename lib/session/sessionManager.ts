@@ -17,7 +17,7 @@ const sessionManager = {
   // --- SETT HELE SESJONEN (Tokens + Profil) ---
   setSession: async (
     tokens: OpenIddictTokenResponse,
-    userProfile: UserProfileResponse
+    userProfile: UserProfileResponse,
   ): Promise<void> => {
     const cookieStore = await cookies();
     const isProd = process.env.NODE_ENV === "production";
@@ -162,7 +162,7 @@ const sessionManager = {
       }
 
       return roleClaim;
-    } catch (error){
+    } catch {
       return undefined;
     }
   },

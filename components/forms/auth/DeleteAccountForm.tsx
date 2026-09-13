@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Paper, Title, Text, Button, Group, Alert, Modal, Stack, Tooltip } from "@mantine/core";
+import { Paper, Title, Button, Group, Alert, Modal, Stack, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconTrash, IconAlertTriangle, IconLock } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -66,16 +66,21 @@ export const DeleteAccountForm = () => {
 
           {isAdmin ? (
             <Alert color="gray" icon={<IconLock size={20} />} title="Beskyttet administratorkonto">
-              Systemadministratorkontoen er låst mot sletting. Kontakt systemansvarlig dersom du ønsker å gjøre endringer på denne kontoen.
+              Systemadministratorkontoen er låst mot sletting. Kontakt systemansvarlig dersom du
+              ønsker å gjøre endringer på denne kontoen.
             </Alert>
           ) : (
             <Alert color="red" variant="light" icon={<IconAlertTriangle size={20} />}>
-              Sletting av brukerkontoen din vil umiddelbart fjerne alle dine lagrede oppskrifter, ukesmenyer og personlige preferanser. Handlingen er permanent og kan ikke reverseres.
+              Sletting av brukerkontoen din vil umiddelbart fjerne alle dine lagrede oppskrifter,
+              ukesmenyer og personlige preferanser. Handlingen er permanent og kan ikke reverseres.
             </Alert>
           )}
 
           <Group justify="flex-end">
-            <Tooltip label={isAdmin ? "Systemadmin kan ikke slettes" : undefined} disabled={!isAdmin}>
+            <Tooltip
+              label={isAdmin ? "Systemadmin kan ikke slettes" : undefined}
+              disabled={!isAdmin}
+            >
               <span>
                 <Button
                   color="red"

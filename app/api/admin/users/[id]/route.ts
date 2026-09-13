@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {AdminUserDetails} from "@/lib/models/admin/users/AdminUserDetails";
+import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 
 // GET /api/admin/users/[id]
-export const GET = async (
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) => {
+export const GET = async (_request: Request, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const { id } = await params;
     const userDetails = await agentAuthAdmin.getUserDetails(id);

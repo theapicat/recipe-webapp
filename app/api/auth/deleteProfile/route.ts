@@ -19,8 +19,7 @@ export const DELETE = async () => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke slette kontoen.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke slette kontoen.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

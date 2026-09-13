@@ -14,31 +14,17 @@ import {
   Button,
   Divider,
 } from "@mantine/core";
-import {
-  IconSparkles,
-  IconArrowRight,
-  IconLink,
-  IconCalendarEvent,
-} from "@tabler/icons-react";
+import { IconSparkles, IconArrowRight, IconLink, IconCalendarEvent } from "@tabler/icons-react";
 import Link from "next/link";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
-import {
-  FEATURE_CATEGORIES,
-  FEATURES_DATA,
-  STATUS_CONFIG,
-  FeatureItem,
-} from "./featuresData";
+import { FEATURE_CATEGORIES, FEATURES_DATA, STATUS_CONFIG, FeatureItem } from "./featuresData";
 
 function FeatureCard({ item }: { item: FeatureItem }) {
   const IconComponent = item.icon;
   const statusConfig = STATUS_CONFIG[item.status];
 
   const itemColor =
-    item.color === "teal"
-      ? "sage"
-      : item.color === "orange"
-        ? "terracotta"
-        : item.color;
+    item.color === "teal" ? "sage" : item.color === "orange" ? "terracotta" : item.color;
 
   const statusColor =
     statusConfig.color === "teal"
@@ -95,7 +81,8 @@ export default function FeaturePage() {
             </Title>
 
             <Text size="lg" style={{ opacity: 0.9, maxWidth: 640 }}>
-              Ingen faste oppskrifter – her bygger du din egen kokebok ved å importere fra favorittsider eller dele med venner. Planlegg uken og generer automatisk handleliste.
+              Ingen faste oppskrifter – her bygger du din egen kokebok ved å importere fra
+              favorittsider eller dele med venner. Planlegg uken og generer automatisk handleliste.
             </Text>
 
             {/* To knapper som fremhever handlinger */}
@@ -127,9 +114,7 @@ export default function FeaturePage() {
 
         {/* --- DYNAMISKE KATEGORIER --- */}
         {FEATURE_CATEGORIES.map((category, index) => {
-          const categoryItems = FEATURES_DATA.filter(
-            (f) => f.category === category.id
-          );
+          const categoryItems = FEATURES_DATA.filter((f) => f.category === category.id);
 
           const badgeColor =
             category.badgeColor === "teal"
@@ -171,7 +156,8 @@ export default function FeaturePage() {
             <Stack gap="xs" style={{ maxWidth: 500 }}>
               <Title order={3}>Klar til å samle oppskriftene dine?</Title>
               <Text size="sm" c="dimmed">
-                Lim inn en lenke fra din favorittside, eller opprett din første oppskrift manuelt i dag.
+                Lim inn en lenke fra din favorittside, eller opprett din første oppskrift manuelt i
+                dag.
               </Text>
             </Stack>
             <Group>

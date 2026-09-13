@@ -130,7 +130,8 @@ export default function AdminSystemPage() {
           icon={<IconInfoCircle size={20} />}
           radius="md"
         >
-          Dette er en visuell skisse for <b>System & Helse</b>. Sanntidsovervåking og helsesjekker vil koble seg direkte mot de ulike mikrotjenestenes <code>/health</code>-endepunkter.
+          Dette er en visuell skisse for <b>System & Helse</b>. Sanntidsovervåking og helsesjekker
+          vil koble seg direkte mot de ulike mikrotjenestenes <code>/health</code>-endepunkter.
         </Alert>
 
         {/* Overskrift */}
@@ -176,7 +177,8 @@ export default function AdminSystemPage() {
               </Badge>
             </Group>
             <Text size="xs" c="dimmed" mb="md">
-              Søk i sanntidslogger, spor feilmeldinger og analyser hendelser på tvers av mikrotjenestene.
+              Søk i sanntidslogger, spor feilmeldinger og analyser hendelser på tvers av
+              mikrotjenestene.
             </Text>
             <Button
               component="a"
@@ -211,7 +213,8 @@ export default function AdminSystemPage() {
               </Badge>
             </Group>
             <Text size="xs" c="dimmed" mb="md">
-              Overvåk meldingskøer, aktive arbeidere og asynkrone jobber som sendes mellom Core API og Scraper.
+              Overvåk meldingskøer, aktive arbeidere og asynkrone jobber som sendes mellom Core API
+              og Scraper.
             </Text>
             <Button
               component="a"
@@ -281,10 +284,7 @@ export default function AdminSystemPage() {
                       </Group>
                     </Table.Td>
                     <Table.Td>
-                      <Badge
-                        color={srv.status === "Operativ" ? "sage" : "red"}
-                        variant="dot"
-                      >
+                      <Badge color={srv.status === "Operativ" ? "sage" : "red"} variant="dot">
                         {srv.status}
                       </Badge>
                     </Table.Td>

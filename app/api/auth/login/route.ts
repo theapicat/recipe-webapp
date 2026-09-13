@@ -20,7 +20,6 @@ export const POST = async (request: Request) => {
       },
     });
 
-
     if (!profileRes.ok) {
       const errorResponse: HttpResponse<undefined> = {
         statusCode: profileRes.status,

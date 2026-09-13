@@ -92,8 +92,7 @@ const mockRecipeDetail: RecipeDetail = {
   steps: [
     {
       stepNumber: 1,
-      instruction:
-        "Skjær kyllingfilet i strimler og finhakk løk, hvitløk og paprika.",
+      instruction: "Skjær kyllingfilet i strimler og finhakk løk, hvitløk og paprika.",
     },
     {
       stepNumber: 2,
@@ -102,8 +101,7 @@ const mockRecipeDetail: RecipeDetail = {
     },
     {
       stepNumber: 3,
-      instruction:
-        "Tilsett løk og hvitløk og la det surre med i et par minutter til løken er myk.",
+      instruction: "Tilsett løk og hvitløk og la det surre med i et par minutter til løken er myk.",
     },
     {
       stepNumber: 4,
@@ -153,9 +151,10 @@ export default function RecipeDetailPage() {
     setIsAddingToShoppingList(true);
 
     const checkedIds = Object.keys(checkedIngredients).filter((id) => checkedIngredients[id]);
-    const itemsToAdd = checkedIds.length > 0
-      ? recipe.ingredients.filter((ing) => checkedIds.includes(ing.id))
-      : recipe.ingredients;
+    const itemsToAdd =
+      checkedIds.length > 0
+        ? recipe.ingredients.filter((ing) => checkedIds.includes(ing.id))
+        : recipe.ingredients;
 
     setTimeout(() => {
       setIsAddingToShoppingList(false);
@@ -470,7 +469,14 @@ export default function RecipeDetailPage() {
                 <Divider />
 
                 <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-                  <Paper p="md" radius="md" bg="terracotta.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-terracotta-2)" }}>
+                  <Paper
+                    p="md"
+                    radius="md"
+                    bg="terracotta.0"
+                    ta="center"
+                    withBorder
+                    style={{ borderColor: "var(--mantine-color-terracotta-2)" }}
+                  >
                     <ThemeIcon color="terracotta" variant="light" radius="xl" mb={4}>
                       <IconFlame size={18} />
                     </ThemeIcon>
@@ -482,7 +488,14 @@ export default function RecipeDetailPage() {
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="sage.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-sage-2)" }}>
+                  <Paper
+                    p="md"
+                    radius="md"
+                    bg="sage.0"
+                    ta="center"
+                    withBorder
+                    style={{ borderColor: "var(--mantine-color-sage-2)" }}
+                  >
                     <Text size="xs" c="dimmed" mt={8}>
                       Proteiner
                     </Text>
@@ -491,7 +504,14 @@ export default function RecipeDetailPage() {
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="blue.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-blue-2)" }}>
+                  <Paper
+                    p="md"
+                    radius="md"
+                    bg="blue.0"
+                    ta="center"
+                    withBorder
+                    style={{ borderColor: "var(--mantine-color-blue-2)" }}
+                  >
                     <Text size="xs" c="dimmed" mt={8}>
                       Karbohydrater
                     </Text>
@@ -500,7 +520,14 @@ export default function RecipeDetailPage() {
                     </Text>
                   </Paper>
 
-                  <Paper p="md" radius="md" bg="grape.0" ta="center" withBorder style={{ borderColor: "var(--mantine-color-grape-2)" }}>
+                  <Paper
+                    p="md"
+                    radius="md"
+                    bg="grape.0"
+                    ta="center"
+                    withBorder
+                    style={{ borderColor: "var(--mantine-color-grape-2)" }}
+                  >
                     <Text size="xs" c="dimmed" mt={8}>
                       Fett
                     </Text>
@@ -516,7 +543,13 @@ export default function RecipeDetailPage() {
       </Stack>
 
       {/* DELINGSMODAL */}
-      <Modal opened={shareOpened} onClose={closeShare} title="📩 Del Oppskrift" centered radius="md">
+      <Modal
+        opened={shareOpened}
+        onClose={closeShare}
+        title="📩 Del Oppskrift"
+        centered
+        radius="md"
+      >
         <form onSubmit={handleSendShare}>
           <Stack gap="md">
             <Text size="sm" c="dimmed">

@@ -7,9 +7,7 @@ export async function GET(request: NextRequest) {
   const error = searchParams.get("error");
 
   if (error) {
-    return NextResponse.redirect(
-      new URL(`/login?error=${encodeURIComponent(error)}`, request.url)
-    );
+    return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(error)}`, request.url));
   }
 
   const accessToken = searchParams.get("access_token");
@@ -20,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   if (!accessToken || !refreshToken || !userId) {
     return NextResponse.redirect(
-      new URL("/login?error=Ugyldig+sesjonsdata+fra+Google", request.url)
+      new URL("/login?error=Ugyldig+sesjonsdata+fra+Google", request.url),
     );
   }
 

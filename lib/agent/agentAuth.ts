@@ -4,11 +4,11 @@ import { LoginRequest } from "@/lib/models/auth/loginRequest";
 import { RegisterRequest } from "@/lib/models/auth/registerRequest";
 import { UpdateProfileRequest } from "@/lib/models/auth/updateProfileRequest";
 import { ChangePasswordRequest } from "@/lib/models/auth/changePasswordRequest";
-import {SetPasswordRequest} from "@/lib/models/auth/setPasswordRequest";
-import {ConfirmEmailRequest} from "@/lib/models/auth/confirmEmailRequest";
-import {RecoverPasswordRequest} from "@/lib/models/auth/recoverPasswordRequest";
-import {ResetPasswordRequest} from "@/lib/models/auth/resetPasswordRequest";
-import {UserProfileResponse} from "@/lib/models/auth/userProfileResponse";
+import { SetPasswordRequest } from "@/lib/models/auth/setPasswordRequest";
+import { ConfirmEmailRequest } from "@/lib/models/auth/confirmEmailRequest";
+import { RecoverPasswordRequest } from "@/lib/models/auth/recoverPasswordRequest";
+import { ResetPasswordRequest } from "@/lib/models/auth/resetPasswordRequest";
+import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
 const BASE_URL = process.env.AUTH_API;
 
@@ -57,7 +57,7 @@ export const agentAuth = {
     return await response.json();
   },
 
-// --- 3. REGISTRERING ---
+  // --- 3. REGISTRERING ---
   register: async (data: RegisterRequest): Promise<UserProfileResponse> => {
     const body = new URLSearchParams();
     body.append("Email", data.email);
@@ -160,7 +160,9 @@ export const agentAuth = {
   },
 
   // --- 11. RECOVERY / GLEMT PASSORD ---
-  recovery: async (data: RecoverPasswordRequest): Promise<{ message: string; resetToken?: string }> => {
+  recovery: async (
+    data: RecoverPasswordRequest,
+  ): Promise<{ message: string; resetToken?: string }> => {
     const response = await agentExternal.post(`${BASE_URL}/account/recover`, data);
 
     if (!response.ok) {

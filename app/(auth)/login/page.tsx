@@ -60,7 +60,8 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (!session || !session.role) return;
+    // `useSession()` kaster om den brukes utenfor providertreet, så `session` er alltid definert her.
+    if (!session.role) return;
 
     const normalizedRole = session.role.toLowerCase();
     if (normalizedRole === "admin") {
@@ -68,9 +69,9 @@ const LoginPage = () => {
     } else if (normalizedRole === "user") {
       router.push("/dashboard");
     }
-  }, [session.role, router, session]);
+  }, [session.role, router]);
 
-  const isRedirecting = Boolean(session?.role);
+  const isRedirecting = Boolean(session.role);
 
   return (
     <AsyncMainContainer size={420} py={40} loading={isRedirecting}>

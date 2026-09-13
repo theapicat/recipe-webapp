@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { agentAuth } from "@/lib/agent/agentAuth";
 import { HttpResponse } from "@/lib/models/httpResponse";
-import {ChangePasswordRequest} from "@/lib/models/auth/changePasswordRequest";
+import { ChangePasswordRequest } from "@/lib/models/auth/changePasswordRequest";
 
 export const POST = async (request: Request) => {
   try {
@@ -17,8 +17,7 @@ export const POST = async (request: Request) => {
 
     return NextResponse.json(successResponse, { status: 200 });
   } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke endre passord.";
+    const errorMessage = error instanceof Error ? error.message : "Kunne ikke endre passord.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,

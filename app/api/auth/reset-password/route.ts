@@ -6,10 +6,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const result = await agentAuth.resetPassword(body);
     return NextResponse.json(result);
-  } catch (error: any) {
-    return NextResponse.json(
-      { message: error.message || "Tilbakestilling av passord mislyktes." },
-      { status: 400 }
-    );
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Tilbakestilling av passord mislyktes.";
+    return NextResponse.json({ message: errorMessage }, { status: 400 });
   }
 }

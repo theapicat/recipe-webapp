@@ -3,16 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  Paper,
-  Stack,
-  Title,
-  Text,
-  Group,
-  NavLink,
-  Grid,
-  Divider,
-} from "@mantine/core";
+import { Paper, Stack, Title, Text, Group, NavLink, Grid, Divider } from "@mantine/core";
 import {
   IconFileText,
   IconShield,
@@ -108,9 +99,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           </Grid.Col>
 
           {/* Hovedinnhold (Col 8 av 12) */}
-          <Grid.Col span={{ base: 12, md: 8, lg: 9 }}>
-            {children}
-          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 8, lg: 9 }}>{children}</Grid.Col>
         </Grid>
       </Stack>
     </AsyncMainContainer>

@@ -1,3 +1,3 @@
 export interface RecoverRequest {
-  email: string
+  email: string;
 }

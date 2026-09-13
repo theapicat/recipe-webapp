@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionManager";
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/user/:path*",
-    "/admin/:path*",
-  ],
+  matcher: ["/dashboard/:path*", "/user/:path*", "/admin/:path*"],
 };
 
 const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
@@ -59,7 +55,10 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
   // 3. Forbered responsen og muter innkommende request-headers slik at Next.js Server Components får det nye tokenet Umiddelbart!
   const requestHeaders = new Headers(req.headers);
   if (refreshedTokens) {
-    requestHeaders.set("cookie", `token=${refreshedTokens.access_token}; refreshToken=${refreshedTokens.refresh_token || refreshToken}`);
+    requestHeaders.set(
+      "cookie",
+      `token=${refreshedTokens.access_token}; refreshToken=${refreshedTokens.refresh_token || refreshToken}`,
+    );
   }
 
   const response = NextResponse.next({

@@ -45,23 +45,29 @@ export function AdminBlacklistTable() {
   // Modal-tilstand for sletting fra svarteliste
   const [deleteTarget, setDeleteTarget] = useState<BlacklistedEntry | null>(null);
 
-  // Hent svartelisten
-  const fetchBlacklist = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await agentInternal.get("/api/admin/users/blacklist");
-      if (res.ok) {
-        const responseData = await res.json();
-        const items = Array.isArray(responseData.body)
-          ? responseData.body
-          : responseData.body?.items || [];
-        setEntries(items);
-      }
-    } catch (err) {
-      console.error("Feil ved henting av svarteliste:", err);
-    } finally {
-      setLoading(false);
-    }
+  // Hent svartelisten. Setter ikke loading=true selv — `loading` starter allerede som `true` for
+  // førstelasting, og kallsteder som trigger en ny henting (under) setter det eksplisitt selv.
+  // Bruker en .then()-kjede (ikke async/await): react-hooks/set-state-in-effect flagger setState
+  // etter en `await` inni en async-funksjon kalt fra en effekt, men ikke samme mønster i en
+  // .then()-kjede.
+  const fetchBlacklist = useCallback(() => {
+    agentInternal
+      .get("/api/admin/users/blacklist")
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          const items = Array.isArray(responseData.body)
+            ? responseData.body
+            : responseData.body?.items || [];
+          setEntries(items);
+        }
+      })
+      .catch((err) => {
+        console.error("Feil ved henting av svarteliste:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -96,6 +102,7 @@ export function AdminBlacklistTable() {
         setAddModalOpen(false);
         setPattern("");
         setReason("");
+        setLoading(true);
         fetchBlacklist();
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -130,6 +137,7 @@ export function AdminBlacklistTable() {
           color: "sage",
         });
         setDeleteTarget(null);
+        setLoading(true);
         fetchBlacklist();
       } else {
         const errorData = await res.json().catch(() => ({}));
@@ -155,8 +163,7 @@ export function AdminBlacklistTable() {
     const q = search.toLowerCase().trim();
     return entries.filter(
       (e) =>
-        e.pattern.toLowerCase().includes(q) ||
-        (e.reason && e.reason.toLowerCase().includes(q))
+        e.pattern.toLowerCase().includes(q) || (e.reason && e.reason.toLowerCase().includes(q)),
     );
   }, [entries, search]);
 
@@ -335,7 +342,8 @@ export function AdminBlacklistTable() {
           </Group>
 
           <Text size="sm">
-            Er du sikker på at du vil fjerne <b>{deleteTarget?.pattern}</b> fra svartelisten? Dette vil tillate nye registreringer med denne e-posten/domenet igjen.
+            Er du sikker på at du vil fjerne <b>{deleteTarget?.pattern}</b> fra svartelisten? Dette
+            vil tillate nye registreringer med denne e-posten/domenet igjen.
           </Text>
 
           <Group justify="flex-end" mt="sm">

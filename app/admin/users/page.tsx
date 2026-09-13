@@ -42,8 +42,8 @@ export default function AdminUsersPage() {
   // --- OPPDELEDE FILTRE ---
   const [search, setSearch] = useState("");
   const [accountStatusFilter, setAccountStatusFilter] = useState<string>("all"); // "all", "active", "locked"
-  const [emailStatusFilter, setEmailStatusFilter] = useState<string>("all");     // "all", "confirmed", "unconfirmed"
-  const [lifecycleFilter, setLifecycleFilter] = useState<string>("all");          // "all", "unconfirmed_7d", "unconfirmed_14d", "inactive_6m", "inactive_1y"
+  const [emailStatusFilter, setEmailStatusFilter] = useState<string>("all"); // "all", "confirmed", "unconfirmed"
+  const [lifecycleFilter, setLifecycleFilter] = useState<string>("all"); // "all", "unconfirmed_7d", "unconfirmed_14d", "inactive_6m", "inactive_1y"
 
   // --- SORTERING ---
   const [sortBy, setSortBy] = useState<string>("createdAt"); // "name", "email", "createdAt"
@@ -53,22 +53,28 @@ export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const pageSize = 15;
 
-  const fetchUsers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await agentInternal.get("/api/admin/users");
-      if (res.ok) {
-        const responseData = await res.json();
-        const items = Array.isArray(responseData.body)
-          ? responseData.body
-          : responseData.body?.items || [];
-        setAllUsers(items);
-      }
-    } catch (err) {
-      console.error("Feil ved henting av brukere:", err);
-    } finally {
-      setLoading(false);
-    }
+  // NB: setter ikke loading=true selv — `loading` starter allerede som `true` for førstelasting,
+  // og kall utenfra (f.eks. onRefreshNeeded) setter det eksplisitt før de kaller denne. Bruker en
+  // .then()-kjede (ikke async/await): react-hooks/set-state-in-effect flagger setState etter en
+  // `await` inni en async-funksjon kalt fra en effekt, men ikke samme mønster i en .then()-kjede.
+  const fetchUsers = useCallback(() => {
+    agentInternal
+      .get("/api/admin/users")
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          const items = Array.isArray(responseData.body)
+            ? responseData.body
+            : responseData.body?.items || [];
+          setAllUsers(items);
+        }
+      })
+      .catch((err) => {
+        console.error("Feil ved henting av brukere:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -118,7 +124,7 @@ export default function AdminUsersPage() {
       return d;
     };
 
-    let result = allUsers.filter((u) => {
+    const result = allUsers.filter((u) => {
       const createdAt = new Date(u.createdAt);
       const lastLoginAt = u.lastLoginAt ? new Date(u.lastLoginAt) : null;
 
@@ -179,7 +185,15 @@ export default function AdminUsersPage() {
     });
 
     return result;
-  }, [allUsers, search, accountStatusFilter, emailStatusFilter, lifecycleFilter, sortBy, sortOrder]);
+  }, [
+    allUsers,
+    search,
+    accountStatusFilter,
+    emailStatusFilter,
+    lifecycleFilter,
+    sortBy,
+    sortOrder,
+  ]);
 
   // Paginerte rader
   const totalPages = Math.ceil(filteredUsers.length / pageSize) || 1;
@@ -259,7 +273,8 @@ export default function AdminUsersPage() {
                   />
 
                   <Text size="xs" c="dimmed">
-                    Viser {paginatedUsers.length} av {filteredUsers.length} brukere ({allUsers.length} totalt)
+                    Viser {paginatedUsers.length} av {filteredUsers.length} brukere (
+                    {allUsers.length} totalt)
                   </Text>
                 </Group>
 
@@ -334,14 +349,22 @@ export default function AdminUsersPage() {
                       style={{ width: 160 }}
                     />
 
-                    <Tooltip label={sortOrder === "asc" ? "Stigende (A-Å / Eldst)" : "Synkende (Å-A / Nyest)"}>
+                    <Tooltip
+                      label={
+                        sortOrder === "asc" ? "Stigende (A-Å / Eldst)" : "Synkende (Å-A / Nyest)"
+                      }
+                    >
                       <ActionIcon
                         variant="default"
                         size="input-xs"
                         onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
                         mb={2}
                       >
-                        {sortOrder === "asc" ? <IconSortAscending size={16} /> : <IconSortDescending size={16} />}
+                        {sortOrder === "asc" ? (
+                          <IconSortAscending size={16} />
+                        ) : (
+                          <IconSortDescending size={16} />
+                        )}
                       </ActionIcon>
                     </Tooltip>
                   </Group>
@@ -364,7 +387,10 @@ export default function AdminUsersPage() {
                 {/* Brukertabell */}
                 <AdminUserTable
                   users={paginatedUsers}
-                  onRefreshNeeded={fetchUsers}
+                  onRefreshNeeded={() => {
+                    setLoading(true);
+                    fetchUsers();
+                  }}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
                   onSortChange={handleSortChange}

@@ -54,20 +54,20 @@ export interface EditFormContainerProps {
  * Layout-wrapper for redigeringsskjemaer (Edit Forms) med nullstill-knapp og bekreftelsesmodal.
  */
 export const EditFormContainer = ({
-                                    title,
-                                    description,
-                                    onSubmit,
-                                    onReset,
-                                    submitText = "Lagre endringer",
-                                    resetText = "Nullstill endringer",
-                                    confirmTitle = "Bekreft lagring",
-                                    confirmMessage = "Er du sikker på at du vil lagre endringene?",
-                                    loading = false,
-                                    disabled = false,
-                                    errorMessage,
-                                    footer,
-                                    children,
-                                  }: EditFormContainerProps) => {
+  title,
+  description,
+  onSubmit,
+  onReset,
+  submitText = "Lagre endringer",
+  resetText = "Nullstill endringer",
+  confirmTitle = "Bekreft lagring",
+  confirmMessage = "Er du sikker på at du vil lagre endringene?",
+  loading = false,
+  disabled = false,
+  errorMessage,
+  footer,
+  children,
+}: EditFormContainerProps) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   // Forhindrer direkte submit og åpner bekreftelsesdialogen i stedet

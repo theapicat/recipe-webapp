@@ -10,18 +10,14 @@ export const POST = async (request: Request) => {
 
     const response: HttpResponse<undefined> = {
       statusCode: 200,
-      message:
-        result.message ||
-        "Lenke for tilbakestilling av passord har blitt sendt.",
+      message: result.message || "Lenke for tilbakestilling av passord har blitt sendt.",
       timestamp: new Date().toISOString(),
     };
 
     return NextResponse.json(response, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Kunne ikke sende tilbakestillingslenke.";
+      error instanceof Error ? error.message : "Kunne ikke sende tilbakestillingslenke.";
 
     const errorResponse: HttpResponse<undefined> = {
       statusCode: 400,
