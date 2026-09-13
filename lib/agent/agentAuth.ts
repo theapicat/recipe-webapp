@@ -10,11 +10,14 @@ import { RecoverPasswordRequest } from "@/lib/models/auth/recoverPasswordRequest
 import { ResetPasswordRequest } from "@/lib/models/auth/resetPasswordRequest";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
-const BASE_URL = process.env.AUTH_API;
+const GATEWAY_URL = process.env.GATEWAY_URL;
 
-if (!BASE_URL) {
-  throw new Error("Miljøvariabelen AUTH_API er ikke definert.");
+if (!GATEWAY_URL) {
+  throw new Error("Miljøvariabelen GATEWAY_URL er ikke definert.");
 }
+
+// Gatewayen ruter alt under /auth til recipe-authentication-api
+const BASE_URL = `${GATEWAY_URL}/auth`;
 
 export const agentAuth = {
   // --- 1. INNLOGGING (OAuth2 Password Grant) ---

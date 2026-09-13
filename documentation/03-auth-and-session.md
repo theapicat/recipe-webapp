@@ -48,7 +48,7 @@ Logikk, i rekkefølge:
 1. **Ingen tokens i det hele tatt** (verken `token` eller `refreshToken`) → redirect til `/login`.
 2. **Trenger fornyelse?** Hvis `token` mangler, eller har mindre enn 300 sekunder igjen til utløp
    (`getRemainingExpTime`), og det finnes en `refreshToken` → kall
-   `POST {NEXT_PUBLIC_AUTH_API}/connect/token` med `grant_type=refresh_token` direkte (uten å gå via
+   `POST {GATEWAY_URL}/auth/connect/token` med `grant_type=refresh_token` direkte (uten å gå via
    `agentAuth`/`agentExternal` — dette er en frittstående `fetch`).
    - Lykkes det → nye tokens brukes resten av requesten, og settes på responsen som `Set-Cookie`.
    - Feiler det (f.eks. `invalid_grant` fordi refresh-tokenet er utløpt) → tvungen utlogging: cookies
@@ -59,24 +59,19 @@ Logikk, i rekkefølge:
 5. **Admin-gating:** for `/admin/*` dekodes rollen fra det (eventuelt nylig fornyede) tokenet. Er den ikke
    `admin` → redirect til `/404`.
 
-### Kjent svakhet: miljøvariabel-mismatch
+### Miljøvariabel: én kilde til sannhet
 
 Refresh-kallet i `proxy.ts` bruker:
 
 ```ts
-const refreshUrl = `${process.env.NEXT_PUBLIC_AUTH_API || "http://localhost:5000/api/auth"}/connect/token`;
+const refreshUrl = `${process.env.GATEWAY_URL || "http://localhost:5000/api"}/auth/connect/token`;
 ```
 
-Resten av appen (`agentAuth.ts`, `agentAuthAdmin.ts`) bruker `process.env.AUTH_API`. `.env.local` setter kun
-`AUTH_API` — `NEXT_PUBLIC_AUTH_API` finnes ikke, så `proxy.ts` faller **alltid** tilbake til den hardkodede
-default-strengen. Det tilfeldigvis fungerer i dag fordi verdiene er like, men:
-
-- Endres Gateway-porten/URL-en (f.eks. i staging/prod), må den oppdateres **to steder med to forskjellige
-  variabelnavn** — gjøres den kun i `AUTH_API`, slutter proxyens token-refresh å virke stille (ingen feilmelding,
-  bare at refresh-kallet går til feil URL og feiler → tvungen utlogging av alle brukere).
-
-**Anbefalt fix (ikke gjort ennå — vurder som egen oppgave):** la `proxy.ts` bruke samme `AUTH_API`-variabel,
-eller eksponer én kilde til sannhet for Gateway-URL-en.
+— samme `GATEWAY_URL` som `agentAuth.ts`/`agentAuthAdmin.ts` bygger sin base-URL fra
+(`` `${GATEWAY_URL}/auth` ``). Dette var tidligere to separate variabler (`AUTH_API`/`CORE_API`) pluss en
+tredje, aldri satt variabel i `proxy.ts` alene (`NEXT_PUBLIC_AUTH_API`), som gjorde at proxyens token-refresh
+kjørte på en hardkodet fallback-URL uten at noen la merke til det. Slått sammen til én variabel nettopp for at
+dette ikke skal kunne skje igjen — endres Gateway-URL-en, er det ett sted å gjøre det.
 
 ## 4. Innloggingsflyter
 
@@ -86,7 +81,7 @@ eller eksponer én kilde til sannhet for Gateway-URL-en.
 LoginForm (client) → agentInternal.post("/api/auth/login")
   → app/api/auth/login/route.ts
       → agentAuth.login()         (OAuth2 "password" grant → Gateway /connect/token)
-      → fetch GET {AUTH_API}/account/me   (henter profil med det ferske access-tokenet)
+      → fetch GET {GATEWAY_URL}/auth/account/me   (henter profil med det ferske access-tokenet)
       → sessionManager.setSession(tokens, profil)   (setter alle tre cookies)
   ← { statusCode, body: UserProfileResponse }
 → session.setUser(...) i SessionProvider, redirect til /dashboard eller /admin/dashboard
@@ -96,7 +91,7 @@ LoginForm (client) → agentInternal.post("/api/auth/login")
 
 ```
 GoogleLogin/GoogleRegister → window.location.href = "/api/auth/google"
-  → app/api/auth/google/route.ts: redirect til {AUTH_API}/account/external-login?provider=Google
+  → app/api/auth/google/route.ts: redirect til {GATEWAY_URL}/auth/account/external-login?provider=Google
     (fullstendig browser-redirect, forlater Next.js)
   → [Gateway/Google OAuth-dans skjer utenfor denne appen]
   → Gateway redirecter tilbake til /api/auth/google-callback?access_token=...&refresh_token=...&user_id=...&email=...&...
@@ -149,8 +144,6 @@ Det finnes med andre ord **ingen 401-interceptor** noe sted i `agentInternal`/`a
 2. Utvid `proxy.ts`-matcher til å inkludere `/api/auth/:path*` og `/api/admin/:path*`, slik at samme
    refresh-før-du-treffer-handleren-logikk gjelder for API-kall også (enklere, men kjører på hvert eneste
    API-kall, ikke bare sidenavigasjon).
-3. Fiks miljøvariabel-mismatchen i seksjon 3 uansett — den er en selvstendig feilkilde selv om
-   401-håndteringen fikses.
 
 ## 6. Rolle-sjekk — hold øye med konsistens
 

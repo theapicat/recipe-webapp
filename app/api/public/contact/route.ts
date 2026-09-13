@@ -6,7 +6,7 @@ import { agentExternal } from "@/lib/agent/agentExternal";
 export const POST = async (request: Request) => {
   try {
     const body: ContactRequest = await request.json();
-    const url = `${process.env.CORE_API}/public/contact-form`;
+    const url = `${process.env.GATEWAY_URL}/public/contact-form`;
 
     const response = await agentExternal.post(url, body);
 

@@ -23,15 +23,8 @@ function FeatureCard({ item }: { item: FeatureItem }) {
   const IconComponent = item.icon;
   const statusConfig = STATUS_CONFIG[item.status];
 
-  const itemColor =
-    item.color === "teal" ? "sage" : item.color === "orange" ? "terracotta" : item.color;
-
-  const statusColor =
-    statusConfig.color === "teal"
-      ? "sage"
-      : statusConfig.color === "orange"
-        ? "terracotta"
-        : statusConfig.color;
+  const itemColor = item.color;
+  const statusColor = statusConfig.color;
 
   return (
     <Card withBorder radius="md" p="lg" shadow="sm">
@@ -116,12 +109,7 @@ export default function FeaturePage() {
         {FEATURE_CATEGORIES.map((category, index) => {
           const categoryItems = FEATURES_DATA.filter((f) => f.category === category.id);
 
-          const badgeColor =
-            category.badgeColor === "teal"
-              ? "sage"
-              : category.badgeColor === "orange"
-                ? "terracotta"
-                : category.badgeColor;
+          const badgeColor = category.badgeColor;
 
           return (
             <React.Fragment key={category.id}>

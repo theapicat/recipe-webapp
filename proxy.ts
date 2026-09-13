@@ -22,7 +22,7 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
   // 2. Forny dersom token mangler, er utløpt (exp < 0) eller nærmer seg utløp (exp < 300)
   if ((!token || exp < 300) && refreshToken) {
     try {
-      const refreshUrl = `${process.env.NEXT_PUBLIC_AUTH_API || "http://localhost:5000/api/auth"}/connect/token`;
+      const refreshUrl = `${process.env.GATEWAY_URL || "http://localhost:5000/api"}/auth/connect/token`;
 
       const bodyParams = new URLSearchParams();
       bodyParams.append("grant_type", "refresh_token");

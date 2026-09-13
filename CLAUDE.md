@@ -32,10 +32,12 @@ before making non-trivial changes in that area; it goes into far more depth than
 
 ### Environment variables (`.env.local`)
 
-- `AUTH_API` — base URL of the gateway's auth surface (e.g. `http://localhost:5000/api/auth`), used server-side by
-  `lib/agent/agentAuth.ts` and `lib/agent/agentAuthAdmin.ts`.
-- `CORE_API` — base URL for recipe/core data (e.g. `http://localhost:5000/api`).
-- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — Google OAuth client id (client-visible).
+- `GATEWAY_URL` — base URL of the Recipe Gateway API (e.g. `http://localhost:5000/api`). Auth endpoints are
+  `${GATEWAY_URL}/auth/*` (used by `lib/agent/agentAuth.ts`, `agentAuthAdmin.ts`, `proxy.ts`, and the Google OAuth
+  routes); everything else (e.g. the public contact form) hits `${GATEWAY_URL}/*` directly. One variable for both,
+  by design — see the "Known gap" note below for why that used to be two out-of-sync variables.
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — Google OAuth client id (client-visible). Currently unused in the frontend code
+  (the actual client secret/id exchange happens gateway-side) — not necessarily dead, just unverified in this repo.
 
 ## Architecture
 
@@ -55,7 +57,7 @@ before making non-trivial changes in that area; it goes into far more depth than
   - `lib/agent/agentExternal.ts` — server-side `fetch` (CORS) that attaches `Authorization: Bearer <token>` from
     `sessionManager`, used to call the external gateway directly.
 - `lib/agent/agentAuth.ts` and `lib/agent/agentAuthAdmin.ts` wrap `agentExternal` into typed, per-endpoint methods
-  (login, register, profile, admin user management, blacklist, etc.) against `AUTH_API`.
+  (login, register, profile, admin user management, blacklist, etc.) against `${GATEWAY_URL}/auth`.
 - `app/api/**/route.ts` handlers are a thin proxy layer: parse the client request, call `agentAuth`/`agentAuthAdmin`,
   then translate the result into session cookies (via `sessionManager`) and a JSON response.
 - Google OAuth is the one path that bypasses `agentAuth`: `app/api/auth/google` redirects to the gateway's
@@ -66,9 +68,9 @@ before making non-trivial changes in that area; it goes into far more depth than
 - **Known gap (see `documentation/03-auth-and-session.md`):** `proxy.ts`'s token-refresh only runs for page
   navigations matching its matcher — it does not cover `/api/*`, so a client-side `agentInternal` call made after
   the access token has expired just fails with a generic 400 instead of refreshing or forcing logout.
-  `agentAuth.refresh()` exists but is called from nowhere. Also, `proxy.ts` reads `NEXT_PUBLIC_AUTH_API` for its
-  refresh call while everything else uses `AUTH_API` — `NEXT_PUBLIC_AUTH_API` isn't set, so it silently runs on a
-  hardcoded fallback URL. Don't "fix" either without discussing the approach — see the doc for options.
+  `agentAuth.refresh()` exists but is called from nowhere. Don't "fix" this without discussing the approach first —
+  see the doc for options. (The env-var mismatch that used to compound this — `proxy.ts` reading a different,
+  unset variable than everything else — is fixed; both now read `GATEWAY_URL`.)
 
 ### Route structure
 

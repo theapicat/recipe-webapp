@@ -93,7 +93,7 @@ export default function WelcomePage() {
         notifications.show({
           title: "Bekreftelseslenke sendt!",
           message: "Sjekk innboksen din (og ev. søppelpost).",
-          color: "teal",
+          color: "sage",
           icon: <IconCheck size={16} />,
         });
       } else {
@@ -126,35 +126,35 @@ export default function WelcomePage() {
             p="xl"
             radius="md"
             withBorder
-            bg="light-dark(var(--mantine-color-teal-0), var(--mantine-color-dark-6))"
+            bg="light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-6))"
             style={{
-              borderColor: "light-dark(var(--mantine-color-teal-3), var(--mantine-color-teal-8))",
+              borderColor: "light-dark(var(--mantine-color-sage-3), var(--mantine-color-sage-8))",
             }}
           >
             <Group justify="space-between" align="center" wrap="wrap" gap="md">
               <Stack gap="xs" style={{ flex: 1 }}>
                 <Group gap="xs">
-                  <Badge color="teal" variant="filled" size="sm">
+                  <Badge color="sage" variant="filled" size="sm">
                     {isEmailConfirmed ? "Konto klar" : "Nesten i mål"}
                   </Badge>
                 </Group>
                 <Title
                   order={1}
                   size="h2"
-                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-2))"
+                  c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-2))"
                 >
                   Velkommen til Kjøkkenhylla, {user.firstName || "kokk"}! 🍳
                 </Title>
                 <Text
                   size="sm"
-                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-3))"
+                  c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-3))"
                 >
                   {isEmailConfirmed
                     ? "Kontoen din er bekreftet og klar! Du har nå tilgang til din helt egne, digitale og støyfrie kokebok."
                     : "Kontoen din er opprettet. For å holde plattformen trygg og fri for inaktive brukere, ber vi deg bekrefte e-postadressen din."}
                 </Text>
               </Stack>
-              <ThemeIcon color="teal" size={60} radius="xl">
+              <ThemeIcon color="sage" size={60} radius="xl">
                 {isEmailConfirmed ? <IconSparkles size={36} /> : <IconMailCheck size={36} />}
               </ThemeIcon>
             </Group>
@@ -165,7 +165,7 @@ export default function WelcomePage() {
             <Paper p="lg" radius="md" withBorder shadow="xs">
               <Stack gap="md">
                 <Group gap="xs">
-                  <IconClock size={22} color="var(--mantine-color-orange-6)" />
+                  <IconClock size={22} color="var(--mantine-color-terracotta-6)" />
                   <Title order={3} size="h4">
                     Viktig om bekreftelse av konto (`{user.email}`)
                   </Title>
@@ -173,7 +173,7 @@ export default function WelcomePage() {
 
                 <Divider />
 
-                <Alert color="orange" icon={<IconAlertTriangle size={20} />} radius="md">
+                <Alert color="terracotta" icon={<IconAlertTriangle size={20} />} radius="md">
                   Vi har nylig sendt en aktiveringslenke til <b>{user.email}</b>. Klikk på lenken i
                   e-posten for å bekrefte kontoen din.
                 </Alert>
@@ -186,7 +186,7 @@ export default function WelcomePage() {
                   size="sm"
                   center
                   icon={
-                    <ThemeIcon color="orange" size={20} radius="xl" variant="light">
+                    <ThemeIcon color="terracotta" size={20} radius="xl" variant="light">
                       <IconClock size={12} />
                     </ThemeIcon>
                   }
@@ -238,7 +238,7 @@ export default function WelcomePage() {
 
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
               <Paper p="lg" radius="md" withBorder shadow="xs">
-                <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="sm">
+                <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="sm">
                   <IconBook size={24} />
                 </ThemeIcon>
                 <Text fw={600} size="md" mb={4}>
@@ -251,7 +251,7 @@ export default function WelcomePage() {
               </Paper>
 
               <Paper p="lg" radius="md" withBorder shadow="xs">
-                <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="sm">
+                <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="sm">
                   <IconFridge size={24} />
                 </ThemeIcon>
                 <Text fw={600} size="md" mb={4}>
@@ -264,7 +264,7 @@ export default function WelcomePage() {
               </Paper>
 
               <Paper p="lg" radius="md" withBorder shadow="xs">
-                <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="sm">
+                <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="sm">
                   <IconCalendarCheck size={24} />
                 </ThemeIcon>
                 <Text fw={600} size="md" mb={4}>
@@ -277,7 +277,7 @@ export default function WelcomePage() {
               </Paper>
 
               <Paper p="lg" radius="md" withBorder shadow="xs">
-                <ThemeIcon color="teal" variant="light" size={42} radius="md" mb="sm">
+                <ThemeIcon color="sage" variant="light" size={42} radius="md" mb="sm">
                   <IconShieldCheck size={24} />
                 </ThemeIcon>
                 <Text fw={600} size="md" mb={4}>
@@ -315,9 +315,9 @@ export default function WelcomePage() {
             radius="md"
             withBorder
             shadow="xs"
-            bg="light-dark(var(--mantine-color-teal-0), var(--mantine-color-dark-6))"
+            bg="light-dark(var(--mantine-color-sage-0), var(--mantine-color-dark-6))"
             style={{
-              borderColor: "light-dark(var(--mantine-color-teal-2), var(--mantine-color-teal-8))",
+              borderColor: "light-dark(var(--mantine-color-sage-2), var(--mantine-color-sage-8))",
             }}
           >
             <Group justify="space-between" align="center" wrap="wrap" gap="md">
@@ -325,20 +325,20 @@ export default function WelcomePage() {
                 <Text
                   fw={600}
                   size="sm"
-                  c="light-dark(var(--mantine-color-teal-9), var(--mantine-color-teal-2))"
+                  c="light-dark(var(--mantine-color-sage-9), var(--mantine-color-sage-2))"
                 >
                   Klar til å sette i gang?
                 </Text>
                 <Text
                   size="xs"
-                  c="light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-3))"
+                  c="light-dark(var(--mantine-color-sage-8), var(--mantine-color-sage-3))"
                 >
                   Gå direkte til din personlige oversikt og start oppbyggingen av din kokebok.
                 </Text>
               </div>
 
               <Button
-                color="teal"
+                color="sage"
                 size="md"
                 rightSection={<IconArrowRight size={18} />}
                 onClick={handleProceedToDashboard}

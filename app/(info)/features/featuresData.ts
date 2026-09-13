@@ -23,7 +23,7 @@ export interface StatusConfig {
 
 export const STATUS_CONFIG: Record<FeatureStatus, StatusConfig> = {
   lansert: { label: "Lansert", color: "green" },
-  under_utvikling: { label: "Under utvikling", color: "orange" },
+  under_utvikling: { label: "Under utvikling", color: "terracotta" },
   kommer: { label: "Kommer snart", color: "violet" },
   planlagt: { label: "Planlagt", color: "gray" },
 };
@@ -53,7 +53,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     subtitle:
       "Full kontroll på dine egne oppskrifter – importer fra favorittsider eller del med venner.",
     badgeLabel: "Kjernefunksjonalitet",
-    badgeColor: "teal",
+    badgeColor: "sage",
   },
   {
     id: "planlegging",
@@ -67,7 +67,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     title: "Profil & Tilpasninger",
     subtitle: "Tilpass Kjøkkenhylla til dine kostholdsbehov og preferanser.",
     badgeLabel: "Personaliteter",
-    badgeColor: "orange",
+    badgeColor: "terracotta",
   },
 ];
 
@@ -79,7 +79,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Lim inn en URL fra Matprat, Trines Matblogg og andre populære matblogger for å hente ut oppskriften automatisk.",
     icon: IconLink,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -89,7 +89,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Ingen felles register med oppskrifter. Du bygger din egen samling og kan dele dine favorittretter med venner og familie.",
     icon: IconShare,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -99,7 +99,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Skap dine egne kulinariske mesterverk fra bunnen eller tilpass importerte oppskrifter med egne notater og ingredienser.",
     icon: IconChefHat,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -109,7 +109,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Søk i din egen oppskriftsdatabase basert på råvarene du allerede har i kjøleskapet for å redusere matsvinn.",
     icon: IconSearch,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -119,7 +119,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Hold skjermen våken på kjøkkenbenken, skaler porsjoner sømløst og start innebygde nedtellingsur.",
     icon: IconDeviceMobile,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -129,7 +129,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Lagre dine favorittretter, følg med på antall ganger laget og få oversikt over når du sist spiste dem.",
     icon: IconHeart,
-    color: "teal",
+    color: "sage",
     category: "kjerne",
     status: "planlagt",
   },
@@ -173,7 +173,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Registrer allergier på kontoen din og få tydelige varsler dersom importerte retter inneholder allergener.",
     icon: IconShieldCheck,
-    color: "orange",
+    color: "terracotta",
     category: "profil",
     status: "planlagt",
   },
@@ -183,7 +183,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       "Skriv ut fine oppskriftskort fra samlingen din eller eksporter handlelisten som PDF før du drar på butikken.",
     icon: IconDownload,
-    color: "orange",
+    color: "terracotta",
     category: "profil",
     status: "planlagt",
   },

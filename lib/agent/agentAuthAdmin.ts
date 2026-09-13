@@ -12,11 +12,14 @@ import { SendUserEmailAdminRequest } from "@/lib/models/admin/users/SendUserEmai
 import { DeleteAndBlacklistUserAdminRequest } from "@/lib/models/admin/users/DeleteAndBlacklistUserAdminRequest";
 import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
 
-const BASE_URL = process.env.AUTH_API;
+const GATEWAY_URL = process.env.GATEWAY_URL;
 
-if (!BASE_URL) {
-  throw new Error("Miljøvariabelen AUTH_API er ikke definert.");
+if (!GATEWAY_URL) {
+  throw new Error("Miljøvariabelen GATEWAY_URL er ikke definert.");
 }
+
+// Gatewayen ruter alt under /auth (inkl. /auth/admin/*) til recipe-authentication-api
+const BASE_URL = `${GATEWAY_URL}/auth`;
 
 export const agentAuthAdmin = {
   // --- 1. HENT ALLE BRUKERLISTE ---

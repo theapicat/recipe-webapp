@@ -12,7 +12,7 @@ export const POST = async (request: Request) => {
     const tokens = await agentAuth.login(body);
 
     // 2. Hent innlogget brukersin profil fra /account/deleteProfile med det ferske tokenet
-    const meUrl = `${process.env.AUTH_API}/account/me`;
+    const meUrl = `${process.env.GATEWAY_URL}/auth/account/me`;
     const profileRes = await fetch(meUrl, {
       method: "GET",
       headers: {

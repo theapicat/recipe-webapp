@@ -69,7 +69,7 @@ tilgjengelige endepunkter:
 
 ```
 /api/health                              GET   – enkel healthcheck (status, service, env, timestamp)
-/api/public/contact                      POST  – kontaktskjema → CORE_API
+/api/public/contact                      POST  – kontaktskjema → GATEWAY_URL
 
 /api/auth/login                          POST
 /api/auth/register                       POST

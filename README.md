@@ -45,11 +45,9 @@ Internt benytter frontend-applikasjonen dedikerte HTTP-agenter (`agentInternal` 
 Konfigurer følgende variabler i din `.env.local`-fil i rotmappen:
 
 ```env
-# Base-URL for autentiserings-endepunktene på Gatewayen
-AUTH_API=http://localhost:5000/api/auth
-
-# Base-URL for kjerne-endepunktene (oppskrifter, måltidsplan m.m.) på Gatewayen
-CORE_API=http://localhost:5000/api
+# Base-URL for Recipe Gateway API. Auth-endepunkter nås som {GATEWAY_URL}/auth/*,
+# kjerne-endepunkter (oppskrifter, måltidsplan m.m.) direkte som {GATEWAY_URL}/*
+GATEWAY_URL=http://localhost:5000/api
 
 # Google OAuth client-id
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=...

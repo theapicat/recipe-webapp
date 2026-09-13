@@ -57,22 +57,19 @@ cookies flyter gjennom dette.
 ## 4. Miljøvariabler (`.env.local`)
 
 ```env
-# Base-URL for autentiserings-endepunktene på Gatewayen
-AUTH_API=http://localhost:5000/api/auth
-
-# Base-URL for kjerne-endepunktene (oppskrifter, måltidsplan m.m.) på Gatewayen
-CORE_API=http://localhost:5000/api
+# Base-URL for Recipe Gateway API. Auth-endepunkter nås som {GATEWAY_URL}/auth/*,
+# kjerne-endepunkter (oppskrifter, måltidsplan m.m.) direkte som {GATEWAY_URL}/*
+GATEWAY_URL=http://localhost:5000/api
 
 # Google OAuth client-id (eksponeres til nettleseren)
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=...
 ```
 
-**Viktig fallgruve:** `proxy.ts` (token-refresh ved sidenavigasjon) leser **`NEXT_PUBLIC_AUTH_API`**, ikke
-`AUTH_API`. Denne variabelen er ikke satt i `.env.local`, så proxyen faller alltid tilbake til den hardkodede
-default-verdien `http://localhost:5000/api/auth`. I dagens dev-oppsett tilfeldigvis identisk med `AUTH_API`
-— men endrer du gateway-URL-en ett sted uten det andre, brekker token-refresh stille. Se
-[`03-auth-and-session.md`](./03-auth-and-session.md#kjent-svakhet-miljøvariabel-mismatch) og
-[`07-known-issues-and-tech-debt.md`](./07-known-issues-and-tech-debt.md).
+Én variabel for hele Gatewayen — bevisst, ikke to. Det fantes tidligere to separate variabler (`AUTH_API`,
+`CORE_API`) som pekte på samme host med ulikt path-prefiks, pluss en tredje (`NEXT_PUBLIC_AUTH_API` i
+`proxy.ts`) som aldri var satt og stille falt tilbake til en hardkodet URL. Alle tre er slått sammen til
+`GATEWAY_URL` nettopp for å gjøre det umulig for dem å komme ut av synk igjen — se
+[`03-auth-and-session.md`](./03-auth-and-session.md) for detaljer om hvor den brukes.
 
 ## 5. Kom i gang
 
