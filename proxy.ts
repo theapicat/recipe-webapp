@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionManager";
+import { fetchWithTimeout } from "@/lib/agent/fetchWithTimeout";
 
 export const config = {
   matcher: ["/dashboard/:path*", "/user/:path*", "/admin/:path*"],
@@ -29,7 +30,9 @@ const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
       bodyParams.append("refresh_token", refreshToken);
       bodyParams.append("client_id", "recipe-web-app");
 
-      const refreshRes = await fetch(refreshUrl, {
+      // fetchWithTimeout (10s) — uten dette kan et uoppnåelig Gateway-kall henge på ubestemt tid og
+      // blokkere hele sidenavigasjonen i stedet for å utløse tvungen utlogging under.
+      const refreshRes = await fetchWithTimeout(refreshUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

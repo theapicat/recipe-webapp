@@ -22,8 +22,14 @@ interface Props {
 const SessionContext = createContext<SessionContextType | null>(null);
 
 export const SessionProvider = ({ initialUser, children }: Props) => {
-  const [user, setUserState] = useState<UserProfileResponse | undefined>(initialUser);
-  const [role, setRole] = useState<UserRoleType | undefined>(initialUser?.role);
+  // Normaliserer allerede ved seeding — en cookie skrevet før rolle-normaliseringen ble innført
+  // (eller på en annen maskin/eldre versjon) kan fortsatt inneholde "Admin"/"User" med stor forbokstav.
+  const normalizedInitialUser = initialUser
+    ? { ...initialUser, role: normalizeRole(initialUser.role) }
+    : undefined;
+
+  const [user, setUserState] = useState<UserProfileResponse | undefined>(normalizedInitialUser);
+  const [role, setRole] = useState<UserRoleType | undefined>(normalizedInitialUser?.role);
 
   const setUser = (newUser: UserProfileResponse | undefined) => {
     const normalized = newUser ? { ...newUser, role: normalizeRole(newUser.role) } : undefined;

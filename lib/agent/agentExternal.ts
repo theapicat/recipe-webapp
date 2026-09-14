@@ -1,9 +1,10 @@
 import sessionManager from "@/lib/session/sessionManager";
+import { fetchWithTimeout } from "@/lib/agent/fetchWithTimeout";
 
 export const agentExternal = {
   get: async (url: string) => {
     const token = await sessionManager.getToken();
-    return await fetch(url, {
+    return await fetchWithTimeout(url, {
       method: "GET",
       mode: "cors",
       headers: {
@@ -14,7 +15,7 @@ export const agentExternal = {
   },
   post: async (url: string, body: object) => {
     const token = await sessionManager.getToken();
-    return await fetch(url, {
+    return await fetchWithTimeout(url, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -26,7 +27,7 @@ export const agentExternal = {
   },
   postForm: async (url: string, bodyParams: URLSearchParams) => {
     const token = await sessionManager.getToken();
-    return await fetch(url, {
+    return await fetchWithTimeout(url, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -38,7 +39,7 @@ export const agentExternal = {
   },
   put: async (url: string, body: object) => {
     const token = await sessionManager.getToken();
-    return await fetch(url, {
+    return await fetchWithTimeout(url, {
       method: "PUT",
       mode: "cors",
       headers: {
@@ -50,7 +51,7 @@ export const agentExternal = {
   },
   delete: async (url: string, body?: object) => {
     const token = await sessionManager.getToken();
-    return await fetch(url, {
+    return await fetchWithTimeout(url, {
       method: "DELETE",
       mode: "cors",
       headers: {

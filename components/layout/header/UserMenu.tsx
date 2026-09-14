@@ -1,25 +1,42 @@
 "use client";
 
+import { useState } from "react";
 import { useSession } from "@/lib/session/SessionProvider";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { useRouter } from "next/navigation";
 import { Avatar, Badge, Group, Menu, Text, UnstyledButton } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconSettings, IconUser, IconLogout } from "@tabler/icons-react";
 import Link from "next/link";
 
 export const UserMenu = () => {
   const session = useSession();
   const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    setLoggingOut(true);
+
     try {
       const res = await agentInternal.post("/api/auth/logout", {});
       if (res.ok) {
         session.setUser(undefined); // Tømmer automatisk både user og role i provideren
         router.push("/");
+      } else {
+        notifications.show({
+          title: "Utlogging mislyktes",
+          message: "Kunne ikke logge ut akkurat nå. Prøv igjen om litt.",
+          color: "red",
+        });
       }
-    } catch (error) {
-      console.error("Utlogging mislyktes:", error);
+    } catch {
+      notifications.show({
+        title: "Nettverksfeil",
+        message: "Kunne ikke koble til serveren for å logge ut. Prøv igjen om litt.",
+        color: "red",
+      });
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -68,8 +85,13 @@ export const UserMenu = () => {
 
         <Menu.Divider />
 
-        <Menu.Item color="red" leftSection={<IconLogout size={16} />} onClick={handleLogout}>
-          Logg ut
+        <Menu.Item
+          color="red"
+          leftSection={<IconLogout size={16} />}
+          onClick={handleLogout}
+          disabled={loggingOut}
+        >
+          {loggingOut ? "Logger ut …" : "Logg ut"}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

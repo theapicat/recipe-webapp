@@ -35,6 +35,13 @@ Gateway-endepunkt (login, register, hent profil, lås bruker, svarteliste, ...).
 henter bare det som ligger i cookien akkurat nå og sender det av gårde. Fornyelse skjer i to uavhengige lag:
 `proxy.ts` ved sidenavigasjon (se under), og `agentInternal` ved API-kall (se seksjon 5).
 
+**`fetchWithTimeout`** (`lib/agent/fetchWithTimeout.ts`, 10 sekunder default) brukes av alle fem metodene i
+`agentExternal` og av `proxy.ts` sitt eget frittstående refresh-kall — den eneste plassen appen faktisk gjør
+et nettverkskall mot Gatewayen. Uten dette kan et uoppnåelig Gateway (feil vert, brannmur som dropper pakker
+stille, VPN nede — i motsetning til f.eks. "ingenting kjører på localhost" som feiler nesten øyeblikkelig)
+henge et kall på ubestemt tid. Dette rammet i praksis logout (se seksjon 4.3): brukeren fikk ingen
+tilbakemelding og satt fast, siden `agentAuth.revokeToken()` sitt kall aldri fikk en tidsgrense å gi opp ved.
+
 ## 3. `proxy.ts` — Next.js' "Proxy" (tidligere Middleware)
 
 > Denne Next.js-versjonen har omdøpt `middleware.ts` til `proxy.ts`. Filen ligger i repo-roten og har samme
@@ -109,11 +116,17 @@ opp og oversettes til norske feilmeldinger i `app/(auth)/login/page.tsx` og `app
 
 1. `agentAuth.revokeToken()` — **best-effort** `POST {GATEWAY_URL}/auth/connect/revoke` med refresh-tokenet
    (RFC 7009-format, samme form-encoding som `/connect/token`). Kaster aldri — feiler kallet (f.eks. fordi
-   Gatewayen ikke har endepunktet ennå), fortsetter utloggingen som normalt. Se `BACKEND_REQUIREMENTS.md` i
-   repo-roten for hva som forventes av backend, inkludert en viktig presisering om at revocation av
-   refresh-tokenet ikke nødvendigvis gjør et allerede utstedt (JWT) access-token ugyldig før det utløper
-   naturlig.
+   Gatewayen ikke har endepunktet ennå, eller er helt uoppnåelig), fortsetter utloggingen som normalt. Går
+   via `agentExternal`, som bruker `fetchWithTimeout` (se seksjon 2) — **kritisk** her, siden et uoppnåelig
+   Gateway uten tidsgrense tidligere kunne henge dette kallet på ubestemt tid og la brukeren sitte fast
+   midt i utlogging uten tilbakemelding. Se `BACKEND_REQUIREMENTS.md` i repo-roten for hva som forventes av
+   backend, inkludert en viktig presisering om at revocation av refresh-tokenet ikke nødvendigvis gjør et
+   allerede utstedt (JWT) access-token ugyldig før det utløper naturlig.
 2. `sessionManager.removeSession()` — sletter de tre lokale cookiene.
+
+`UserMenu.tsx` sin `handleLogout()` viser nå en `loading`-tilstand ("Logger ut …") mens kallet pågår, og en
+feilmelding via `notifications` hvis logout-endepunktet svarer med feil eller nettverkskallet feiler — tidligere
+ga et mislykket kall (`!res.ok`) ingen tilbakemelding i det hele tatt.
 
 ## 5. Token-fornyelse for API-kall (`agentInternal` + `/api/auth/refresh`)
 
@@ -160,7 +173,11 @@ alltid er `"admin"` eller `"user"`:
 
 - `sessionManager.getUserRole(token)` — dekoder JWT-claimet.
 - `sessionManager.setSession()` / `setUserData()` — det som lagres i `user_data`-cookien.
-- `SessionProvider.setUser()` / `updateUser()` — det som settes i React-konteksten.
+- `SessionProvider` sin egen **seeding** av `initialUser` (`normalizedInitialUser` i konstruktøren) — ikke
+  bare `setUser()`/`updateUser()`. En cookie skrevet _før_ normaliseringen ble innført (f.eks. en økt som
+  ikke har logget inn på nytt siden, eller på en annen maskin som ikke har fått siste kodeversjon) kunne
+  ellers seede React-state med den rå, ikke-normaliserte verdien fra cookien — noe som i praksis fikk
+  `Header.tsx` til å vise gjeste-navigasjon for en faktisk innlogget bruker. Rettet.
 - `app/api/auth/google-callback/route.ts` — `role`-query-parameteren.
 
 Dette fant sted etter at `Header.tsx` ble oppdaget å sammenligne rollen eksakt (`session.role === "Admin"`)

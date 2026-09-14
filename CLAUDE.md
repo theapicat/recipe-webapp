@@ -81,12 +81,20 @@ frontend that should really be fixed in `recipe-authentication-api`/the gateway 
   independent and both read `GATEWAY_URL`.
 - Role is always normalized to lowercase (`UserRoleType = "admin" | "user"` in `lib/models/types.ts`, via the
   shared `normalizeRole()`) at every point a role enters app state — `sessionManager.setSession`/`setUserData`,
-  `SessionProvider.setUser`/`updateUser`, `sessionManager.getUserRole`, and the Google OAuth callback. The backend
-  currently sends `"Admin"`/`"User"` capitalized in three places; see `BACKEND_REQUIREMENTS.md`. Don't remove the
-  normalization even after backend changes casing — treat it as defense-in-depth.
+  `SessionProvider`'s constructor (`initialUser` seeding) as well as `setUser`/`updateUser`,
+  `sessionManager.getUserRole`, and the Google OAuth callback. The backend currently sends `"Admin"`/`"User"`
+  capitalized in three places; see `BACKEND_REQUIREMENTS.md`. Don't remove the normalization even after backend
+  changes casing — treat it as defense-in-depth (a stale cookie from before this normalization existed can still
+  carry the old casing).
 - Logout (`app/api/auth/logout/route.ts`) calls `agentAuth.revokeToken()` (best-effort `POST .../connect/revoke`,
   never throws) before clearing cookies. The gateway may not implement this endpoint yet — see
   `BACKEND_REQUIREMENTS.md` for the contract and an important caveat about JWT vs. reference tokens.
+- **Every fetch to the gateway is time-boxed.** `lib/agent/fetchWithTimeout.ts` (10s default, `AbortController`-based)
+  wraps all five `agentExternal` methods and `proxy.ts`'s own inline refresh call — the only two places that reach
+  out to `GATEWAY_URL`. Without this, an unreachable gateway (wrong host, dropped packets, VPN down — as opposed to
+  "nothing listening on localhost", which fails fast) could hang a request indefinitely with no user feedback; this
+  was an observed real bug in the logout flow. Keep using `fetchWithTimeout` for any new gateway-facing call rather
+  than bare `fetch`.
 
 ### Route structure
 
