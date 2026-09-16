@@ -110,6 +110,13 @@ const initialRoadmap: CategoryTodos[] = [
           "Skjerm-keepalive, porsjonskalkulator og innebygd nedtellingsur for koketider.",
         completed: false,
       },
+      {
+        id: "rec_ingredient_lookup",
+        label: "Ingrediens-oppslag & Næringsinnhold",
+        description:
+          "Søk opp ingredienser for å se næringsinnhold og porsjonsstørrelser, med lenke til offisiell kilde (Matvaretabellen).",
+        completed: false,
+      },
     ],
   },
   {

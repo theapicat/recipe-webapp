@@ -94,6 +94,7 @@ Utdypende, oppdatert teknisk dokumentasjon ligger i [`documentation/`](./documen
 6. [Skjemaer & designsystem](./documentation/06-forms-and-design-system.md)
 7. [Kjente problemer & teknisk gjeld](./documentation/07-known-issues-and-tech-debt.md)
 8. [Forslag: mappestruktur for modeller & komponenter](./documentation/08-model-and-component-structure-proposal.md)
+9. [Oppskriftsdomenet: Modell & planlagte sider](./documentation/09-recipe-domain-and-planned-pages.md)
 
 ---
 

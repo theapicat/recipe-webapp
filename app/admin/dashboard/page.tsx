@@ -185,8 +185,23 @@ const initialRoadmap: CategoryTodos[] = [
       },
       {
         id: "rec_categories",
-        label: "Kategori- & Råvareregister",
-        description: "Administrere og justere globale kategorier, ingredienser og måleenheter.",
+        label: "Kategori-, Allergen- & Enhetsadministrasjon",
+        description:
+          "Administrere oppskrifts- og ingredienskategorier, allergener, måleenheter og søkeord.",
+        completed: false,
+      },
+      {
+        id: "rec_domain_model",
+        label: "Oppskrifts-/Ingrediens-/Næringsdatamodell",
+        description:
+          "Datamodeller for oppskrifter, ingredienser og næringsinnhold (TypeScript + C#-utkast), designet mot Matvaretabellen som datakilde. Se documentation/09 og RECIPE_BACKEND_NOTES.md.",
+        completed: true,
+      },
+      {
+        id: "rec_ingredient_admin",
+        label: "Ingrediens- & Næringsadministrasjon",
+        description:
+          "Adminpanel for å administrere ingredienskatalogen og næringsstoff-definisjonene, samt godkjenne brukerinnsendte (uverifiserte) ingredienser.",
         completed: false,
       },
     ],
