@@ -3,5 +3,6 @@ export interface RecipeStep {
   recipeId: string;
   stepNumber: number;
   description: string;
-  timerMinutes?: number;
+  // null = ingen timer. Timerne er rent klientside.
+  timerMinutes: number | null;
 }

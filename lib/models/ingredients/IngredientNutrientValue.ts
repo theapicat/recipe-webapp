@@ -3,8 +3,10 @@
 export interface IngredientNutrientValue {
   id: string;
   ingredientId: string;
+  // Refererer til NutrientDefinition.id (tekstkode, f.eks. "Fett", "Vit C").
   nutrientDefinitionId: string;
+  // Per 100 g spiselig del.
   quantity: number;
   // Kildens egen referansekode for denne spesifikke verdien (sporbarhet utover Ingredient.sourceId).
-  sourceId?: string;
+  sourceId: string | null;
 }
