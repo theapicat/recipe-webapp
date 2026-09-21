@@ -176,3 +176,8 @@ handleliste. Merk: Core sitt punkt «allergen-tagging» foreslår en regelbasert
   ingrediens-editoren.
 - **Antall lenker i headeren:** admin har 6 lenker og går til burger-menyen under 1200px. Blir det flere, vurder en
   gruppert/nedtrekksmeny for adminlenkene i stedet.
+- **Tema og styling (lav prioritet, ikke en kjernefunksjon):** leke med fargetemaer og styling av komponentene (`theme.ts`, se
+  [06](./06-forms-and-design-system.md), del B), uten å endre sidenes layout, og gjøre en gjennomgang av at alle sidene ser konsistente ut.
+  Ting å se på i gjennomgangen: sidebredder (`MainContainer` bruker `lg` på katalogsiden, `xl` på ingredienssiden), tabell-, kort- og
+  filterstil, merker (badges) og ikonbruk, lys/mørk modus og tilgjengelighet (ikke fargen alene). Kjent forskjell: de eldre
+  mock-sidene i admin har emoji i tittelen (f.eks. «👥 Brukeradministrasjon»), de nye sidene har det ikke.
