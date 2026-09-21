@@ -25,7 +25,7 @@ Applikasjonen er den primære brukerflaten i et økosystem bestående av tre sam
 2. **Eksternt API:** Sentralt API for autentisering, lagring og håndtering av bruker- og oppskriftsdata.
 3. **Skrapetjeneste:** Egen mikrotjeneste som håndterer import og uthenting av oppskrifter fra godkjente eksterne nettsteder via API.
 
-Internt benytter frontend-applikasjonen dedikerte HTTP-agenter (`agentInternal` for server-side API-ruter og `agentExternal` for direkte REST-kall mot ekstern backend).
+Internt benytter frontend-applikasjonen nøyaktig to HTTP-agenter: `agentInternal` (klientkomponenter → appens egne API-ruter) og `agentExternal` (server → Gatewayen, med token fra sesjonscookien). API-rutene er tynne og bygges alle med samme mal (`apiRoute` + `agentExternal`) — se [API-integrasjon](./documentation/04-api-integration-and-data-models.md).
 
 ---
 
@@ -95,6 +95,7 @@ Utdypende, oppdatert teknisk dokumentasjon ligger i [`documentation/`](./documen
 7. [Kjente problemer & teknisk gjeld](./documentation/07-known-issues-and-tech-debt.md)
 8. [Forslag: mappestruktur for modeller & komponenter](./documentation/08-model-and-component-structure-proposal.md)
 9. [Oppskriftsdomenet: Modell & planlagte sider](./documentation/09-recipe-domain-and-planned-pages.md)
+10. [Backlog & utsatte avklaringer](./documentation/10-backlog.md)
 
 ---
 

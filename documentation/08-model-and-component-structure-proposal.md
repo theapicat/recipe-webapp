@@ -36,11 +36,8 @@ lib/models/
   i `lib/models/`-rot, ikke i en domenemappe.
 - ✅ **`lib/models/auth/openIddictResponse.ts`, `lib/models/auth/deleteProfileRequest.ts`,
   `lib/models/user/user.ts`** — alle ubrukte, slettet.
-- ⏳ **`UserRoleType`** (`"Admin" | "User" | string"` → `"Admin" | "User"`) er **ikke** strammet inn ennå.
-  `| string` nuller ut hele poenget med unionen og er trolig rotårsaken til at `Header.tsx` sammenligner
-  rollen annerledes enn resten av appen. Innstramming utløser en reell type-feil i `google-callback/route.ts`
-  (rollen kommer uvalidert fra en query-param) som krever en bevisst normaliseringsbeslutning — se
-  [07](./07-known-issues-and-tech-debt.md).
+- ✅ **`UserRoleType`** er nå `"admin" | "user"` (små bokstaver, slik backend sender dem), og `normalizeRole()` i
+  `lib/models/types.ts` brukes overalt en rolle kommer inn i appens tilstand, inkludert `google-callback/route.ts`.
 
 ## 3. Ny struktur — legg til domenemapper etter behov, ikke på forskudd
 
@@ -124,10 +121,13 @@ dag).
 
 ## 6. Konkret migreringsrekkefølge når dere er klare
 
-Anbefalt rekkefølge — start med oppskrifter siden måltidsplan og handleliste begge refererer til dem:
+Besluttet rekkefølge (2026-09-21): **kataloger (admin) → ingredienser → oppskrifter → måltidsplan → handleliste.**
+Oppskrifter avhenger av ingredienser, som igjen avhenger av katalogene (ingrediens-/oppskriftskategorier, enheter,
+allergener, søkeord), så de bygges i omvendt rekkefølge av hvordan de brukes. Punktene under gjelder oppskriftsdelen:
 
-1. `lib/models/recipes/*` + `agentRecipes.ts` (samme mønster som `agentAuth.ts`) + `app/api/recipes/**`
-   route handlers.
+1. `lib/models/recipes/*` (gjort) + route handlers som bruker `apiRoute` og `agentExternal` direkte. Det lages
+   **ingen** egen `agentRecipes.ts` — appen har kun `agentInternal` og `agentExternal` (se
+   [04](./04-api-integration-and-data-models.md)).
 2. Bryt `app/(user)/user/recipes/page.tsx` (541 linjer) opp i `page.tsx` (tynn) +
    `components/recipes/RecipeCard.tsx` + `RecipeFilterBar.tsx`, koblet til ekte data.
 3. Gjenta for `recipes/create` og `recipes/[id]/edit` med en delt `RecipeForm.tsx` (de to sidene gjør i dag

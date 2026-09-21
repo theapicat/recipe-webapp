@@ -27,9 +27,9 @@ app/admin/users/email/page.tsx    → AdminSendEmailForm, AdminUserCard
 ```
 
 Handlinger tilgjengelig fra `AdminUserTable.tsx` / `AdminUserActionPanel.tsx`, alle via `agentInternal` →
-tilsvarende `/api/admin/users/*`-rute → `agentAuthAdmin`:
+tilsvarende `/api/admin/users/*`-rute → `agentExternal` (mot Auth API sine `/auth/admin/*`-endepunkter):
 
-- Lås / lås opp bruker (`lockUser` / `unlockUser`)
+- Lås / lås opp bruker (`/api/admin/users/lock` / `unlock`)
 - Bekreft e-post manuelt / send bekreftelse på nytt
 - Send passord-tilbakestilling på vegne av bruker
 - Send fritekst-e-post til bruker
@@ -43,9 +43,8 @@ filnavn må matche interface-navn (nylig rettet for `BlacklistedEntry`/`DeleteAn
 ### Paginering: bevisst client-side (for nå)
 
 Det fantes tidligere en påbegynt, ikke fullført migrering til server-side paginering
-(`AdminUserQueryParams`/`PaginatedResponse`-modeller lagt til, men verken `agentAuthAdmin.getUsers()`,
-route handleren eller selve siden brukte dem konsekvent). Dette er ryddet opp: `app/api/admin/users/route.ts`
-henter nå en flat liste uten query-params, i tråd med at `app/admin/users/page.tsx` allerede gjør all
+(`AdminUserQueryParams`/`PaginatedResponse`-modeller lagt til, men verken route handleren eller selve siden brukte
+dem konsekvent). Dette er ryddet opp: `app/api/admin/users/route.ts` henter nå en flat liste uten query-params, i tråd med at `app/admin/users/page.tsx` allerede gjør all
 søk/filter/sortering/paginering client-side i en `useMemo`. De ubrukte modellene er slettet. Server-side
 paginering kan bygges skikkelig senere når brukerlisten faktisk blir stor nok til å trenge det — se
 [07 – Kjente problemer](./07-known-issues-and-tech-debt.md).

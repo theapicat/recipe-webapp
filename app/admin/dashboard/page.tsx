@@ -194,7 +194,7 @@ const initialRoadmap: CategoryTodos[] = [
         id: "rec_domain_model",
         label: "Oppskrifts-/Ingrediens-/Næringsdatamodell",
         description:
-          "Datamodeller for oppskrifter, ingredienser og næringsinnhold (TypeScript + C#-utkast), designet mot Matvaretabellen som datakilde. Se documentation/09 og RECIPE_BACKEND_NOTES.md.",
+          "Datamodeller for oppskrifter, ingredienser og næringsinnhold, designet mot Matvaretabellen som datakilde og justert mot recipe-core-api. Se documentation/09.",
         completed: true,
       },
       {

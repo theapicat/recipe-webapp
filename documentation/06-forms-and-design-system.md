@@ -148,7 +148,7 @@ export const ProfileEditForm = ({ initialData }: { initialData: ProfileFormValue
 
 ```tsx
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
-import { ProfileEditForm } from "@/components/forms/account/ProfileEditForm";
+import { ProfileEditForm } from "@/components/forms/auth/ProfileEditForm";
 
 export default async function ProfilePage() {
   const initialData = { firstName: "Ola", lastName: "Nordmann" };
@@ -164,11 +164,12 @@ export default async function ProfilePage() {
 
 1. Klientkomponent (`*Form.tsx`) kaller interne route handlers via `agentInternal` (f.eks.
    `PUT /api/auth/updateProfile`).
-2. Route handler ekstraherer session/cookies og videresender kallet til Gatewayen.
+2. Route handler (bygget med `apiRoute`, se [04](./04-api-integration-and-data-models.md#7-mal-slik-legger-du-til-et-nytt-backend-endepunkt))
+   videresender kallet til Gatewayen via `agentExternal`, som legger på token fra sesjonscookien.
 3. Gatewayen (YARP) validerer JWT lokalt, renser headers, injiserer `X-User-Id`, ruter videre til
    `recipe-authentication-api` (5001) eller `recipe-core-api` (5002).
-4. Svaret returneres samme vei tilbake, hvor `errorMessage` i `CreateFormContainer`/`EditFormContainer`
-   oppdateres automatisk ved feil.
+4. Svaret returneres samme vei tilbake som en `HttpResponse<T>`-konvolutt; skjemaet leser `message` og setter
+   `errorMessage` i `CreateFormContainer`/`EditFormContainer` ved feil.
 
 Se [04 – API-integrasjon](./04-api-integration-and-data-models.md) for det tekniske laget under dette.
 

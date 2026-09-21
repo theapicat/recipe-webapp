@@ -49,7 +49,7 @@ const sessionManager = {
     }
 
     // 3. Brukerprofil (Tilgjengelig for frontend UI) — rolle normaliseres til små bokstaver her,
-    // uansett hvilken casing backend sendte (se BACKEND_REQUIREMENTS.md).
+    // uansett hvilken casing backend sendte (se documentation/03-auth-and-session.md, seksjon 6).
     const normalizedProfile: UserProfileResponse = {
       ...userProfile,
       role: normalizeRole(userProfile.role),

@@ -2,8 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-@AGENTS.md
-
 ## Project
 
 Kjøkkenhylla ("the kitchen shelf") — a Norwegian-language personal recipe manager, weekly meal planner, shopping-list
@@ -19,11 +17,11 @@ This app (`recipe-webapp`) is only the frontend + server-side proxy layer of a l
 - **Scraping microservice** — handles recipe import from approved external sites, invoked via the gateway.
 
 Full technical documentation (architecture, routing, auth deep-dive, API integration, admin panel, forms/design
-system, known issues) lives in numbered files under [`documentation/`](./documentation) — read the relevant one
+system, known issues, backlog) lives in numbered files under [`documentation/`](./documentation) — read the relevant one
 before making non-trivial changes in that area; it goes into far more depth than this file.
 
-[`BACKEND_REQUIREMENTS.md`](./BACKEND_REQUIREMENTS.md) tracks things this repo currently compensates for on the
-frontend that should really be fixed in `recipe-authentication-api`/the gateway (role casing, token revocation).
+Known backend gaps this repo compensates for on the frontend (e.g. the gateway may not implement
+`POST /connect/revoke` yet) are described where they occur — see `documentation/03-auth-and-session.md`, section 4.3.
 
 ## Commands
 
@@ -31,12 +29,16 @@ frontend that should really be fixed in `recipe-authentication-api`/the gateway 
 - `npm run build` / `npm run start` — production build / run.
 - `npm run lint` — ESLint (flat config in `eslint.config.mjs`, extends `eslint-config-next`'s core-web-vitals +
   typescript configs).
-- No test runner is configured in this repo (no test script, no Jest/Vitest config).
+- No test runner is configured in this repo (no test script, no Jest/Vitest config). Before finishing a change run
+  `npx tsc --noEmit`, `npm run lint` and `npx prettier --check <changed files>` (`res.json()` is loosely typed, so
+  also read both sides of a handler ⇄ component interface — `tsc` won't catch every mismatch).
+- `next dev` injects a "nextjs-agent-rules" block into this file on every start; it is not part of our docs (disable
+  with `agentRules: false` in `next.config.ts` if it bothers you).
 
 ### Environment variables (`.env.local`)
 
 - `GATEWAY_URL` — base URL of the Recipe Gateway API (e.g. `http://localhost:5000/api`). Auth endpoints are
-  `${GATEWAY_URL}/auth/*` (used by `lib/agent/agentAuth.ts`, `agentAuthAdmin.ts`, `proxy.ts`, and the Google OAuth
+  `${GATEWAY_URL}/auth/*` (used by `lib/agent/agentExternal.ts`, `proxy.ts`, and the Google OAuth
   routes); everything else (e.g. the public contact form) hits `${GATEWAY_URL}/*` directly. One variable for both,
   by design (used to be two out-of-sync variables — see `documentation/03-auth-and-session.md`).
 - `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — Google OAuth client id (client-visible). Currently unused in the frontend code
@@ -49,29 +51,33 @@ frontend that should really be fixed in `recipe-authentication-api`/the gateway 
 - Sessions are three cookies managed exclusively through `lib/session/sessionManager.ts`: `token` (httpOnly access
   token), `refreshToken` (httpOnly), `user_data` (readable JSON profile, for client UI). All cookie reads/writes
   should go through this module rather than touching `next/headers` cookies directly.
-- `proxy.ts` at the repo root is this Next.js version's renamed `middleware.ts` (see "Proxy" in the vendored Next
-  docs / `AGENTS.md`). It matches `/dashboard/:path*`, `/user/:path*`, `/admin/:path*`, and on every matched request:
+- `proxy.ts` at the repo root is this Next.js version's renamed `middleware.ts` (see the vendored Next docs in
+  `node_modules/next/dist/docs/`). It matches `/dashboard/:path*`, `/user/:path*`, `/admin/:path*`, and on every matched request:
   refreshes the access token when it's missing or <300s from expiry, force-logs-out (clears cookies, redirects to
   `/login?expired=true`) if the refresh fails, and for `/admin/*` decodes the JWT's role claim and redirects to
   `/404` if the role isn't `admin`.
-- Two HTTP client wrappers, not interchangeable:
+- **Exactly two HTTP agents, not interchangeable — do not add per-domain agent/wrapper files:**
   - `lib/agent/agentInternal.ts` — `"use client"`, same-origin `fetch` used by client components to call this app's
-    own `app/api/**/route.ts` handlers. Catches 401 responses, calls `POST /api/auth/refresh` (deduped across
+    own `app/api/**/route.ts` handlers. Generic: `agentInternal.post<UserProfileResponse>(...)` types `res.json()` as
+    `HttpResponse<UserProfileResponse>`. Catches 401 responses, calls `POST /api/auth/refresh` (deduped across
     concurrent calls via a module-level promise) and retries the original request once before giving up.
-  - `lib/agent/agentExternal.ts` — server-side `fetch` (CORS) that attaches `Authorization: Bearer <token>` from
-    `sessionManager`, used to call the external gateway directly. Does not itself refresh an expired token.
-- `lib/agent/agentAuth.ts` and `lib/agent/agentAuthAdmin.ts` wrap `agentExternal` into typed, per-endpoint methods
-  (login, register, profile, admin user management, blacklist, etc.) against `${GATEWAY_URL}/auth`. They throw
-  `ApiError` (`lib/agent/ApiError.ts`, carries the real HTTP status) rather than a plain `Error`, so route handlers
-  can propagate the actual status code (401 vs. 400 etc.) instead of flattening everything — this is what
-  `agentInternal` keys its refresh-and-retry logic on.
-- `app/api/**/route.ts` handlers are a thin proxy layer: parse the client request, call `agentAuth`/`agentAuthAdmin`,
-  then translate the result into session cookies (via `sessionManager`) and a JSON response whose status mirrors
-  `error.status` when the caught error is an `ApiError`.
-- `app/api/auth/refresh/route.ts` is called only by `agentInternal` (never directly from a component): runs
-  `agentAuth.refresh()`, updates the `token`/`refreshToken` cookies via `sessionManager`, or clears the session and
-  returns 401 if the refresh token itself is dead.
-- Google OAuth is the one path that bypasses `agentAuth`: `app/api/auth/google` redirects to the gateway's
+  - `lib/agent/agentExternal.ts` — server-only (reads the httpOnly token cookie), the single place that talks to the
+    gateway. Takes a path relative to `GATEWAY_URL` (`agentExternal.get<T>("/auth/account/me")`), attaches
+    `Authorization: Bearer <token>` from `sessionManager`, parses the body and returns it as `T` (`undefined` for an
+    empty/204 body). On failure it throws `ApiError` (`lib/agent/ApiError.ts`, carries the real HTTP status) with the
+    message extracted from whichever error format the backend used (Core `ProblemDetails.detail`, Auth API
+    `message`, OpenIddict `error_description`); unreachable gateway/timeout become 503/504. It does not itself
+    refresh an expired token.
+- `app/api/**/route.ts` handlers are thin: they wrap their work in `apiRoute()` (`lib/http/apiRoute.ts`), which
+  takes the Norwegian fallback error message and an action that calls `agentExternal` directly (plus `sessionManager`
+  for cookies where needed), and always answers with the `HttpResponse<T>` envelope — the status mirrors
+  `error.status` when the caught error is an `ApiError`, otherwise 400 with the fallback message. There is no
+  per-endpoint wrapper layer between handler and `agentExternal` (the old `agentAuth`/`agentAuthAdmin` were removed).
+  Exceptions that don't use the envelope: `/api/health` and the Google OAuth redirects.
+- `app/api/auth/refresh/route.ts` is called only by `agentInternal` (never directly from a component): does the
+  refresh-token grant via `agentExternal`, updates the `token`/`refreshToken` cookies via `sessionManager`, or clears
+  the session and returns 401 if the refresh token itself is dead.
+- Google OAuth is the one path that bypasses `agentExternal`: `app/api/auth/google` redirects to the gateway's
   `external-login`; `app/api/auth/google-callback` receives tokens + profile fields as query params directly from
   the gateway and calls `sessionManager.setSession` itself.
 - JWT role/expiry are decoded manually in `sessionManager` (`getUserRole`, `getRemainingExpTime`) via base64 payload
@@ -82,15 +88,16 @@ frontend that should really be fixed in `recipe-authentication-api`/the gateway 
 - Role is always normalized to lowercase (`UserRoleType = "admin" | "user"` in `lib/models/types.ts`, via the
   shared `normalizeRole()`) at every point a role enters app state — `sessionManager.setSession`/`setUserData`,
   `SessionProvider`'s constructor (`initialUser` seeding) as well as `setUser`/`updateUser`,
-  `sessionManager.getUserRole`, and the Google OAuth callback. The backend currently sends `"Admin"`/`"User"`
-  capitalized in three places; see `BACKEND_REQUIREMENTS.md`. Don't remove the normalization even after backend
-  changes casing — treat it as defense-in-depth (a stale cookie from before this normalization existed can still
+  `sessionManager.getUserRole`, and the Google OAuth callback. The backend always sends lowercase
+  `admin`/`user` (JWT `role` claim, `/account/me`, Google callback param). Keep the normalization anyway —
+  treat it as defense-in-depth (a stale cookie from before this normalization existed can still
   carry the old casing).
-- Logout (`app/api/auth/logout/route.ts`) calls `agentAuth.revokeToken()` (best-effort `POST .../connect/revoke`,
-  never throws) before clearing cookies. The gateway may not implement this endpoint yet — see
-  `BACKEND_REQUIREMENTS.md` for the contract and an important caveat about JWT vs. reference tokens.
+- Logout (`app/api/auth/logout/route.ts`) does a best-effort `POST /auth/connect/revoke` via `agentExternal` (errors
+  swallowed) before clearing cookies. The gateway may not implement this endpoint yet, and revoking the refresh token
+  does not invalidate an already-issued JWT access token before it expires — see
+  `documentation/03-auth-and-session.md`, section 4.3.
 - **Every fetch to the gateway is time-boxed.** `lib/agent/fetchWithTimeout.ts` (10s default, `AbortController`-based)
-  wraps all five `agentExternal` methods and `proxy.ts`'s own inline refresh call — the only two places that reach
+  wraps every `agentExternal` call and `proxy.ts`'s own inline refresh call — the only two places that reach
   out to `GATEWAY_URL`. Without this, an unreachable gateway (wrong host, dropped packets, VPN down — as opposed to
   "nothing listening on localhost", which fails fast) could hang a request indefinitely with no user feedback; this
   was an observed real bug in the logout flow. Keep using `fetchWithTimeout` for any new gateway-facing call rather
@@ -136,3 +143,17 @@ variant="filled"`; destructive actions use `red` or `terracotta`.
 `SessionProvider` (`lib/session/SessionProvider.tsx`) is a React context seeded server-side in `app/layout.tsx` from
 `sessionManager.getUserData()`, exposing `user`/`role` plus `refreshProfile()` (re-fetches `/api/auth/me` via
 `agentInternal`) to client components via `useSession()`.
+
+## Adding a backend-backed feature (the fixed recipe — follow it for every new endpoint)
+
+Full version with code and pitfalls: `documentation/04-api-integration-and-data-models.md`, section 7.
+
+1. **Models** in `lib/models/<domain>/`, one file per interface, filename == interface name; separate response and
+   request models; copy the backend's wire format (`| null`, capitalized enum strings, no ids in requests).
+2. **Route handler** `app/api/<path>/route.ts` (path mirrors the gateway path, e.g. gateway `/user/recipes` →
+   `app/api/user/recipes/route.ts`), always `apiRoute("Norwegian fallback message", async (options) => ...)` +
+   `agentExternal.<method><T>("/gateway/path", body, options)`. No raw `fetch`, no own try/catch, no new agent files.
+   Route files may only export HTTP methods.
+3. **Client**: `agentInternal.<method><T>("/api/<path>")` from a client component; show `message` on errors.
+4. Update `documentation/02` (route list) and `documentation/07` (when a mock page gets wired up); deferred work goes in
+   `documentation/10-backlog.md`.
