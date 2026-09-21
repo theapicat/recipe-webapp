@@ -15,8 +15,8 @@ fungerende, best-effort kompenserende tiltak på plass.
 
 ## Store, monolittiske sider uten backend
 
-Kjernefunksjonaliteten appen faktisk er bygget for (oppskrifter, måltidsplan, handleliste) — og tre av
-admin-sidene — er per nå UI-skisser med hardkodet mock-data, ikke koblet til `recipe-core-api`:
+Kjernefunksjonaliteten appen faktisk er bygget for (oppskrifter, måltidsplan, handleliste) — og to av
+admin-sidene (whitelist, system) — er per nå UI-skisser med hardkodet mock-data, ikke koblet til `recipe-core-api`:
 
 | Side                                      | Linjer | Mock-data-variabel                                     |
 | ----------------------------------------- | ------ | ------------------------------------------------------ |
@@ -27,7 +27,6 @@ admin-sidene — er per nå UI-skisser med hardkodet mock-data, ikke koblet til 
 | `app/(user)/user/shoppinglist/page.tsx`   | 329    | lokal state                                            |
 | `app/(user)/user/import/page.tsx`         | 312    | lokal state                                            |
 | `app/admin/whitelist/page.tsx`            | 297    | `mockDomainsData`                                      |
-| `app/admin/categories/page.tsx`           | 394    | `mockCategories`, `mockIngredients`, `mockUnits`       |
 | `app/admin/system/page.tsx`               | 361    | `mockServices`, `mockRecentLogs`                       |
 
 Linjetallene er målt 2026-09-21. Ingen av disse følger skjemaarkitekturen i [06](./06-forms-and-design-system.md). Modellene for
@@ -87,6 +86,7 @@ med andre fikser.
    `@mantine/dates` når måltidsplanen kommer) — følg mappestrukturen og den besluttede rekkefølgen i
    [08](./08-model-and-component-structure-proposal.md#6-konkret-migreringsrekkefølge-når-dere-er-klare):
    kataloger (admin) → ingredienser → oppskrifter → måltidsplan → handleliste.
-3. Vurder om `app/admin/whitelist`, `categories`, `system` skal prioriteres før eller etter kjernefunksjonene.
+3. Vurder om `app/admin/whitelist` og `system` skal prioriteres før eller etter kjernefunksjonene (`/admin/catalog` er
+   koblet til backend og er ikke lenger en mock).
 4. `POST /connect/revoke` på Gatewayen når det passer — ikke hastverk, utloggingen har et fungerende
    kompenserende tiltak på frontend-siden allerede.

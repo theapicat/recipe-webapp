@@ -1,0 +1,44 @@
+/*
+ * Globale grunnregler for hele appen — ÉN plass, ikke per komponent (se documentation/06, seksjon B.7).
+ *
+ * 1. Tekst kan ikke markeres. Markering av kort, knapper, lenker og vanlig tekst er mer forstyrrende enn nyttig.
+ *    Unntak: skjemafelt (kreves for å kunne skrive/redigere — Safari blokkerer tasting hvis `user-select: none`
+ *    settes på inputs), og områder som eksplisitt merkes med klassen `.selectable` (f.eks. tekst brukeren trolig vil
+ *    kopiere). Bruk `.selectable` bare der det er bevisst ønsket.
+ * 2. Markøren er en vanlig pil over tekst. Pekefinger vises kun på det som er interaktivt. Tekstfelt beholder
+ *    tekstmarkøren (I-bjelke) fra nettleserens egen stilmal.
+ */
+
+html,
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Interaktive elementer: pekefinger (Mantine setter allerede pointer/not-allowed på sine egne komponenter;
+   dette dekker rene ARIA-roller og native elementer, uten å overstyre deaktiverte). */
+a[href],
+button:not(:disabled),
+[role="button"]:not([data-disabled]):not([aria-disabled="true"]),
+[role="tab"]:not([data-disabled]):not([aria-disabled="true"]),
+[role="menuitem"]:not([data-disabled]):not([aria-disabled="true"]),
+[role="option"]:not([data-disabled]):not([aria-disabled="true"]),
+[role="link"],
+summary,
+label[for],
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="range"]:not(:disabled) {
+  cursor: pointer;
+}

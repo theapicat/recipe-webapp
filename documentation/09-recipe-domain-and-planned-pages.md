@@ -32,11 +32,13 @@ Nye sider som er planlagt basert på modelldesign-samtalen:
 - **`app/(user)/user/ingredients/` (ny)** — søkbar oppslagsside der brukeren kan finne en ingrediens og se
   næringsinnhold, porsjonsstørrelser og en lenke til den offisielle Matvaretabellen-siden (`Ingredient.sourceUrl`).
   Tenkt som frittstående oppslag, ikke bundet til en oppskrift — "hva får jeg av å ete to gulrøtter"-type bruk.
-- **Adminpaneler for ingrediens-/næringsdomenet (nye)** — utvider dagens `app/admin/categories/page.tsx`
-  (i dag én mock-side med faner for kategorier/ingredienser/enheter) til å faktisk dekke alle katalogene fra
-  modellen: `IngredientCategory`, `RecipeCategory`, `Allergen`, `UnitType`/`Unit`, `SearchKeyword`, og en egen
-  flate for `NutrientDefinition`-katalogen. Admin skal også kunne godkjenne/behandle `UnconfirmedIngredient`-køen
-  brukere legger til.
+- **Katalog-admin — gjort (`/admin/catalog`, se [05](./05-admin-panel.md)).** Dekker `IngredientCategory`,
+  `RecipeCategory`, `Allergen`, `UnitType` (skrivebeskyttet), `Unit` og `SearchKeyword`. `NutrientDefinition`-katalogen er
+  skrivebeskyttet i backend og får ingen admin-flate.
+- **Ingrediens-admin** — en egen side (`/admin/ingredients`). **Full CRUD er bygget** (liste, utvidet visning, redigering med
+  allergener, verifisering, oppretting og sletting i en skuff, se [05](./05-admin-panel.md), seksjon 4). Gjenstår:
+  admin-køen for `UnconfirmedIngredient` — godkjenn som ny ingrediens (evt. avledet fra en eksisterende) eller slå sammen med en
+  eksisterende (erstatter den i brukernes oppskrifter) — og avvis. Køen gjenbruker editoren.
 
-Ingen av disse er startet — dette er en oversikt for å ikke miste kontekst mellom sesjoner, ikke en beskrivelse
-av kode som finnes.
+Den første av punktene over er bygget; resten er ikke startet — dette er en oversikt for å ikke miste kontekst mellom
+sesjoner.

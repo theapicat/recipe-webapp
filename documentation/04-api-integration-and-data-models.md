@@ -114,6 +114,7 @@ lib/models/
 ├── admin/users/              # admin-spesifikke request/response-typer
 ├── enums/                    # f.eks. BlacklistType
 ├── public/                   # kontaktskjema o.l.
+├── catalog/                  # CatalogResource (hvitliste over adminkatalogene) + CatalogModelMap
 ├── recipes/                  # Recipe, RecipeListItem, RecipeRequest, RecipeNutrition, ... (speiler recipe-core-api)
 ├── ingredients/              # Ingredient, IngredientListItem, IngredientRequest, NutrientDefinition, UnconfirmedIngredient, ...
 ├── units/                    # Unit, UnitType
@@ -142,6 +143,9 @@ Modellene i `recipes/`, `ingredients/` og `units/` speiler ledningsformatet (wir
 - **Response- og request-modeller er forskjellige** (`Recipe` vs. `RecipeRequest`): requests har ingen id-er og
   ingen utledede felt.
 - **`PUT` erstatter alt** for oppskrifter og ingredienser (barn får nye id-er) — send alltid hele objektet.
+- **Ingen egen request-modell når den er identisk med response-modellen.** Bruk modellen direkte: `Omit<Unit, "id">`
+  ved opprettelse (serveren tildeler id), hele `Unit` ved oppdatering. En egen request-modell lages kun når formen
+  faktisk er forskjellig (`RecipeRequest` har ingen id-er/utledede felt og andre nøstede typer).
 
 Det finnes fortsatt ingen `lib/models`-filer for måltidsplaner eller handlelister; disse sidene har heller ingen
 ekte API-integrasjon ennå. Se [07 – Kjente problemer](./07-known-issues-and-tech-debt.md#store-monolittiske-sider-uten-backend)
@@ -235,3 +239,36 @@ og oppdater [07](./07-known-issues-and-tech-debt.md) når en mock-side kobles ti
 **5. Før du er ferdig** — `npx tsc --noEmit`, `npm run lint` og `npx prettier --check <endrede filer>` skal være
 rene. `res.json()` er løst typet, så `tsc` fanger ikke alle feil mellom handler og komponent: les gjennom
 begge sider av grensesnittet.
+
+### 7.1 Variant: én dynamisk rute for flere like ressurser
+
+Når flere backend-ressurser har **identisk kontrakt** (samme HTTP-metoder, samme feil, bare ulik modell), lages én
+dynamisk rute i stedet for ett filsett per ressurs. Eksempelet er de seks adminkatalogene:
+`app/api/admin/[resource]/route.ts` (GET, POST, PUT) og `app/api/admin/[resource]/[id]/route.ts` (DELETE).
+
+```ts
+export const GET = (_request: Request, { params }: CatalogContext) =>
+  apiRoute<CatalogItem[]>("Kunne ikke hente katalogen.", async (options) => {
+    const resource = await resolveCatalogResource(params); // 404 hvis ikke på hvitlisten
+    const items = await agentExternal.get<CatalogItem[]>(`/admin/${resource}`, options);
+    return { message: "Katalogen ble hentet.", body: items };
+  });
+```
+
+Regler:
+
+- **Hvitliste er obligatorisk.** Segmentet kommer fra brukeren; uten en liste kan ruten misbrukes til å nå andre
+  admin-endepunkter. Listen (`CATALOG_RESOURCES`) og en `isCatalogResource`-vakt ligger i
+  `lib/models/catalog/CatalogResource.ts`; `resolveCatalogResource` (`lib/http/`) kaster `ApiError` 404 for ukjente navn
+  og 405 for skriving mot skrivebeskyttede (`READ_ONLY_CATALOG_RESOURCES`). Hjelpefunksjonen ligger i `lib/`, ikke i
+  route-filen, siden route-filer kun kan eksportere HTTP-metoder.
+- **Typekartet** `CatalogModelMap` kobler hvert navn til sin modell. UI-konfigurasjonen
+  (`components/admin/catalog/catalogConfig.ts`) er en `Record<WritableCatalogResource, …>` (hvitlisten minus de
+  skrivebeskyttede, i dag `unit-types`) — legger man til en katalog i hvitlisten uten å konfigurere den, feiler
+  TypeScript. En skrivebeskyttet ressurs kan leses (som data), men gir 405 ved skriving og har ingen fane.
+- **Avvikende ressurser får egen rute.** En statisk mappe (`app/api/admin/ingredients/`) har forrang over
+  `[resource]`, så en ressurs som avviker fra kontrakten (f.eks. ingredienser med barnelister og `PUT` med id i stien)
+  lages som vanlig, egen rute etter malen i seksjon 7 — uten å røre den dynamiske. Ingredienslisten er et eksempel:
+  `app/api/admin/ingredients/route.ts`.
+- Klientsiden er generisk på samme måte (`CatalogTable`, `CatalogItemForm`), og kun det som faktisk avviker (enheter:
+  ekstra kolonner og et eget skjema) er eget.

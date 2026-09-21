@@ -4,8 +4,14 @@ import React, { SyntheticEvent } from "react";
 import { Alert, Button, Grid, Paper, Text, Title } from "@mantine/core";
 
 export interface FormContainerProps {
-  /** Hovedtittel for skjemaet (f.eks. "Logg inn" eller "Opprett ny bruker"). */
+  /** Hovedtittel for skjemaet (f.eks. "Logg inn" eller "Opprett ny bruker"). Vises ikke når `bare` er satt. */
   title: string;
+
+  /**
+   * Uten Paper-ramme og tittel — for bruk inne i en Modal (eller annen ramme) som allerede har sin egen tittel.
+   * Feltene, feilmeldingen og knappene er uendret.
+   */
+  bare?: boolean;
 
   /** Valgfri undertekst eller forklaring plassert rett under tittelen. */
   description?: string;
@@ -42,6 +48,7 @@ export interface FormContainerProps {
  */
 export const CreateFormContainer = ({
   title,
+  bare = false,
   description,
   onSubmit,
   submitText,
@@ -51,14 +58,10 @@ export const CreateFormContainer = ({
   footer,
   children,
 }: FormContainerProps) => {
-  return (
-    <Paper radius="md" p="xl" withBorder>
-      <Title order={2} ta="center" mb={description ? "xs" : "lg"}>
-        {title}
-      </Title>
-
+  const body = (
+    <>
       {description && (
-        <Text c="dimmed" size="sm" ta="center" mb="lg">
+        <Text c="dimmed" size="sm" ta={bare ? "left" : "center"} mb="lg">
           {description}
         </Text>
       )}
@@ -90,6 +93,18 @@ export const CreateFormContainer = ({
           {footer}
         </Text>
       )}
+    </>
+  );
+
+  if (bare) return body;
+
+  return (
+    <Paper radius="md" p="xl" withBorder>
+      <Title order={2} ta="center" mb={description ? "xs" : "lg"}>
+        {title}
+      </Title>
+
+      {body}
     </Paper>
   );
 };

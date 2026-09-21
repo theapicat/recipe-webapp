@@ -87,18 +87,20 @@ Se [`07-known-issues-and-tech-debt.md`](./07-known-issues-and-tech-debt.md).
 
 ## 6. Mappeoversikt (høyt nivå)
 
-| Mappe                | Ansvar                                                                                                                                          |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app/`               | Next.js App Router — sider, route handlers (`api/`), route groups                                                                               |
-| `components/`        | React-komponenter, gruppert etter `forms/`, `admin/`, `layout/`, `containers/`                                                                  |
-| `lib/agent/`         | De to HTTP-agentene: `agentInternal` (mot egne API-ruter) og `agentExternal` (mot Gatewayen) — se [04](./04-api-integration-and-data-models.md) |
-| `lib/http/`          | `apiRoute` — felles ramme (feilhåndtering + `HttpResponse<T>`) for route handlers                                                               |
-| `lib/session/`       | Cookie-/sesjonshåndtering og React-context for innlogget bruker                                                                                 |
-| `lib/models/`        | TypeScript-modeller/DTO-er, gruppert etter domene (`auth/`, `admin/users/`, `recipes/`, `ingredients/`, ...)                                    |
-| `documentation/`     | Denne dokumentasjonen                                                                                                                           |
-| `public/docs/legal/` | Juridiske dokumenter servert direkte til brukere (speiles av `(legal)`-rutene)                                                                  |
-| `proxy.ts`           | Next.js "Proxy" (tidligere Middleware) — auth-gating og token-refresh på sidenavigasjon                                                         |
-| `theme.ts`           | Mantine-tema (se [`06-forms-and-design-system.md`](./06-forms-and-design-system.md))                                                            |
+| Mappe                | Ansvar                                                                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`               | Next.js App Router — sider, route handlers (`api/`), route groups                                                                                                                     |
+| `components/`        | React-komponenter, gruppert etter `forms/`, `admin/`, `layout/`, `containers/`, `common/`                                                                                             |
+| `lib/agent/`         | De to HTTP-agentene: `agentInternal` (mot egne API-ruter) og `agentExternal` (mot Gatewayen) — se [04](./04-api-integration-and-data-models.md)                                       |
+| `lib/http/`          | `apiRoute` — felles ramme (feilhåndtering + `HttpResponse<T>`) for route handlers                                                                                                     |
+| `lib/text/`          | Små tekst-hjelpere (`capitalize`, `normalizeName`) — backend lagrer navn lowercase, UI viser dem med stor forbokstav                                                                  |
+| `lib/session/`       | Cookie-/sesjonshåndtering og React-context for innlogget bruker                                                                                                                       |
+| `lib/models/`        | TypeScript-modeller/DTO-er, gruppert etter domene (`auth/`, `admin/users/`, `recipes/`, `ingredients/`, ...)                                                                          |
+| `documentation/`     | Denne dokumentasjonen                                                                                                                                                                 |
+| `public/docs/legal/` | Juridiske dokumenter servert direkte til brukere (speiles av `(legal)`-rutene)                                                                                                        |
+| `app/globals.css`    | Globale grunnregler: ingen tekstmarkering, pil-markør på tekst og pekefinger kun på interaktive elementer (se [06, B.7](./06-forms-and-design-system.md#b7-tekstmarkering-og-markør)) |
+| `proxy.ts`           | Next.js "Proxy" (tidligere Middleware) — auth-gating og token-refresh på sidenavigasjon                                                                                               |
+| `theme.ts`           | Mantine-tema (se [`06-forms-and-design-system.md`](./06-forms-and-design-system.md))                                                                                                  |
 
 ## 7. Videre lesning
 

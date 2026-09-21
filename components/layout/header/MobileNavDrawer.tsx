@@ -9,11 +9,26 @@ interface MobileNavDrawerProps {
   onClose: () => void;
   links: NavItem[];
   isGuest: boolean;
+  /** Drawer-en skjules fra dette bruddpunktet og oppover (da vises lenkene i headeren). */
+  hiddenFrom?: "md" | "lg";
 }
 
-export const MobileNavDrawer = ({ opened, onClose, links, isGuest }: MobileNavDrawerProps) => {
+export const MobileNavDrawer = ({
+  opened,
+  onClose,
+  links,
+  isGuest,
+  hiddenFrom = "md",
+}: MobileNavDrawerProps) => {
   return (
-    <Drawer opened={opened} onClose={onClose} size="xs" padding="md" title="Meny" hiddenFrom="md">
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      size="xs"
+      padding="md"
+      title="Meny"
+      hiddenFrom={hiddenFrom}
+    >
       <Stack gap="xs" mt="md">
         {links.map((link) => {
           const Icon = link.icon;

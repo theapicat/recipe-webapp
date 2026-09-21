@@ -19,12 +19,22 @@ om og valgt å ta senere. Ta en ting av lista og flytt den til 07/02/09 når den
 
 ## 2. Neste på lista
 
-1. **Kataloger (admin):** én generisk CRUD-flate for de seks skrivbare katalogene (ingrediens-kategorier, allergener,
-   søkeord, enhetstyper, enheter, oppskriftskategorier). Erstatter mock-siden `app/admin/categories`.
-   Næringsstoffdefinisjoner er skrivebeskyttet i backend og får ingen admin-flate.
-2. **Ingredienser:** admin-editor for ingredienser (her tagges allergener), «mine ingredienser» (ubekreftede
-   ingredienser med review-livssyklus), admin-kø for godkjenning/sammenslåing/avvisning, og et oppslag
-   (`/user/ingredients`, se [09](./09-recipe-domain-and-planned-pages.md)).
+1. ✅ **Kataloger (admin) — bygget** (`/admin/catalog`, se [05](./05-admin-panel.md), seksjon 3): fem kataloger med
+   egen fane (enhetstypene er faste og vises kun som data, med filter og kolonne i enhetstabellen). Erstattet mock-siden `app/admin/categories`. Næringsstoffdefinisjoner er
+   skrivebeskyttet i backend og har ingen admin-flate. Gjenstår: manuell testing mot ekte backend.
+2. **Ingredienser:** egen admin-side `/admin/ingredients` — det gamle «Råvareregister» fra mocken. ✅ **Bygget** (se
+   [05](./05-admin-panel.md), seksjon 4): liste med søk og filtre (inkl. opprinnelse — venter på backend), utvidet visning,
+   redigering (også allergener), verifisering/fjerning av den (krever næringsverdier), oppretting (også avledet fra en
+   eksisterende), sletting (blokkert når i bruk), og **offisielle ingredienser delvis låst** (kildedata; vil man endre dem lager man en
+   variant). **Gjenstår:**
+   - **Godkjenningskøen** for brukeres ubekreftede ingredienser. «Godkjenn» er enten å opprette en ny offisiell ingrediens (evt.
+     avledet fra en eksisterende, med editoren forhåndsutfylt) eller å **slå den sammen** med en eksisterende (erstatter den ubekreftede
+     i brukernes oppskrifter — det er en sammenslåing, ikke en verifisering), eller å avvise den. Gjenbruker editoren.
+   - **«Mine ingredienser»** for brukeren (egne ubekreftede ingredienser med review-livssyklus).
+   - **Brukerens ingrediensoppslag** (`/user/ingredients`, se [09](./09-recipe-domain-and-planned-pages.md)) — gjenbruker `IngredientDetailView`.
+   - **Massehandlinger** (velg flere → verifiser / legg til allergen) — krever backend, se seksjon 7 (B11).
+     Ingrediens-endepunktene avviker fra katalogkontrakten og har egne ruter (se
+     [04, seksjon 7.1](./04-api-integration-and-data-models.md#71-variant-én-dynamisk-rute-for-flere-like-ressurser)).
 3. **Oppskrifter:** opprett/rediger-skjema (med ingrediensvelger og enhetsvalg) → liste → detalj → næringsfane →
    redigering → kokemodus.
 
@@ -46,6 +56,12 @@ om og valgt å ta senere. Ta en ting av lista og flytt den til 07/02/09 når den
 
 ## 4. Utsatt frontend-arbeid og åpne avklaringer
 
+- **Frontend-oppfølging når backend leverer** (se seksjon 7; feltene er valgfrie i modellene, så ingenting brekker før det):
+  send `updatedAt` med `PUT` og vis «endret av noen andre»-meldingen (B3); bytt verifisering til det lette endepunktet (B10); bryter
+  «Allergener gjennomgått» i editoren og tydelig skille mellom «ikke gjennomgått» og «ingen» (B9); radvalg + massehandlinger i
+  ingredienslisten (B11); sortering/filter på endret/verifisert/mangler næringsdata (B12); åpne enhetstyper for redigering (B13);
+  fjern utledningen av «offisiell» fra `sourceId` når `isOfficial` kommer (B2). Flytt varslene (toasts) til nederst til høyre om de dekker
+  handlingslinjen i skuffen.
 - **Teststrategi for frontend** (rammeverk, hva som dekkes først — trolig ren logikk som næringsgruppering,
   enhetsvalg og porsjonsskalering, samt auth-flyten). Bevisst utelatt i denne runden.
 - **Verifisering gjennom Gatewayen.** Core er så langt testet direkte mot sin egen port. Må sjekkes når tjenestene
@@ -64,6 +80,9 @@ om og valgt å ta senere. Ta en ting av lista og flytt den til 07/02/09 når den
   [03, seksjon 4.3](./03-auth-and-session.md).
 - **Passord-policy** er inkonsekvent på tvers av tre skjemaer — se [07](./07-known-issues-and-tech-debt.md).
 - **`@mantine/dates`** mangler `DatesProvider`-oppsett — tas sammen med måltidsplanen.
+- **Per-side `<Suspense>`** i `admin/users/email`, `confirm-email` og `reset-password` finnes bare fordi sidene bruker
+  `useSearchParams`. Vurder å erstatte dem med segment-`loading.tsx` (som `app/admin/loading.tsx`) — verifiser først at
+  produksjonsbygget godtar det.
 - **`agentRules`-blokken** som `next dev` skriver inn i `CLAUDE.md` (se [01](./01-architecture-and-setup.md)) kan slås av
   i `next.config.ts` om den blir plagsom.
 
@@ -71,8 +90,8 @@ om og valgt å ta senere. Ta en ting av lista og flytt den til 07/02/09 når den
 
 Kilde: `recipe-core-api` sine egne notater og `Documentation/08-api-reference.md` i det repoet.
 
-- Alle 1 565 seedede ingredienser har `isVerified: false` og **ingen allergener** — ikke vis advarsel på alle, og
-  ikke selg allergenfilteret som en sikkerhetsfunksjon ennå.
+- Alle 1 565 seedede ingredienser har i dag `isVerified: false` og **ingen allergener**. Besluttet: de skal seedes som
+  verifiserte, men uten gjettede allergener — se seksjon 7 (B8). Ikke selg allergenfilteret som en sikkerhetsfunksjon ennå.
 - `defaultUnitId` er `dl` for mange ingredienser (f.eks. egg) fordi den utledes fra porsjonene. Vurder å foretrekke
   `stk` i enhetsvalget når ingrediensen har en stk-porsjon.
 - Kalkulatoren for næring finner vekt/volum via **navnet** på enhetstypene (`vekt`, `volum`). Omdøpes de, gir alle
@@ -83,3 +102,77 @@ Kilde: `recipe-core-api` sine egne notater og `Documentation/08-api-reference.md
   senere variere med kontotype — ikke hardkod tallet mange steder.
 - Seeden inneholder mange produkt-/rett-lignende oppføringer (yoghurt med smak, ferdigretter, brød). Ikke bygg UI som
   antar at ingredienslisten er endelig — en egen produktmodell er planlagt.
+
+## 6. Idéer: bruk og statistikk for katalogene (senere)
+
+Ikke nødvendig for at katalogene skal fungere, men nyttig for admin. Ingen av dem er mulig uten nye backend-endepunkter
+(eller, for noen, tunge klientberegninger).
+
+- **Antall per oppføring («bruk»):** oppskrifter per oppskriftskategori, ingredienser per kategori/allergen/søkeord,
+  hvor ofte et søkeord brukes, hvilke enheter som er i bruk. Foreslått design: et eget `GET /admin/<resource>/usage` →
+  `[{id, count}]`, slik at den cachede og delte katalogformen ikke endres. Ingrediensbaserte tall kan i prinsippet telles
+  klientside fra ingredienslisten, men det gir misvisende tall for enheter (porsjoner og oppskriftslinjer teller også),
+  og oppskriftskategorier krever et aggregat i backend (admin har ikke innsyn i brukeres oppskrifter — kun tall).
+- **Slett-vern:** ✅ bygget i frontend mot valgfrie `isSystem`/`usageCount` (avhenger av at backend leverer dem — se seksjon 7, B7).
+- **Filter «ubrukte»**, spesielt nyttig for de ~300 søkeordene.
+- **Sammenslåing** av to oppføringer (flytt all bruk til én, slett den andre) — krever backend-støtte.
+- **Masse-tillegg:** lim inn en liste med søkeord.
+- **Eksport** (CSV) og **«sist endret av/når»**.
+- «Status/aktiv»-feltet fra den gamle mocken er bevisst fjernet: en oppføring er tilgjengelig så snart den er
+  registrert.
+
+## 7. Avhengigheter til backend (oppsummering)
+
+Frontend er bygget til å **fungere uten noe av dette** — den speiler reglene selv, faller tilbake til vanlige 409-svar, og de nye feltene er
+**valgfrie** i modellene og lyser opp av seg selv når backend begynner å levere dem. Men API-et bør ikke stole på frontend.
+
+Den **detaljerte spesifikasjonen** (kontrakter, feilmeldinger, skjemaendringer, seed-endringer, akseptansetester, åpne avklaringer) ligger i et
+**privat arbeidsnotat, `backend-notes.md` i repo-roten**. Det er bevisst _ikke_ en del av den offentlige dokumentasjonen og skal aldri
+committes eller stages (samme status som `frontend-notes.md`). Nummerne **B1–B15** er de samme i begge; kode og dokumentasjon viser til dem.
+
+**Prioritet:** **P1** = trengs for at admin-redigering skal være trygg. **P2** = trengs for at det som allerede er bygget skal virke fullt ut.
+**P3** = nyttig.
+
+| #   | Ønske                                                                                                                               | Prio | Frontend i dag → når levert                                                                                     |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------- |
+| B1  | **Håndhev låsen på offisielle ingredienser** (avvis endring av navn, energi, spiselig del, næringsverdier, kilde)                   | P1   | Frontend låser feltene → backend blir sikringen                                                                 |
+| B2  | **`isOfficial`** på `Ingredient` og `IngredientListItem` (+ `createdAt`, `origin`)                                                  | P1   | Utledes fra `sourceId` i skuffen; filter og kolonne «Opprinnelse» i listen er bygget og **venter** på feltet    |
+| B3  | **Samtidighetskontroll** (`updatedAt`) på `PUT` av ingrediens                                                                       | P1   | Ingen i dag (siste lagring vinner) → 409 med klar melding; frontend må da sende `updatedAt`                     |
+| B4  | **Validering med klare 400-svar** (prosent, enhet ↔ enhetstype, variant-løkke, duplikate næringsstoffer/porsjoner, URL, størrelser) | P1   | Frontend speiler reglene → backend gir samme meldinger                                                          |
+| B5  | **Håndhev «verifisert krever næringsverdier»**                                                                                      | P1   | Frontend deaktiverer «Verifiser» → backend avviser også                                                         |
+| B6  | **Enhetsvalidering** (`abbreviation` ikke tom, `baseUnitRatio` > 0, `antall` = 1)                                                   | P1   | Frontend validerer; forholdstall 0 gir stille feil næringstall om det slipper gjennom                           |
+| B7  | **`isSystem` + `usageCount`** på kataloger og ingredienser, og `DELETE` som avviser dem med forklaring                              | P2   | «Slett» er bygget mot feltene (deaktivert med begrunnelse når de finnes); i dag aktiv, med 409 som siste skanse |
+| B8  | **Seed:** offisielle ingredienser verifiserte, katalograder `is_system`, **ingen gjettede allergener**                              | P2   | I dag viser registeret «Nei» (uverifisert) på alle 1 565                                                        |
+| B9  | **`allergensReviewed`** — skille «ukjent» fra «ingen allergener» (forslag)                                                          | P2   | Forbeholdstekst «ingen registrert ≠ fri for allergener»; allergenfilteret kan ikke selges som sikkerhet         |
+| B10 | **Lett verifiserings-endepunkt**                                                                                                    | P2   | Verifisering sender hele ingrediensen (`PUT` med alle barn)                                                     |
+| B11 | **Massehandlinger** (verifiser mange, legg til/fjern allergen på mange)                                                             | P2   | Ikke bygget — gjennomgang av ~1 565 ingredienser er urealistisk uten                                            |
+| B12 | **Revisjons- og listefelt** (`updatedAt`/`By`, `verifiedAt`/`By`, `nutrientValueCount`, `portionCount`)                             | P3   | Ingen sortering/filter på «endret nylig», «mangler næringsdata»                                                 |
+| B13 | **`dimension` på enhetstyper** i stedet for navnematching                                                                           | P3   | Enhetstyper er skrivebeskyttet i frontend; med dimensjon kan de åpnes                                           |
+| B14 | **Katalog-`PUT`/`DELETE` på manglende rad → 404** (i dag 200/204)                                                                   | P3   | Frontend leser listen på nytt etter hver endring, så det merkes ikke                                            |
+| B15 | **Slette-meldinger med forklaring** og dokumentasjon (bl.a. at `PUT` gir barna nye id-er)                                           | P3   | Generisk 409-melding vises                                                                                      |
+
+**Beslutninger frontend bygger på** (se [05](./05-admin-panel.md), seksjon 3–4):
+
+- **Verifisert** betyr offisiell/gjennomgått oppføring — _ikke_ at allergendata er komplett. En ingrediens kan bare verifiseres med næringsverdier;
+  å fjerne verifisering er alltid lov.
+- **Offisielle ingredienser er kildedata** og delvis låst (navn, energi, spiselig del, næringsverdier, kilde). Allergener, søkeord, kategori, enheter,
+  porsjoner og verifisering kan endres; vil man endre en låst verdi lager man en variant.
+- **Ingen ingrediens i bruk kan slettes, og standardoppføringene i katalogene kan aldri slettes.** Enhetstyper er faste (skrivebeskyttet).
+- **Offisielle ingredienser skal seedes som verifiserte, uten gjettede allergener** (ingen offentlig datakilde; feil data er verre enn ingen).
+
+**Allerede på Core sin egen liste** (ingen frontend-handling): opprydding når en konto slettes, verifisering gjennom Gatewayen, skrapetjeneste-konsument,
+deling av oppskrifter, bildeopplasting, varsler når en ubekreftet ingrediens avgjøres, kontotype-avhengige grenser, produktmodell, måltidsplan og
+handleliste. Merk: Core sitt punkt «allergen-tagging» foreslår en regelbasert seed — det er i strid med beslutningen over og bør rettes.
+
+## 8. Avklaringer og idéer for brukergrensesnittet
+
+- **Tekstmarkering (`.selectable`):** appen har ingen markerbar tekst som standard (se
+  [06, B.7](./06-forms-and-design-system.md#b7-tekstmarkering-og-markør)). Avgjør senere hvor kopiering faktisk er nyttig
+  og legg klassen `selectable` der: e-post/id-er i admin-tabellene (brukerliste, svarteliste), oppskriftsinstruksjoner og
+  ingredienslister, juridiske tekster, og feilmeldinger man vil sende videre.
+- **Sortering av kolonner** i katalog- og ingredienstabellene (i dag er de sortert på navn). Naturlig for enheter
+  (forholdstall) og ingredienser (energi).
+- **Ingredienstabell:** klikk på en rad for detaljvisning (næringsverdier, porsjoner, kilde). Hører sammen med
+  ingrediens-editoren.
+- **Antall lenker i headeren:** admin har 6 lenker og går til burger-menyen under 1200px. Blir det flere, vurder en
+  gruppert/nedtrekksmeny for adminlenkene i stedet.

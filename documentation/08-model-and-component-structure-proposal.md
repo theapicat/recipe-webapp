@@ -62,7 +62,7 @@ lib/models/
 │   ├── ShoppingListItem.ts
 │   └── GenerateShoppingListRequest.ts
 └── admin/
-    ├── categories/                  # når /admin/categories går fra mock til ekte
+    ├── catalog/                     # ✅ gjort: lib/models/catalog/ (hvitliste + typekart)
     └── whitelist/                   # når /admin/whitelist går fra mock til ekte
 ```
 
@@ -109,7 +109,8 @@ components/
 │   ├── ShoppingListItemRow.tsx
 │   └── ShoppingListGenerator.tsx
 └── admin/
-    ├── categories/
+    ├── catalog/                     # ✅ gjort: components/admin/catalog/
+    ├── ingredients/                 # ✅ gjort (full CRUD i skuff): components/admin/ingredients/
     └── whitelist/
 ```
 
@@ -138,5 +139,5 @@ allergener, søkeord), så de bygges i omvendt rekkefølge av hvordan de brukes.
    oppskrifter (`MOCK_USER_RECIPES` peker på recipe-data), så den bør komme etter punkt 1–4.
 6. Til slutt handleliste, som typisk genereres _fra_ måltidsplanen.
 
-Adminsidene (`whitelist`, `categories`, `system`) kan tas uavhengig av dette løpet — de har ingen avhengighet
+Adminsidene (`whitelist`, `system`) kan tas uavhengig av dette løpet — de har ingen avhengighet
 til oppskrifts-domenet.

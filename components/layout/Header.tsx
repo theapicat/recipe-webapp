@@ -22,25 +22,34 @@ export const Header = () => {
   const currentLinks =
     session.role === "admin" ? ADMIN_LINKS : session.role === "user" ? USER_LINKS : GUEST_LINKS;
 
+  // Under dette bruddpunktet vises burger-menyen i stedet for lenkene i headeren. Flere enn 5 lenker (admin) trenger
+  // mer plass enn `md` (992px) gir — da klippes brukermenyen ytterst til høyre — så de går til burger under `lg`.
+  const collapseBelow = currentLinks.length > 5 ? "lg" : "md";
+
   return (
     <>
       <Container size="xl" h="100%">
         <Group justify="space-between" align="center" h="100%" wrap="nowrap">
           {/* Burger og Desktop-logo */}
           <Group gap="xs" wrap="nowrap">
-            <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="md" size="sm" />
-            <Group visibleFrom="md">
+            <Burger
+              opened={drawerOpened}
+              onClick={toggleDrawer}
+              hiddenFrom={collapseBelow}
+              size="sm"
+            />
+            <Group visibleFrom={collapseBelow}>
               <Logo href={logoHref} />
             </Group>
           </Group>
 
           {/* Mobil-logo (vises kun når burgeren er synlig) */}
-          <Group hiddenFrom="md">
+          <Group hiddenFrom={collapseBelow}>
             <Logo href={logoHref} />
           </Group>
 
           {/* Desktop Navigasjon */}
-          <NavLinksContainer links={currentLinks} />
+          <NavLinksContainer links={currentLinks} visibleFrom={collapseBelow} />
 
           {/* Høyre del (Fargetema + Bruker-meny eller Innlogging) */}
           <Group gap="xs" wrap="nowrap">
@@ -66,6 +75,7 @@ export const Header = () => {
         onClose={closeDrawer}
         links={currentLinks}
         isGuest={isGuest}
+        hiddenFrom={collapseBelow}
       />
     </>
   );

@@ -4,8 +4,14 @@ import React, { useState, SyntheticEvent } from "react";
 import { Alert, Button, Grid, Group, Modal, Paper, Text, Title } from "@mantine/core";
 
 export interface EditFormContainerProps {
-  /** Hovedtittel for redigeringsskjemaet (f.eks. "Rediger profil"). */
+  /** Hovedtittel for redigeringsskjemaet (f.eks. "Rediger profil"). Vises ikke når `bare` er satt. */
   title: string;
+
+  /**
+   * Uten Paper-ramme og tittel — for bruk inne i en Modal (eller annen ramme) som allerede har sin egen tittel.
+   * Bekreftelsesdialogen, feltene og knappene er uendret.
+   */
+  bare?: boolean;
 
   /** Valgfri undertekst eller forklaring plassert rett under tittelen. */
   description?: string;
@@ -55,6 +61,7 @@ export interface EditFormContainerProps {
  */
 export const EditFormContainer = ({
   title,
+  bare = false,
   description,
   onSubmit,
   onReset,
@@ -84,58 +91,68 @@ export const EditFormContainer = ({
     }
   };
 
+  const body = (
+    <>
+      {description && (
+        <Text c="dimmed" size="sm" ta={bare ? "left" : "center"} mb="lg">
+          {description}
+        </Text>
+      )}
+
+      <form onSubmit={handleSubmitClick}>
+        <Grid gap="md">
+          {children}
+
+          {errorMessage && (
+            <Grid.Col span={12}>
+              <Alert color="red" variant="light" radius="md" title="Feil">
+                {errorMessage}
+              </Alert>
+            </Grid.Col>
+          )}
+
+          <Grid.Col span={12} mt="xs">
+            <Group justify="flex-end" gap="sm">
+              {onReset && (
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={onReset}
+                  disabled={loading || disabled}
+                >
+                  {resetText}
+                </Button>
+              )}
+
+              <Button type="submit" loading={loading} disabled={disabled}>
+                {submitText}
+              </Button>
+            </Group>
+          </Grid.Col>
+        </Grid>
+      </form>
+
+      {footer && (
+        <Text ta="center" size="sm" mt="md" c="dimmed">
+          {footer}
+        </Text>
+      )}
+    </>
+  );
+
   return (
     <>
-      <Paper radius="md" p="xl" withBorder>
-        <Title order={2} ta="center" mb={description ? "xs" : "lg"}>
-          {title}
-        </Title>
+      {bare ? (
+        body
+      ) : (
+        <Paper radius="md" p="xl" withBorder>
+          <Title order={2} ta="center" mb={description ? "xs" : "lg"}>
+            {title}
+          </Title>
 
-        {description && (
-          <Text c="dimmed" size="sm" ta="center" mb="lg">
-            {description}
-          </Text>
-        )}
-
-        <form onSubmit={handleSubmitClick}>
-          <Grid gap="md">
-            {children}
-
-            {errorMessage && (
-              <Grid.Col span={12}>
-                <Alert color="red" variant="light" radius="md" title="Feil">
-                  {errorMessage}
-                </Alert>
-              </Grid.Col>
-            )}
-
-            <Grid.Col span={12} mt="xs">
-              <Group justify="flex-end" gap="sm">
-                {onReset && (
-                  <Button
-                    type="button"
-                    variant="default"
-                    onClick={onReset}
-                    disabled={loading || disabled}
-                  >
-                    {resetText}
-                  </Button>
-                )}
-
-                <Button type="submit" loading={loading} disabled={disabled}>
-                  {submitText}
-                </Button>
-              </Group>
-            </Grid.Col>
-          </Grid>
-        </form>
-
-        {footer && (
-          <Text ta="center" size="sm" mt="md" c="dimmed">
-            {footer}
-          </Text>
-        )}
-      </Paper>
+          {body}
+        </Paper>
+      )}
 
       <Modal
         opened={isConfirmOpen}

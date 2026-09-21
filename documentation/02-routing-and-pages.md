@@ -48,6 +48,7 @@ for kjernedomene-sidene (oppskrifter/måltidsplan/handleliste) — se avviket do
 | Fil                            | Rolle                                                                                                                                                                 |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `app/layout.tsx`               | Root layout. Setter opp `MantineProvider`, `Notifications`, `SessionProvider` (seedet server-side fra `sessionManager.getUserData()`) og `MainShell` (header/footer). |
+| `app/admin/loading.tsx`        | Suspense-fallback for **alle** sider under `/admin` (Next pakker siden i `<Suspense>` med denne som fallback) — ingen admin-side trenger egen `<Suspense>`.           |
 | `app/error.tsx`                | Global error boundary (client component, Next.js-konvensjon). Viser feilmelding + "Prøv igjen"/"Tilbake".                                                             |
 | `app/not-found.tsx`            | Global 404-side. Brukes bl.a. når `proxy.ts` avviser en ikke-admin fra `/admin/*`.                                                                                    |
 | `app/(legal)/legal/layout.tsx` | Egen to-kolonne-layout (sidemeny + innhold) kun for `/legal/*`-rutene.                                                                                                |
@@ -59,6 +60,11 @@ for kjernedomene-sidene (oppskrifter/måltidsplan/handleliste) — se avviket do
 — som `Header.tsx` velger mellom basert på `session.role`. Rollen er alltid normalisert til `"admin"`/`"user"`
 (små bokstaver) før den havner i sesjonstilstanden, så `Header.tsx` sammenligner med små bokstaver — se
 [03 – Auth & sesjon, seksjon 6](./03-auth-and-session.md#6-rolle-normalisert-til-små-bokstaver-ved-kilden).
+
+**Brytepunkt for burger-menyen:** lenkene vises i headeren fra `md` (992px), men et lenkesett med **flere enn 5 lenker**
+(i dag admin: Dashboard, Brukere, Whitelist, Katalog, Ingredienser, System) trenger mer plass og går til burger-menyen
+under `lg` (1200px) — ellers klippes brukermenyen ytterst til høyre. Regelen ligger i `Header.tsx` (`collapseBelow`) og
+sendes til `NavLinksContainer` og `MobileNavDrawer`; legger du til flere lenker, trengs ingen endring der.
 
 ## 6. API-ruter (`app/api/**/route.ts`)
 
@@ -100,7 +106,20 @@ Fullstendig liste, med backend-endepunktet hver rute kaller (relativt til `GATEW
 /api/admin/users/delete-and-blacklist    POST  → /auth/admin/users/delete-and-blacklist
 /api/admin/users/blacklist               GET, POST → /auth/admin/blacklist
 /api/admin/users/blacklist/[id]          DELETE → /auth/admin/blacklist/{id}
+
+/api/admin/[resource]                    GET, POST, PUT → /admin/<resource>  (Core, dynamisk rute — se under)
+/api/admin/[resource]/[id]               DELETE → /admin/<resource>/{id}
+/api/admin/ingredients                   GET, POST → /admin/ingredients  (Core, hele listen / opprett; egen statisk rute)
+/api/admin/ingredients/[id]              GET, PUT, DELETE → /admin/ingredients/{id}  (full ingrediens; PUT erstatter alt)
+/api/user/nutrient-definitions           GET   → /user/nutrient-definitions  (Core, næringsstoffkatalogen; admin-token godtas)
 ```
 
-Endepunktene i `recipe-core-api` (kataloger, ingredienser, oppskrifter, næring) har ingen ruter her ennå — de
-bygges i rekkefølgen beskrevet i [08](./08-model-and-component-structure-proposal.md), etter malen i 04, seksjon 7.
+**`/api/admin/[resource]`** er én dynamisk rute for alle seks adminstyrte kataloger i `recipe-core-api`
+(`recipe-categories`, `ingredient-categories`, `allergens`, `search-keywords`, `unit-types`, `units`) — de har samme
+kontrakt, så de deler kode i stedet for ett filsett per katalog. Gyldige navn er hvitlisten i
+`lib/models/catalog/CatalogResource.ts`; alt annet gir **404**, og skriving mot en skrivebeskyttet katalog
+(`unit-types`) gir **405**. Enhetstypene kan derfor leses (de brukes som data i enhetstabellen og -filteret), men ikke endres. Statiske ruter som `/api/admin/users` har forrang over det dynamiske segmentet. Se
+[04, seksjon 7.1](./04-api-integration-and-data-models.md#71-variant-én-dynamisk-rute-for-flere-like-ressurser).
+
+Ingredienser har egne ruter (`/api/admin/ingredients`, full CRUD) og næringsstoffkatalogen leses via `/api/user/nutrient-definitions`; oppskrifter og næringsberegning har ingen ruter her ennå — de bygges i rekkefølgen beskrevet i
+[08](./08-model-and-component-structure-proposal.md), etter malen i 04, seksjon 7.

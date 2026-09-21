@@ -23,6 +23,10 @@ before making non-trivial changes in that area; it goes into far more depth than
 Known backend gaps this repo compensates for on the frontend (e.g. the gateway may not implement
 `POST /connect/revoke` yet) are described where they occur — see `documentation/03-auth-and-session.md`, section 4.3.
 
+**Private notes — never stage or commit:** `frontend-notes.md` (Core's contract for us) and `backend-notes.md` (our detailed asks of Core) are local-only
+working memos, not documentation. When staging, use explicit paths (never `git add -A`/`.` from the repo root without excluding them).
+The public summary of the backend dependencies is `documentation/10-backlog.md`, section 7 (ids B1–B15, same in both).
+
 ## Commands
 
 - `npm run dev` — start the dev server.
@@ -108,9 +112,13 @@ Known backend gaps this repo compensates for on the frontend (e.g. the gateway m
 `app/` uses route groups purely for organization/layout, not URLs: `(auth)`, `(info)`, `(legal)`, `(user)`. Auth
 gating for `/user/*`, `/dashboard/*`, `/admin/*` happens in `proxy.ts`, not in per-page checks.
 
+**No `<Suspense>` in pages.** Loading UI comes from the segment's `loading.tsx` (e.g. `app/admin/loading.tsx` covers every
+admin page); data fetched inside a client component has its own loader. Avoid `useSearchParams` unless needed (it is what
+forces a `<Suspense>` around a page) — e.g. keep tab state local.
+
 ### Form architecture (see `documentation/06-forms-and-design-system.md` for the full walkthrough)
 
-Followed strictly in auth/admin; the recipe/mealplan/shoppinglist/import pages and the admin whitelist/categories/
+Followed strictly in auth/admin; the recipe/mealplan/shoppinglist/import pages and the admin whitelist/
 system pages are large monolithic client components with hardcoded mock data instead — see
 `documentation/07-known-issues-and-tech-debt.md`.
 
@@ -135,6 +143,10 @@ Strict layering, page → container → form → field:
   `primaryShade` per light/dark mode.
 - Convention: category badges use `color="terracotta" variant="light"`; status/admin badges use `color="sage"
 variant="filled"`; destructive actions use `red` or `terracotta`.
+- **Global UI rules live in `app/globals.css`, once — never per component:** text is not selectable by default
+  (`user-select: none`), plain text shows the default arrow cursor, and only interactive elements show `cursor: pointer`.
+  Inputs stay selectable (Safari needs that to type). Opt in to selectable text with the `selectable` class, only where
+  deliberately wanted. See `documentation/06`, section B.7.
 - Accessibility is a hard requirement (deuteranopia/protanopia considered explicitly): never encode meaning in color
   alone — pair with icons (`@tabler/icons-react`) and text labels.
 
@@ -157,3 +169,28 @@ Full version with code and pitfalls: `documentation/04-api-integration-and-data-
 3. **Client**: `agentInternal.<method><T>("/api/<path>")` from a client component; show `message` on errors.
 4. Update `documentation/02` (route list) and `documentation/07` (when a mock page gets wired up); deferred work goes in
    `documentation/10-backlog.md`.
+
+Also, keep it generic where the backend is uniform (`documentation/04`, section 7.1):
+
+- **Uniform resources share one dynamic route with a whitelist** — e.g. the six admin catalogs use
+  `app/api/admin/[resource]` + `lib/models/catalog/CatalogResource.ts` (unknown name → 404, read-only → 405) instead of a
+  file set per catalog. A resource that deviates from the contract gets its own static route (static wins over dynamic).
+- **Don't create a request model identical to the response model** — use `Omit<T, "id">` for creates and `T` for updates.
+  A separate request model only when the shape genuinely differs.
+- **Drawer for big objects** (ingredients): list stays behind, tagged-union state, one `guard()` for unsaved changes; a dialog opened
+  _by_ an Escape keypress needs `closeOnEscape={false}` (its own handler otherwise swallows the same keystroke) — `documentation/06`, B.9.
+- **Official ingredients are partly locked** (`isOfficialIngredient` in `ingredientForm.ts`, derived from `sourceId` until the backend sends
+  `isOfficial`, `documentation/10`, section 7, B2): name, energy, edible part, nutrient values and source stay identical to the public source;
+  allergens, keywords, category, units, portions and verified stay editable; to change a locked value you create a variant (own, fully
+  editable). Form actions (verified, cancel, save) live in a sticky bar at the top of the drawer form, never at the bottom.
+- **Delete is blocked, not attempted:** show «Slett» disabled with a reason via `deleteBlockedReason()` (seeded `isSystem`, `usageCount > 0`,
+  variants). `isSystem`/`usageCount` are optional model fields the backend doesn't send yet (`documentation/10`, section 7, B7). Verifying an
+  ingredient requires nutrient values (`ingredientForm.ts`); unverifying is always allowed.
+- **Long tables:** use `usePagedItems` + `TablePagination` (`components/common/`): pager above _and_ below, page size 25/50/100,
+  and always change page through `goToPage` so the view jumps back to the top of the table (`documentation/06`, B.8).
+- **Header nav:** a link set with more than 5 links collapses to the burger menu below `lg` (1200px) instead of `md`
+  (see `Header.tsx`, `collapseBelow`) — otherwise the user menu is clipped at the right edge. Admin has 6 links.
+- **Read-only catalog resources** (`READ_ONLY_CATALOG_RESOURCES`, today `unit-types`) can be read as data but have no tab
+  and reject writes with 405.
+- **Forms:** `FormField` supports `text | password | email | textarea | select | number` (norwegian decimal comma); both form
+  containers have a `bare` mode for use inside a `Modal`. Add missing field types to `FormField`, not ad hoc in a form.

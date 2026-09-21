@@ -6,11 +6,13 @@ import { NavItem } from "@/components/layout/header/navlinks";
 
 interface NavLinksContainerProps {
   links: NavItem[];
+  /** Fra hvilket bruddpunkt lenkene vises i headeren (under det brukes burger-menyen). */
+  visibleFrom?: "md" | "lg";
 }
 
-export const NavLinksContainer = ({ links }: NavLinksContainerProps) => {
+export const NavLinksContainer = ({ links, visibleFrom = "md" }: NavLinksContainerProps) => {
   return (
-    <Group gap="xs" visibleFrom="md" wrap="nowrap">
+    <Group gap="xs" visibleFrom={visibleFrom} wrap="nowrap">
       {links.map((link) => {
         const Icon = link.icon;
         return (

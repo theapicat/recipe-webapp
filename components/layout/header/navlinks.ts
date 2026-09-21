@@ -12,6 +12,7 @@ import {
   IconTags,
   IconActivity,
   IconLink,
+  IconCarrot,
 } from "@tabler/icons-react";
 import React from "react";
 
@@ -41,6 +42,7 @@ export const ADMIN_LINKS: NavItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: IconShieldCheck },
   { label: "Brukere", href: "/admin/users", icon: IconUsers },
   { label: "Whitelist", href: "/admin/whitelist", icon: IconWorldCheck },
-  { label: "Kategorier", href: "/admin/categories", icon: IconTags },
+  { label: "Katalog", href: "/admin/catalog", icon: IconTags },
+  { label: "Ingredienser", href: "/admin/ingredients", icon: IconCarrot },
   { label: "System", href: "/admin/system", icon: IconActivity },
 ];
