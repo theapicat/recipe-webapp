@@ -24,13 +24,11 @@ function AdminSendEmailContent() {
   // det samme mønsteret som en .then()-kjede.
   const fetchUsers = useCallback(() => {
     agentInternal
-      .get("/api/admin/users")
+      .get<AdminUserListItem[]>("/api/admin/users")
       .then(async (res) => {
         if (res.ok) {
           const responseData = await res.json();
-          const items = Array.isArray(responseData.body)
-            ? responseData.body
-            : responseData.body?.items || [];
+          const items = responseData.body ?? [];
           setUsers(items);
         }
       })

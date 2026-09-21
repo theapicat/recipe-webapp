@@ -1,16 +1,18 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { RecoverPasswordRequest } from "@/lib/models/auth/recoverPasswordRequest";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const result = await agentAuth.recovery(body);
-    return NextResponse.json(result);
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke sende gjenopprettingslenke.";
-    return NextResponse.json({ message: errorMessage }, { status });
-  }
-}
+// POST /api/auth/recover (glemt passord)
+export const POST = (request: Request) =>
+  apiRoute("Kunne ikke sende gjenopprettingslenke.", async (options) => {
+    const data: RecoverPasswordRequest = await request.json();
+
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/account/recover",
+      data,
+      options,
+    );
+
+    return { message: result?.message || "Gjenopprettingslenke er sendt." };
+  });

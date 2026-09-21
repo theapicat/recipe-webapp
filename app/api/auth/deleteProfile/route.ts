@@ -1,34 +1,15 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
 import sessionManager from "@/lib/session/sessionManager";
-import { HttpResponse } from "@/lib/models/httpResponse";
 
-export const DELETE = async () => {
-  try {
+// DELETE /api/auth/deleteProfile
+export const DELETE = () =>
+  apiRoute("Kunne ikke slette kontoen.", async (options) => {
     // 1. Slett i backend
-    await agentAuth.deleteProfile();
+    await agentExternal.delete("/auth/account/me", undefined, options);
 
     // 2. Fjerner cookies/sesjon
     await sessionManager.removeSession();
 
-    const successResponse: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: "Kontoen din er nå slettet.",
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke slette kontoen.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: "Kontoen din er nå slettet." };
+  });

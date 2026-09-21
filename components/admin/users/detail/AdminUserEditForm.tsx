@@ -9,6 +9,7 @@ import { FormField } from "@/components/forms/common/FormField";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 import { AdminUpdateUserRequest } from "@/lib/models/admin/users/AdminUpdateUserRequest";
+import { HttpResponse } from "@/lib/models/httpResponse";
 
 interface Props {
   user: AdminUserDetails;
@@ -49,7 +50,7 @@ export function AdminUserEditForm({ user, onUserUpdated }: Props) {
         });
         onUserUpdated();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         setErrorMessage(errorData.message || "Kunne ikke oppdatere brukeren.");
       }
     } catch {

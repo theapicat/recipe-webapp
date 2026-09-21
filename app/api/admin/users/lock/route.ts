@@ -1,31 +1,18 @@
-import { NextResponse } from "next/server";
-import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
-import { ApiError } from "@/lib/agent/ApiError";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { LockUserRequest } from "@/lib/models/admin/users/LockUserRequest";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
 // POST /api/admin/users/lock
-export const POST = async (request: Request) => {
-  try {
-    const body = await request.json();
-    const result = await agentAuthAdmin.lockUser(body);
+export const POST = (request: Request) =>
+  apiRoute("Kunne ikke sperre brukeren.", async (options) => {
+    const data: LockUserRequest = await request.json();
 
-    const response: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: result.message || "Brukeren har blitt sperret.",
-      timestamp: new Date().toISOString(),
-    };
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/admin/users/lock",
+      data,
+      options,
+    );
 
-    return NextResponse.json(response, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke sperre brukeren.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: result?.message || "Brukeren har blitt sperret." };
+  });

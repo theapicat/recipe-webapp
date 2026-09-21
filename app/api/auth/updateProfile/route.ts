@@ -1,39 +1,23 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
 import sessionManager from "@/lib/session/sessionManager";
-import { HttpResponse } from "@/lib/models/httpResponse";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 import { UpdateProfileRequest } from "@/lib/models/auth/updateProfileRequest";
 
-export const PUT = async (request: Request) => {
-  try {
-    const body: UpdateProfileRequest = await request.json();
+// PUT /api/auth/updateProfile
+export const PUT = (request: Request) =>
+  apiRoute<UserProfileResponse>("Kunne ikke oppdatere profilen.", async (options) => {
+    const data: UpdateProfileRequest = await request.json();
 
     // 1. Send oppdatering til Auth API
-    const updatedProfile: UserProfileResponse = await agentAuth.updateProfile(body);
+    const updatedProfile = await agentExternal.put<UserProfileResponse>(
+      "/auth/account/profile",
+      data,
+      options,
+    );
 
     // 2. Oppdater brukerdata i cookies
     await sessionManager.setUserData(updatedProfile);
 
-    const successResponse: HttpResponse<UserProfileResponse> = {
-      statusCode: 200,
-      message: "Profilen ble oppdatert!",
-      body: updatedProfile,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke oppdatere profilen.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: "Profilen ble oppdatert!", body: updatedProfile };
+  });

@@ -52,10 +52,10 @@ export const SessionProvider = ({ initialUser, children }: Props) => {
   // Henter fersk profil fra serveren og oppdaterer tilstanden
   const refreshProfile = async () => {
     try {
-      const res = await agentInternal.get("/api/auth/me");
+      const res = await agentInternal.get<UserProfileResponse>("/api/auth/me");
       if (res.ok) {
-        const freshUser: UserProfileResponse = await res.json();
-        setUser(freshUser);
+        const { body: freshUser } = await res.json();
+        if (freshUser) setUser(freshUser);
       }
     } catch (err) {
       console.error("Kunne ikke fornye brukerprofil:", err);

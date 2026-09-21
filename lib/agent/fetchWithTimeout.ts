@@ -4,7 +4,7 @@
  * (f.eks. ECONNREFUSED når ingenting kjører lokalt) inntreffer — se documentation/03-auth-and-session.md.
  *
  * Ved timeout kastes samme type feil (`AbortError`) som ved en vanlig nettverksfeil, så eksisterende
- * try/catch-blokker (best-effort i `agentAuth.revokeToken`, tvungen utlogging i `proxy.ts`, osv.)
+ * try/catch-blokker (best-effort revoke i `app/api/auth/logout`, tvungen utlogging i `proxy.ts`, osv.)
  * håndterer den uten videre endringer.
  */
 export const fetchWithTimeout = async (

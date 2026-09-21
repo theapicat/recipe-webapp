@@ -59,13 +59,11 @@ export default function AdminUsersPage() {
   // `await` inni en async-funksjon kalt fra en effekt, men ikke samme mønster i en .then()-kjede.
   const fetchUsers = useCallback(() => {
     agentInternal
-      .get("/api/admin/users")
+      .get<AdminUserListItem[]>("/api/admin/users")
       .then(async (res) => {
         if (res.ok) {
           const responseData = await res.json();
-          const items = Array.isArray(responseData.body)
-            ? responseData.body
-            : responseData.body?.items || [];
+          const items = responseData.body ?? [];
           setAllUsers(items);
         }
       })

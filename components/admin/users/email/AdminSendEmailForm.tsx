@@ -13,6 +13,7 @@ import { FormField } from "@/components/forms/common/FormField";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
 import { AdminUserCard } from "@/components/admin/users/email/AdminUserCard";
+import { HttpResponse } from "@/lib/models/httpResponse";
 
 interface FormValues {
   userId: string;
@@ -75,7 +76,7 @@ export function AdminSendEmailForm({ users, preselectedUserId }: Props) {
           router.push("/admin/users");
         }
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         setErrorMessage(errorData.message || "Kunne ikke sende e-posten via serveren.");
       }
     } catch {

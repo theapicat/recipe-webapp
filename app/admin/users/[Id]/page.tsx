@@ -35,11 +35,11 @@ function AdminUserDetailsContent({ id }: { id?: string }) {
     if (!isValidId) return;
 
     agentInternal
-      .get(`/api/admin/users/${id}`)
+      .get<AdminUserDetails>(`/api/admin/users/${id}`)
       .then(async (res) => {
         if (res.ok) {
           const responseData = await res.json();
-          setUser(responseData.body);
+          setUser(responseData.body ?? null);
         }
       })
       .catch((err) => {

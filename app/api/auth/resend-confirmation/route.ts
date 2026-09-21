@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-export async function POST() {
-  try {
-    const result = await agentAuth.resendConfirmation();
-    return NextResponse.json(result, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke sende bekreftelses-epost på nytt.";
-    return NextResponse.json({ message: errorMessage }, { status });
-  }
-}
+// POST /api/auth/resend-confirmation (innlogget bruker)
+export const POST = () =>
+  apiRoute("Kunne ikke sende bekreftelses-epost på nytt.", async (options) => {
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/account/resend-confirmation",
+      {},
+      options,
+    );
+
+    return { message: result?.message || "En ny bekreftelses-epost er sendt." };
+  });

@@ -1,20 +1,15 @@
-// app/api/auth/me/route.ts
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
 import sessionManager from "@/lib/session/sessionManager";
+import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
-export async function GET() {
-  try {
-    const profile = await agentAuth.getProfile();
+// GET /api/auth/me
+export const GET = () =>
+  apiRoute<UserProfileResponse>("Kunne ikke hente brukerprofil.", async (options) => {
+    const profile = await agentExternal.get<UserProfileResponse>("/auth/account/me", options);
 
     // Synkroniserer cookien slik at initialUser i Server Components er oppdatert
     await sessionManager.setUserData(profile);
 
-    return NextResponse.json(profile);
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente brukerprofil.";
-    return NextResponse.json({ message: errorMessage }, { status });
-  }
-}
+    return { message: "Brukerprofil hentet.", body: profile };
+  });

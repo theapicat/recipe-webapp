@@ -1,29 +1,37 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { ApiError } from "@/lib/agent/ApiError";
+import { apiRoute } from "@/lib/http/apiRoute";
 import sessionManager from "@/lib/session/sessionManager";
-import { HttpResponse } from "@/lib/models/httpResponse";
 
-export const POST = async () => {
-  try {
-    // Best-effort — kaster aldri, se agentAuth.revokeToken(). Må skje FØR removeSession()
-    // siden den leser refreshToken-cookien.
-    await agentAuth.revokeToken();
-    await sessionManager.removeSession();
+const ERROR_MESSAGE = "Det oppstod en feil under utlogging.";
 
-    const response: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: "Utlogging vellykket!",
-      timestamp: new Date().toISOString(),
-    };
+export const POST = () =>
+  apiRoute(ERROR_MESSAGE, async () => {
+    try {
+      // OAuth2 Revocation (RFC 7009). Best-effort: utlogging skal aldri feile for brukeren selv om dette
+      // kallet feiler (f.eks. fordi Gatewayen ikke har implementert /connect/revoke ennå). Må skje FØR
+      // removeSession() siden refreshToken-cookien leses her.
+      const refreshToken = await sessionManager.getRefreshToken();
 
-    return NextResponse.json(response, { status: 200 });
-  } catch {
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: 500,
-      message: "Det oppstod en feil under utlogging.",
-      timestamp: new Date().toISOString(),
-    };
+      if (refreshToken) {
+        try {
+          await agentExternal.postForm(
+            "/auth/connect/revoke",
+            new URLSearchParams({
+              token: refreshToken,
+              token_type_hint: "refresh_token",
+              client_id: "recipe-web-app",
+            }),
+          );
+        } catch {
+          // Ignorert med vilje — se kommentar over.
+        }
+      }
 
-    return NextResponse.json(errorResponse, { status: 500 });
-  }
-};
+      await sessionManager.removeSession();
+    } catch {
+      throw new ApiError(ERROR_MESSAGE, 500);
+    }
+
+    return { message: "Utlogging vellykket!" };
+  });

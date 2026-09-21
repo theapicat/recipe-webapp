@@ -10,7 +10,6 @@ import { GoogleLogin } from "@/components/forms/auth/GoogleLogin";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { LoginRequest } from "@/lib/models/auth/loginRequest";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
-import { HttpResponse } from "@/lib/models/httpResponse";
 import { useSession } from "@/lib/session/SessionProvider";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
 import { DEV_USERS } from "@/app/(auth)/login/userData";
@@ -44,8 +43,8 @@ const LoginPage = () => {
 
   const handleStaticLogin = async (credentials: LoginRequest) => {
     try {
-      const res = await agentInternal.post("/api/auth/login", credentials);
-      const data = (await res.json()) as HttpResponse<UserProfileResponse | undefined>;
+      const res = await agentInternal.post<UserProfileResponse>("/api/auth/login", credentials);
+      const data = await res.json();
 
       if (data.statusCode === 200 && data.body) {
         session.setUser(data.body);

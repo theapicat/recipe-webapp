@@ -1,35 +1,17 @@
-import { NextResponse } from "next/server";
-import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
-import { ApiError } from "@/lib/agent/ApiError";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-// DELETE /api/admin/blacklist/[id]
-export const DELETE = async (
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) => {
-  try {
+// DELETE /api/admin/users/blacklist/[id]
+export const DELETE = (_request: Request, { params }: { params: Promise<{ id: string }> }) =>
+  apiRoute("Kunne ikke fjerne fra svartelisten.", async (options) => {
     const { id } = await params;
-    const result = await agentAuthAdmin.removeFromBlacklist(id);
 
-    const response: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: result.message || "Oppføringen ble fjernet fra svartelisten.",
-      timestamp: new Date().toISOString(),
-    };
+    const result = await agentExternal.delete<MessageResponse>(
+      `/auth/admin/blacklist/${id}`,
+      undefined,
+      options,
+    );
 
-    return NextResponse.json(response, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke fjerne fra svartelisten.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: result?.message || "Oppføringen ble fjernet fra svartelisten." };
+  });

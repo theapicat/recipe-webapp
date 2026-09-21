@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useForm, isEmail, isNotEmpty } from "@mantine/form";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { useSession } from "@/lib/session/SessionProvider";
-import { HttpResponse } from "@/lib/models/httpResponse";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 import { AppFormProvider } from "@/components/forms/common/FormContext";
 import { CreateFormContainer } from "@/components/forms/common/CreateFormContainer";
@@ -62,8 +61,8 @@ export const RegisterForm = ({ onRegistered }: RegisterFormProps) => {
     const { confirmPassword, ...payload } = values;
 
     try {
-      const res = await agentInternal.post("/api/auth/register", payload);
-      const data = (await res.json()) as HttpResponse<UserProfileResponse>;
+      const res = await agentInternal.post<UserProfileResponse>("/api/auth/register", payload);
+      const data = await res.json();
 
       if (res.ok && data.body) {
         session.setUser(data.body);

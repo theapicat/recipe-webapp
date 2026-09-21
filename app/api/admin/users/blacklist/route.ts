@@ -1,60 +1,27 @@
-import { NextResponse } from "next/server";
-import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
-import { ApiError } from "@/lib/agent/ApiError";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { AddBlacklistRequest } from "@/lib/models/admin/users/AddBlacklistRequest";
 import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-// GET /api/admin/blacklist
-export const GET = async () => {
-  try {
-    const data = await agentAuthAdmin.getBlacklist();
+// GET /api/admin/users/blacklist
+export const GET = () =>
+  apiRoute<BlacklistedEntry[]>("Kunne ikke hente svartelisten.", async (options) => {
+    const entries = await agentExternal.get<BlacklistedEntry[]>("/auth/admin/blacklist", options);
 
-    const response: HttpResponse<BlacklistedEntry[]> = {
-      statusCode: 200,
-      message: "Svartelisten ble hentet.",
-      body: data,
-      timestamp: new Date().toISOString(),
-    };
+    return { message: "Svartelisten ble hentet.", body: entries };
+  });
 
-    return NextResponse.json(response, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke hente svartelisten.";
+// POST /api/admin/users/blacklist
+export const POST = (request: Request) =>
+  apiRoute("Kunne ikke legge til i svartelisten.", async (options) => {
+    const data: AddBlacklistRequest = await request.json();
 
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/admin/blacklist",
+      data,
+      options,
+    );
 
-    return NextResponse.json(errorResponse, { status });
-  }
-};
-
-// POST /api/admin/blacklist
-export const POST = async (request: Request) => {
-  try {
-    const body = await request.json();
-    const result = await agentAuthAdmin.addToBlacklist(body);
-
-    const response: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: result.message || "Oppføringen ble lagt til i svartelisten.",
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(response, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke legge til i svartelisten.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: result?.message || "Oppføringen ble lagt til i svartelisten." };
+  });

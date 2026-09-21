@@ -1,46 +1,43 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
-import sessionManager from "@/lib/session/sessionManager";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
+import sessionManager, { OpenIddictTokenResponse } from "@/lib/session/sessionManager";
 import { RegisterRequest } from "@/lib/models/auth/registerRequest";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
-export const POST = async (request: Request) => {
-  try {
-    const body: RegisterRequest = await request.json();
+export const POST = (request: Request) =>
+  apiRoute<UserProfileResponse>("Kunne ikke opprette bruker.", async (options) => {
+    const data: RegisterRequest = await request.json();
 
-    // 1. Opprett bruker i backend (mottar UserProfileResponse)
-    const userProfile = await agentAuth.register(body);
-
-    // 2. Logg inn brukeren automatisk for å få access- og refresh-tokens
-    const tokens = await agentAuth.login({
-      email: body.email,
-      password: body.password,
+    // 1. Opprett bruker i Auth API (form-encoded, feltnavn med stor forbokstav)
+    const registration = new URLSearchParams({
+      Email: data.email,
+      Password: data.password,
+      FirstName: data.firstName,
+      LastName: data.lastName,
     });
 
-    // 3. Lagre tokens (HttpOnly cookies) og brukerprofil i sesjonen
+    const userProfile = await agentExternal.postForm<UserProfileResponse>(
+      "/auth/account/register",
+      registration,
+      options,
+    );
+
+    // 2. Logg inn brukeren automatisk (samme Password Grant som app/api/auth/login) for å få tokens
+    const credentials = new URLSearchParams({
+      grant_type: "password",
+      username: data.email,
+      password: data.password,
+      client_id: "recipe-web-app",
+    });
+
+    const tokens = await agentExternal.postForm<OpenIddictTokenResponse>(
+      "/auth/connect/token",
+      credentials,
+      { errorMessage: "Innlogging etter registrering mislyktes." },
+    );
+
+    // 3. Lagre tokens (HttpOnly-cookies) og brukerprofil i sesjonen
     await sessionManager.setSession(tokens, userProfile);
 
-    // 4. Returner suksessrespons
-    const successResponse: HttpResponse<UserProfileResponse> = {
-      statusCode: 200,
-      message: "Registrering vellykket!",
-      body: userProfile,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke opprette bruker.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: "Registrering vellykket!", body: userProfile };
+  });

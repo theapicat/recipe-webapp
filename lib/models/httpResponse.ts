@@ -1,4 +1,4 @@
-export interface HttpResponse<T> {
+export interface HttpResponse<T = undefined> {
   statusCode: number;
   message: string;
   errors?: Record<string, string[]>;

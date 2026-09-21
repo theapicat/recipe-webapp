@@ -62,11 +62,11 @@ export default function WelcomePage() {
 
     // 2. Marker velkomst som fullført i databasen
     agentInternal
-      .get("/api/auth/complete-welcome")
+      .get<UserProfileResponse>("/api/auth/complete-welcome")
       .then(async (res) => {
         if (res.ok) {
-          const updatedUser = (await res.json()) as UserProfileResponse;
-          setUser(updatedUser);
+          const { body: updatedUser } = await res.json();
+          if (updatedUser) setUser(updatedUser);
         }
       })
       .catch((err) => {

@@ -10,6 +10,7 @@ import { EditFormContainer } from "@/components/forms/common/EditFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { useSession } from "@/lib/session/SessionProvider";
 import { agentInternal } from "@/lib/agent/agentInternal";
+import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 
 interface ProfileFormValues {
   firstName: string;
@@ -58,7 +59,7 @@ export const ProfileEditForm = () => {
     setErrorMessage(undefined);
 
     try {
-      const res = await agentInternal.put("/api/auth/updateProfile", {
+      const res = await agentInternal.put<UserProfileResponse>("/api/auth/updateProfile", {
         firstName: values.firstName,
         lastName: values.lastName,
       });

@@ -8,7 +8,6 @@ import { useForm, isEmail, isNotEmpty } from "@mantine/form";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { useSession } from "@/lib/session/SessionProvider";
 import { LoginRequest } from "@/lib/models/auth/loginRequest";
-import { HttpResponse } from "@/lib/models/httpResponse";
 import { UserProfileResponse } from "@/lib/models/auth/userProfileResponse";
 import { AppFormProvider } from "@/components/forms/common/FormContext";
 import { CreateFormContainer } from "@/components/forms/common/CreateFormContainer";
@@ -38,8 +37,8 @@ export const LoginForm = () => {
     setLoginFailedMessage(undefined);
 
     try {
-      const res = await agentInternal.post("/api/auth/login", value);
-      const data = (await res.json()) as HttpResponse<UserProfileResponse>;
+      const res = await agentInternal.post<UserProfileResponse>("/api/auth/login", value);
+      const data = await res.json();
 
       if (res.ok && data.body) {
         // Oppdaterer både bruker og rolle i SessionProvider

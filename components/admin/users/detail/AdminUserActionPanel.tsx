@@ -16,6 +16,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
+import { HttpResponse } from "@/lib/models/httpResponse";
 
 interface Props {
   user: AdminUserDetails;
@@ -54,7 +55,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         setLockReason("");
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sperre brukeren.",
@@ -88,7 +89,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         });
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke gjenåpne brukeren.",
@@ -122,7 +123,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         });
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke bekrefte e-posten.",
@@ -155,7 +156,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
           color: "sage",
         });
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sende bekreftelse.",
@@ -188,7 +189,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
           color: "sage",
         });
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sende passord-reset.",
@@ -222,7 +223,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         });
         router.push("/admin/users");
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Sletting mislyktes",
           message: errorData.message || "Kunne ikke slette brukeren.",
@@ -258,7 +259,7 @@ export function AdminUserActionPanel({ user, onRefreshNeeded }: Props) {
         });
         router.push("/admin/users");
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke slette og svarteliste brukeren.",

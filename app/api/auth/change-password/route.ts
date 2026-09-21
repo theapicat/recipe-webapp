@@ -1,32 +1,18 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
-import { ApiError } from "@/lib/agent/ApiError";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
 import { ChangePasswordRequest } from "@/lib/models/auth/changePasswordRequest";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-export const POST = async (request: Request) => {
-  try {
-    const body: ChangePasswordRequest = await request.json();
+// POST /api/auth/change-password (for brukere med eksisterende passord)
+export const POST = (request: Request) =>
+  apiRoute("Kunne ikke endre passord.", async (options) => {
+    const data: ChangePasswordRequest = await request.json();
 
-    const result = await agentAuth.changePassword(body);
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/account/change-password",
+      data,
+      options,
+    );
 
-    const successResponse: HttpResponse<undefined> = {
-      statusCode: 200,
-      message: result.message || "Passordet ble endret!",
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(successResponse, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke endre passord.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: result?.message || "Passordet ble endret!" };
+  });

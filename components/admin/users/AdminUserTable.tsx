@@ -36,6 +36,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { AdminUserListItem } from "@/lib/models/admin/users/AdminUserListItem";
+import { HttpResponse } from "@/lib/models/httpResponse";
 
 interface Props {
   users: AdminUserListItem[];
@@ -96,7 +97,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
         setLockReason("");
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sperre brukeren.",
@@ -128,7 +129,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
         });
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke gjenåpne brukeren.",
@@ -157,7 +158,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
           color: "sage",
         });
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sende bekreftelse.",
@@ -186,7 +187,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
           color: "sage",
         });
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke sende passord-reset.",
@@ -220,7 +221,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
         setDeleteTarget(null);
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Sletting mislyktes",
           message: errorData.message || "Kunne ikke slette brukeren.",
@@ -258,7 +259,7 @@ export function AdminUserTable({ users, onRefreshNeeded, sortBy, sortOrder, onSo
         setBlacklistReason("");
         onRefreshNeeded();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke slette og svarteliste brukeren.",

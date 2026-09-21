@@ -1,20 +1,23 @@
-import { NextResponse } from "next/server";
-import { agentAuth } from "@/lib/agent/agentAuth";
+import { agentExternal } from "@/lib/agent/agentExternal";
 import { ApiError } from "@/lib/agent/ApiError";
+import { apiRoute } from "@/lib/http/apiRoute";
+import { ConfirmEmailRequest } from "@/lib/models/auth/confirmEmailRequest";
+import { MessageResponse } from "@/lib/models/messageResponse";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json(); // Forventer { userId, token }
+// POST /api/auth/confirm-email (anonym — via e-postlenke)
+export const POST = (request: Request) =>
+  apiRoute("Kunne ikke bekrefte e-post.", async (options) => {
+    const data: ConfirmEmailRequest = await request.json();
 
-    if (!body.userId || !body.token) {
-      return NextResponse.json({ message: "Mangler userId eller token." }, { status: 400 });
+    if (!data.userId || !data.token) {
+      throw new ApiError("Mangler userId eller token.", 400);
     }
 
-    const result = await agentAuth.confirmEmail(body);
-    return NextResponse.json(result, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage = error instanceof Error ? error.message : "Kunne ikke bekrefte e-post.";
-    return NextResponse.json({ message: errorMessage }, { status });
-  }
-}
+    const result = await agentExternal.post<MessageResponse>(
+      "/auth/account/confirm-email",
+      data,
+      options,
+    );
+
+    return { message: result?.message || "E-postadressen er bekreftet." };
+  });

@@ -29,6 +29,7 @@ import { notifications } from "@mantine/notifications";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { BlacklistType } from "@/lib/models/enums/BlacklistType";
 import { BlacklistedEntry } from "@/lib/models/admin/users/BlacklistedEntry";
+import { HttpResponse } from "@/lib/models/httpResponse";
 
 export function AdminBlacklistTable() {
   const [loading, setLoading] = useState(true);
@@ -52,13 +53,11 @@ export function AdminBlacklistTable() {
   // .then()-kjede.
   const fetchBlacklist = useCallback(() => {
     agentInternal
-      .get("/api/admin/users/blacklist")
+      .get<BlacklistedEntry[]>("/api/admin/users/blacklist")
       .then(async (res) => {
         if (res.ok) {
           const responseData = await res.json();
-          const items = Array.isArray(responseData.body)
-            ? responseData.body
-            : responseData.body?.items || [];
+          const items = responseData.body ?? [];
           setEntries(items);
         }
       })
@@ -105,7 +104,7 @@ export function AdminBlacklistTable() {
         setLoading(true);
         fetchBlacklist();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke legge til i svartelisten.",
@@ -140,7 +139,7 @@ export function AdminBlacklistTable() {
         setLoading(true);
         fetchBlacklist();
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: Partial<HttpResponse> = await res.json().catch(() => ({}));
         notifications.show({
           title: "Handling mislyktes",
           message: errorData.message || "Kunne ikke fjerne oppføringen.",

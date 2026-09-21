@@ -1,34 +1,16 @@
-import { NextResponse } from "next/server";
-import { agentAuthAdmin } from "@/lib/agent/agentAuthAdmin";
-import { ApiError } from "@/lib/agent/ApiError";
-import { HttpResponse } from "@/lib/models/httpResponse";
+import { agentExternal } from "@/lib/agent/agentExternal";
+import { apiRoute } from "@/lib/http/apiRoute";
 import { AdminUserDetails } from "@/lib/models/admin/users/AdminUserDetails";
 
 // GET /api/admin/users/[id]
-export const GET = async (_request: Request, { params }: { params: Promise<{ id: string }> }) => {
-  try {
+export const GET = (_request: Request, { params }: { params: Promise<{ id: string }> }) =>
+  apiRoute<AdminUserDetails>("Kunne ikke hente brukerdetaljer.", async (options) => {
     const { id } = await params;
-    const userDetails = await agentAuthAdmin.getUserDetails(id);
 
-    const response: HttpResponse<AdminUserDetails> = {
-      statusCode: 200,
-      message: "Brukerdetaljer hentet med hell.",
-      body: userDetails,
-      timestamp: new Date().toISOString(),
-    };
+    const userDetails = await agentExternal.get<AdminUserDetails>(
+      `/auth/admin/users/${id}`,
+      options,
+    );
 
-    return NextResponse.json(response, { status: 200 });
-  } catch (error: unknown) {
-    const status = error instanceof ApiError ? error.status : 400;
-    const errorMessage =
-      error instanceof Error ? error.message : "Kunne ikke hente brukerdetaljer.";
-
-    const errorResponse: HttpResponse<undefined> = {
-      statusCode: status,
-      message: errorMessage,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(errorResponse, { status });
-  }
-};
+    return { message: "Brukerdetaljer hentet med hell.", body: userDetails };
+  });
