@@ -2,7 +2,7 @@ import { RecipeIngredientRequest } from "@/lib/models/recipes/RecipeIngredientRe
 import { RecipeSourceRequest } from "@/lib/models/recipes/RecipeSourceRequest";
 import { RecipeStepRequest } from "@/lib/models/recipes/RecipeStepRequest";
 
-// Body for POST og PUT /recipes. PUT erstatter ALT (steg og ingredienslinjer får nye id-er), så send
+// Body for POST og PUT /user/recipes. PUT erstatter ALT (steg og ingredienslinjer får nye id-er), så send
 // alltid hele oppskriften. Ingen id-er og ingen utledede felt (cookTimeMinutes).
 export interface RecipeRequest {
   // Ikke tom, maks 200 tegn.

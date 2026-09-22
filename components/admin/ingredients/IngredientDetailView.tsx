@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Accordion, Anchor, Badge, Group, SimpleGrid, Stack, Table, Text } from "@mantine/core";
 import { IconCircleCheck, IconCircleDashed, IconExternalLink } from "@tabler/icons-react";
 import { isOfficialIngredient } from "@/components/admin/ingredients/ingredientForm";
-import { groupNutrients } from "@/components/admin/ingredients/nutrientGrouping";
+import { groupNutrients } from "@/lib/nutrients/nutrientGrouping";
 import { IngredientLookups, nameOf } from "@/components/admin/ingredients/ingredientLookups";
 import { Ingredient } from "@/lib/models/ingredients/Ingredient";
 import { capitalize } from "@/lib/text/names";

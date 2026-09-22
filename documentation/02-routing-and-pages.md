@@ -112,6 +112,16 @@ Fullstendig liste, med backend-endepunktet hver rute kaller (relativt til `GATEW
 /api/admin/ingredients                   GET, POST → /admin/ingredients  (Core, hele listen / opprett; egen statisk rute)
 /api/admin/ingredients/[id]              GET, PUT, DELETE → /admin/ingredients/{id}  (full ingrediens; PUT erstatter alt)
 /api/user/nutrient-definitions           GET   → /user/nutrient-definitions  (Core, næringsstoffkatalogen; admin-token godtas)
+/api/user/recipes                        GET, POST → /user/recipes  (Core, hele listen / opprett)
+/api/user/recipes/[id]                   GET, PUT, DELETE → /user/recipes/{id}
+/api/user/recipes/[id]/favorite          PUT   → /user/recipes/{id}/favorite  (lettvekts av/på for isFavorite)
+/api/user/recipes/[id]/nutrition         GET   → /user/recipes/{id}/nutrition  (beregnes på forespørsel, til næringsfanen)
+/api/user/ingredients                    GET   → /user/ingredients  (lett, brukervendt ingrediensliste til velgeren i oppskriftsskjemaet)
+/api/user/ingredients/[id]               GET   → /user/ingredients/{id}  (full ingrediens inkl. porsjoner, til enhetsinnsnevringen)
+/api/user/unconfirmed-ingredients        POST  → /user/unconfirmed-ingredients  (brukerens egen ingrediens, opprettet fra oppskriftsskjemaet)
+/api/user/recipe-categories              GET   → /user/recipe-categories  (skrivebeskyttet)
+/api/user/units                          GET   → /user/units  (skrivebeskyttet)
+/api/user/unit-types                     GET   → /user/unit-types  (skrivebeskyttet; ikke i faktisk bruk lenger, se under)
 ```
 
 **`/api/admin/[resource]`** er én dynamisk rute for alle seks adminstyrte kataloger i `recipe-core-api`
@@ -121,5 +131,13 @@ kontrakt, så de deler kode i stedet for ett filsett per katalog. Gyldige navn e
 (`unit-types`) gir **405**. Enhetstypene kan derfor leses (de brukes som data i enhetstabellen og -filteret), men ikke endres. Statiske ruter som `/api/admin/users` har forrang over det dynamiske segmentet. Se
 [04, seksjon 7.1](./04-api-integration-and-data-models.md#71-variant-én-dynamisk-rute-for-flere-like-ressurser).
 
-Ingredienser har egne ruter (`/api/admin/ingredients`, full CRUD) og næringsstoffkatalogen leses via `/api/user/nutrient-definitions`; oppskrifter og næringsberegning har ingen ruter her ennå — de bygges i rekkefølgen beskrevet i
-[08](./08-model-and-component-structure-proposal.md), etter malen i 04, seksjon 7.
+Ingredienser har egne ruter (`/api/admin/ingredients`, full CRUD) og næringsstoffkatalogen leses via `/api/user/nutrient-definitions`.
+Oppskrifter er nå bygget (`/api/user/recipes*`, se [09](./09-recipe-domain-and-planned-pages.md)), etter malen i 04, seksjon 7.
+Næringsberegning (`GET /user/recipes/{id}/nutrition`) er koblet opp (næringsfanen på detaljsiden, se [09](./09-recipe-domain-and-planned-pages.md)).
+`/api/user/recipe-categories`, `/api/user/units`, `/api/user/unit-types` og `/api/user/ingredients[/{id}]` er brukervendte
+lese-stier parallelt med adminkatalogen, samme mønster som `/user/nutrient-definitions` — **alle bekreftet 2026-09-23 mot
+`recipe-core-api`-kildekoden** (se `backend-notes.md`, B16). Enhetsvelgeren på hver ingredienslinje innsnevres til enheter
+som faktisk har en gram-omregning for den valgte ingrediensen: samme enhetstype som ingrediensen normalt måles i, pluss
+enhetene ingrediensen selv har en definert porsjon for (`GET /user/ingredients/{id}` → `portions`) —
+`components/recipes/recipeLookups.ts`, `unitsForIngredient()`. `unit-types` er dermed ikke lenger i bruk til dette (var en
+tidligere, mindre presis versjon av innsnevringen), men ruten er beholdt siden den er bekreftet og fungerer.

@@ -10,7 +10,8 @@ interface State {
   errorMessage?: string;
 }
 
-// Næringsstoffkatalogen (57 stoffer, skrivebeskyttet og uendret under kjøring) — trengs av visningen og editoren.
+// Næringsstoffkatalogen (57 stoffer, skrivebeskyttet og uendret under kjøring) — trengs av ingrediens- og
+// oppskriftsvisningene. I lib/ (ikke components/admin/) fordi begge domenene bruker den.
 export const useNutrientDefinitions = (): State => {
   const [state, setState] = useState<State>({ definitions: [], loading: true });
 

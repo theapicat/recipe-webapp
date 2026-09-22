@@ -29,11 +29,12 @@ import {
   verifyBlockedReason,
 } from "@/components/admin/ingredients/ingredientForm";
 import { IngredientLookups } from "@/components/admin/ingredients/ingredientLookups";
-import { groupNutrients } from "@/components/admin/ingredients/nutrientGrouping";
+import { groupNutrients } from "@/lib/nutrients/nutrientGrouping";
 import { norwegianNumberProps } from "@/components/forms/common/numberInputProps";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { Ingredient } from "@/lib/models/ingredients/Ingredient";
+import { unitsOfType, unitTypeId, WEIGHT_UNIT_TYPE } from "@/lib/units/unitTypeInfo";
 import { capitalize } from "@/lib/text/names";
 
 interface IngredientFormProps {
@@ -72,6 +73,12 @@ export const IngredientForm = ({
 }: IngredientFormProps) => {
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  // Valgt enhetstype per porsjonsrad, FØR en enhet er valgt (rad-nøkkel -> enhetstype-id). Selve porsjonen lagrer
+  // bare unitId, så dette er ren UI-state for det to-stegs valget (type -> enhet) under, ikke en del av skjemaet.
+  const [portionUnitTypeByKey, setPortionUnitTypeByKey] = useState<Record<string, string | null>>(
+    {},
+  );
+  const weightTypeId = unitTypeId(lookups.unitTypes, WEIGHT_UNIT_TYPE);
 
   const form = useForm<IngredientFormValues>({
     mode: "controlled",
@@ -102,7 +109,7 @@ export const IngredientForm = ({
     [lookups.definitions],
   );
 
-  const unitsOfType = lookups.units.filter((u) => u.unitTypeId === values.primaryUnitTypeId);
+  const primaryTypeUnits = lookups.units.filter((u) => u.unitTypeId === values.primaryUnitTypeId);
 
   const handleSubmit = async (submitted: IngredientFormValues) => {
     setSaving(true);
@@ -244,7 +251,7 @@ export const IngredientForm = ({
             <Select
               label="Standardenhet"
               placeholder={values.primaryUnitTypeId ? "Velg enhet" : "Velg enhetstype først"}
-              data={unitsOfType.map((u) => ({
+              data={primaryTypeUnits.map((u) => ({
                 value: u.id,
                 label: `${capitalize(u.name)} (${u.abbreviation})`,
               }))}
@@ -375,43 +382,72 @@ export const IngredientForm = ({
               til gram.
             </Text>
           ) : (
-            values.portions.map((portion, index) => (
-              <Group key={portion.key} align="flex-start" wrap="nowrap">
-                <Select
-                  label={index === 0 ? "Enhet" : undefined}
-                  aria-label="Enhet"
-                  placeholder="Velg enhet"
-                  data={lookups.units.map((u) => ({
-                    value: u.id,
-                    label: `${capitalize(u.name)} (${u.abbreviation})`,
-                  }))}
-                  searchable
-                  allowDeselect={false}
-                  disabled={saving}
-                  style={{ flex: 1 }}
-                  {...form.getInputProps(`portions.${index}.unitId`)}
-                />
-                <NumberInput
-                  label={index === 0 ? "Gram (spiselig del)" : undefined}
-                  aria-label="Gram"
-                  decimalScale={2}
-                  disabled={saving}
-                  w={170}
-                  {...norwegianNumberProps}
-                  {...form.getInputProps(`portions.${index}.gramsPerPortion`)}
-                />
-                <ActionIcon
-                  variant="subtle"
-                  color="red"
-                  aria-label="Fjern porsjon"
-                  mt={index === 0 ? 25 : 0}
-                  disabled={saving}
-                  onClick={() => form.removeListItem("portions", index)}
-                >
-                  <IconTrash size={16} />
-                </ActionIcon>
-              </Group>
-            ))
+            values.portions.map((portion, index) => {
+              // Enhetstypen for raden: enten valgt lokalt (før en enhet er valgt), eller utledet fra enheten som
+              // allerede er lagret (ved redigering av en eksisterende porsjon).
+              const currentTypeId =
+                portionUnitTypeByKey[portion.key] ??
+                lookups.units.find((u) => u.id === portion.unitId)?.unitTypeId ??
+                null;
+              const unitOptions = unitsOfType(lookups.units, currentTypeId, weightTypeId).map(
+                (u) => ({
+                  value: u.id,
+                  label: `${capitalize(u.name)} (${u.abbreviation})`,
+                }),
+              );
+
+              return (
+                <Group key={portion.key} align="flex-start" wrap="nowrap">
+                  <Select
+                    label={index === 0 ? "Enhetstype" : undefined}
+                    aria-label="Enhetstype"
+                    placeholder="Velg type"
+                    data={lookups.unitTypes.map((t) => ({
+                      value: t.id,
+                      label: capitalize(t.name),
+                    }))}
+                    allowDeselect={false}
+                    disabled={saving}
+                    style={{ width: 140 }}
+                    value={currentTypeId}
+                    onChange={(value) => {
+                      setPortionUnitTypeByKey((prev) => ({ ...prev, [portion.key]: value }));
+                      form.setFieldValue(`portions.${index}.unitId`, null);
+                    }}
+                  />
+                  <Select
+                    label={index === 0 ? "Enhet" : undefined}
+                    aria-label="Enhet"
+                    placeholder={currentTypeId ? "Velg enhet" : "Velg enhetstype først"}
+                    data={unitOptions}
+                    searchable
+                    allowDeselect={false}
+                    disabled={saving || !currentTypeId}
+                    style={{ flex: 1 }}
+                    {...form.getInputProps(`portions.${index}.unitId`)}
+                  />
+                  <NumberInput
+                    label={index === 0 ? "Gram (spiselig del)" : undefined}
+                    aria-label="Gram"
+                    decimalScale={2}
+                    disabled={saving}
+                    w={170}
+                    {...norwegianNumberProps}
+                    {...form.getInputProps(`portions.${index}.gramsPerPortion`)}
+                  />
+                  <ActionIcon
+                    variant="subtle"
+                    color="red"
+                    aria-label="Fjern porsjon"
+                    mt={index === 0 ? 25 : 0}
+                    disabled={saving}
+                    onClick={() => form.removeListItem("portions", index)}
+                  >
+                    <IconTrash size={16} />
+                  </ActionIcon>
+                </Group>
+              );
+            })
           )}
         </Stack>
 

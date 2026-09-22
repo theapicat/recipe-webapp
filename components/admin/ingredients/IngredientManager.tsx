@@ -21,7 +21,7 @@ import {
 } from "@/components/admin/ingredients/IngredientDrawer";
 import { IngredientLookups } from "@/components/admin/ingredients/ingredientLookups";
 import { IngredientTable } from "@/components/admin/ingredients/IngredientTable";
-import { useNutrientDefinitions } from "@/components/admin/ingredients/useNutrientDefinitions";
+import { useNutrientDefinitions } from "@/lib/nutrients/useNutrientDefinitions";
 import { useIngredients } from "@/components/admin/ingredients/useIngredients";
 import { useCatalogs } from "@/components/admin/catalog/useCatalogs";
 import { capitalize, normalizeName } from "@/lib/text/names";

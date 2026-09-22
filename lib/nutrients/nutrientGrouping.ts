@@ -3,6 +3,7 @@ import { NutrientGroup } from "@/lib/models/ingredients/NutrientGroup";
 
 // Næringsstoffkatalogen kommer flat og ferdig sortert (dybde-først), men hvert stoff bærer sin gruppe — og undergrupper
 // (f.eks. «mettede fettsyrer» under «fett») har `parentGroup`. Her bygges hovedgrupper med undergrupper i rekkefølge.
+// I lib/ (ikke components/admin/) fordi både ingrediens- og oppskriftsvisningene bruker den.
 export interface NutrientSection {
   /** null = stoffene som hører direkte til hovedgruppen. */
   subgroup: NutrientGroup | null;

@@ -25,7 +25,7 @@ import {
   UnitFilters,
 } from "@/components/admin/catalog/UnitFilters";
 import { UnitForm } from "@/components/admin/catalog/UnitForm";
-import { BASE_UNIT_BY_TYPE, formatRatio } from "@/components/admin/catalog/unitTypeInfo";
+import { BASE_UNIT_BY_TYPE, formatRatio } from "@/lib/units/unitTypeInfo";
 import { CatalogState } from "@/components/admin/catalog/useCatalogs";
 import { CatalogItem } from "@/lib/models/catalog/CatalogModelMap";
 import { WritableCatalogResource } from "@/lib/models/catalog/CatalogResource";

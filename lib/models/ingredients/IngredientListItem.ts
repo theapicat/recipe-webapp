@@ -1,4 +1,5 @@
-// Svaret fra GET /ingredients (søk) - lett variant uten næringsverdier og porsjoner.
+// Svaret fra GET /user/ingredients (søk) - lett variant uten næringsverdier og porsjoner. Antatt sti, ikke
+// bekreftet mot backend ennå — se app/api/user/ingredients/route.ts og backend-notes.md, B16.
 // Rekkefølgen er ikke garantert: sorter klientside.
 export interface IngredientListItem {
   id: string;

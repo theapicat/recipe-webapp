@@ -159,6 +159,9 @@ Regler (frontend håndhever; backend-ønsker i [10](./10-backlog.md), seksjon 7)
 - **Validering** speiler backend og legger på det backend ikke sjekker ennå: navn påkrevd og unikt (uavhengig av store/små
   bokstaver), kategori/enhetstype/standardenhet påkrevd og standardenheten må høre til enhetstypen, kcal ≥ 0, kJ ≥ 0, spiselig
   del i (0, 100], kilde-URL må være `http(s)`, næringsverdier ≥ 0, porsjoner med gram > 0 og unik enhet, ikke variant av seg selv.
+- **Porsjoner** velges i to steg (2026-09-23): først enhetstype (vekt/volum/antall), så enhet — enhetslisten filtreres til den
+  valgte typen, og vekt er i tillegg begrenset til gram/hektogram/kilogram (mikrogram/milligram-variantene finnes kun i
+  katalogen for næringsstoffenes skyld, ikke til bruk i porsjoner) — se `lib/units/unitTypeInfo.ts`, `unitsOfType()`.
 - **Ulagrede endringer:** lukker man skuffen, blar eller bytter modus med endringer, spørres det om forkasting. (Ingen egen
   lagre-bekreftelse som i profilskjemaet — admin redigerer mange ingredienser, og en dialog per lagring ville vært i veien.)
 - **Allergener** vises alltid med forbeholdet «ingen registrert betyr ikke at ingrediensen er fri for allergener» — dataene er

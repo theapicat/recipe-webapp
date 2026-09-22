@@ -21,6 +21,8 @@ import {
   Divider,
   Tooltip,
   SimpleGrid,
+  Center,
+  Loader,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -39,60 +41,16 @@ import {
   IconBellRinging,
   IconTrash,
   IconRotate,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { AsyncMainContainer } from "@/components/containers/MainContainer";
-
-// Syntetiserer et behagelig "pling" via nettleserens Web Audio API uten eksterne lydfiler
-const playKitchenChime = () => {
-  try {
-    const AudioContext =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
-    if (!AudioContext) return;
-
-    const audioCtx = new AudioContext();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = "sine";
-    // Gli fra D5 (587.33Hz) til A5 (880Hz) for et rent, lyst "pling"
-    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.8);
-  } catch (e) {
-    console.error("Kunne ikke spille av lyd:", e);
-  }
-};
-
-interface RecipeStep {
-  stepNumber: number;
-  instruction: string;
-  suggestedTimerMinutes?: number;
-}
-
-interface Ingredient {
-  id: string;
-  name: string;
-  amount: number;
-  unit: string;
-}
-
-interface CookModeRecipe {
-  id: string;
-  title: string;
-  defaultServings: number;
-  ingredients: Ingredient[];
-  steps: RecipeStep[];
-}
+import { isToTaste } from "@/components/recipes/recipeForm";
+import { unitAbbreviationOf } from "@/components/recipes/recipeLookups";
+import { useRecipe } from "@/components/recipes/useRecipe";
+import { useRecipeLookups } from "@/components/recipes/useRecipeLookups";
+import { playKitchenChime } from "@/lib/audio/kitchenChime";
+import { capitalize } from "@/lib/text/names";
 
 interface StepTimer {
   stepNumber: number;
@@ -101,47 +59,10 @@ interface StepTimer {
   isRunning: boolean;
 }
 
-const mockCookRecipe: CookModeRecipe = {
-  id: "rec-1",
-  title: "Kremet Kyllinggryte med Paprika",
-  defaultServings: 4,
-  ingredients: [
-    { id: "ing-1", name: "Kyllingfilet", amount: 600, unit: "g" },
-    { id: "ing-2", name: "Rød paprika", amount: 2, unit: "stk" },
-    { id: "ing-3", name: "Matfløte", amount: 3, unit: "dl" },
-    { id: "ing-4", name: "Gul løk", amount: 1, unit: "stk" },
-    { id: "ing-5", name: "Hvitløksfedd", amount: 2, unit: "stk" },
-    { id: "ing-6", name: "Kyllingbuljong (utblandet)", amount: 2, unit: "dl" },
-  ],
-  steps: [
-    {
-      stepNumber: 1,
-      instruction: "Skjær kyllingfilet i jevne strimler og finhakk løk, hvitløk og rød paprika.",
-    },
-    {
-      stepNumber: 2,
-      instruction:
-        "Varm opp en stekepanne med litt olje eller smør på middels høy varme. Brun kyllingen i 5 minutter til den har fått fin stekeskorpe.",
-      suggestedTimerMinutes: 5,
-    },
-    {
-      stepNumber: 3,
-      instruction:
-        "Tilsett finkuttet løk og hvitløk i pannen. La det surre mykt sammen med kyllingen i ca. 2 minutter.",
-      suggestedTimerMinutes: 2,
-    },
-    {
-      stepNumber: 4,
-      instruction:
-        "Hell over utblandet kyllingbuljong og matfløte, og tilsett strimlet paprika. La gryten småkoke under lokk i 10 minutter til sausen tykner.",
-      suggestedTimerMinutes: 10,
-    },
-    {
-      stepNumber: 5,
-      instruction:
-        "Smak til med salt, nykvernet pepper og eventuelt litt frisk timian før servering. Bon appétit!",
-    },
-  ],
+const formatTimer = (seconds: number) => {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
 export default function RecipeCookPage() {
@@ -149,12 +70,58 @@ export default function RecipeCookPage() {
   const router = useRouter();
   const recipeId = params?.id as string;
 
-  const [recipe] = useState<CookModeRecipe>(mockCookRecipe);
+  const { recipe, loading: loadingRecipe, errorMessage, retry } = useRecipe(recipeId);
+  const { lookups, loading: loadingLookups } = useRecipeLookups();
+  const loading = loadingRecipe || loadingLookups;
+
+  return (
+    <AsyncMainContainer size="lg" py={20}>
+      {loading ? (
+        <Center mih={300}>
+          <Loader color="sage" size="md" type="dots" />
+        </Center>
+      ) : errorMessage || !recipe ? (
+        <Alert
+          color="red"
+          variant="light"
+          radius="md"
+          title="Kunne ikke hente oppskriften"
+          icon={<IconAlertCircle size={18} />}
+        >
+          <Group justify="space-between" align="center">
+            <Text size="sm">{errorMessage}</Text>
+            <Button size="xs" variant="light" color="red" onClick={retry}>
+              Prøv igjen
+            </Button>
+          </Group>
+        </Alert>
+      ) : (
+        <CookMode
+          recipe={recipe}
+          units={lookups.units}
+          onFinish={() => router.push(`/user/recipes/${recipe.id}`)}
+        />
+      )}
+    </AsyncMainContainer>
+  );
+}
+
+// Eget innhold (etter lasting) slik at all state under initialiseres med ekte data fra start, i stedet for å
+// måtte håndtere en tom/skiftende oppskrift underveis.
+const CookMode = ({
+  recipe,
+  units,
+  onFinish,
+}: {
+  recipe: NonNullable<ReturnType<typeof useRecipe>["recipe"]>;
+  units: ReturnType<typeof useRecipeLookups>["lookups"]["units"];
+  onFinish: () => void;
+}) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [servings, setServings] = useState<number>(mockCookRecipe.defaultServings);
+  const [servings, setServings] = useState<number>(recipe.servings);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<string, boolean>>({});
 
-  // Multi-timer tilstand (Nøkkel = stepNumber)
+  // Multi-timer tilstand (nøkkel = stegnummer)
   const [timers, setTimers] = useState<Record<number, StepTimer>>({});
 
   // Skjerm Keep-Alive (Web Wake Lock API)
@@ -164,10 +131,11 @@ export default function RecipeCookPage() {
   // Ingrediens-skuff (Drawer)
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
 
-  const currentStep = recipe.steps[currentStepIndex];
-  const totalSteps = recipe.steps.length;
+  const steps = recipe.steps;
+  const currentStep = steps[currentStepIndex];
+  const totalSteps = steps.length;
   const progressPercent = Math.round(((currentStepIndex + 1) / totalSteps) * 100);
-  const scaleRatio = servings / recipe.defaultServings;
+  const scaleRatio = servings / recipe.servings;
 
   // Aktiver Web Wake Lock
   useEffect(() => {
@@ -219,14 +187,12 @@ export default function RecipeCookPage() {
                 isRunning: false,
               };
 
-              // Spill av lyd
               playKitchenChime();
 
-              // Unngå duplikater ved å bruke eksplisitt notification ID
               notifications.show({
                 id: `timer-done-${stepNum}`,
-                title: `⏰ Timer for Steg ${stepNum} er ferdig!`,
-                message: `Tiden er ute for dette steget i ${recipe.title}.`,
+                title: `Timer for steg ${stepNum} er ferdig!`,
+                message: `Tiden er ute for dette steget i "${capitalize(recipe.title)}".`,
                 color: "orange",
                 icon: <IconBellRinging size={20} />,
                 autoClose: false,
@@ -242,7 +208,7 @@ export default function RecipeCookPage() {
     return () => clearInterval(interval);
   }, [recipe.title]);
 
-  // --- TIMER HANDSKER ---
+  // --- TIMER-HANDLINGER ---
   const handleStartTimer = (stepNum: number, minutes: number) => {
     const totalSecs = minutes * 60;
     setTimers((prev) => ({
@@ -260,13 +226,7 @@ export default function RecipeCookPage() {
     setTimers((prev) => {
       const existing = prev[stepNum];
       if (!existing) return prev;
-      return {
-        ...prev,
-        [stepNum]: {
-          ...existing,
-          isRunning: !existing.isRunning,
-        },
-      };
+      return { ...prev, [stepNum]: { ...existing, isRunning: !existing.isRunning } };
     });
   };
 
@@ -276,11 +236,7 @@ export default function RecipeCookPage() {
       if (!existing) return prev;
       return {
         ...prev,
-        [stepNum]: {
-          ...existing,
-          remainingSeconds: existing.initialSeconds,
-          isRunning: false,
-        },
+        [stepNum]: { ...existing, remainingSeconds: existing.initialSeconds, isRunning: false },
       };
     });
   };
@@ -296,23 +252,26 @@ export default function RecipeCookPage() {
     });
   };
 
-  const formatTimer = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  };
-
   const toggleIngredient = (id: string) => {
     setCheckedIngredients((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const ingredientLabel = (ingredient: (typeof recipe.ingredients)[number]) => {
+    const scaledAmount = Math.round(ingredient.amount * scaleRatio * 10) / 10;
+    const unit = unitAbbreviationOf(units, ingredient.unitId);
+    const amountText = isToTaste(ingredient.amount)
+      ? "Etter smak"
+      : `${scaledAmount} ${unit ?? ""}`;
+    return { amountText, name: capitalize(ingredient.name ?? "") };
   };
 
   const activeTimerList = Object.values(timers);
   const currentStepTimer = timers[currentStep.stepNumber];
 
   return (
-    <AsyncMainContainer size="lg" py={20}>
+    <>
       <Stack gap="lg">
-        {/* TOPP-LINJE FOR KOKKEMODUS */}
+        {/* TOPPLINJE FOR KOKKEMODUS */}
         <Paper
           p="md"
           radius="md"
@@ -326,13 +285,13 @@ export default function RecipeCookPage() {
             <Group gap="sm">
               <Button
                 component={Link}
-                href={`/user/recipes/${recipeId}`}
+                href={`/user/recipes/${recipe.id}`}
                 variant="subtle"
                 color="gray"
                 leftSection={<IconArrowLeft size={16} />}
                 size="sm"
               >
-                Avslutt Kokkemodus
+                Avslutt kokkemodus
               </Button>
               <Badge
                 color="sage"
@@ -360,7 +319,7 @@ export default function RecipeCookPage() {
                 leftSection={<IconListCheck size={16} />}
                 onClick={openDrawer}
               >
-                Vis Ingredienser
+                Vis ingredienser
               </Button>
             </Group>
           </Group>
@@ -369,7 +328,7 @@ export default function RecipeCookPage() {
         {/* TITTEL & PORSJONER */}
         <Group justify="space-between" align="center">
           <div>
-            <Title order={2}>{recipe.title}</Title>
+            <Title order={2}>{capitalize(recipe.title)}</Title>
             <Text size="sm" c="dimmed">
               Steg {currentStepIndex + 1} av {totalSteps}
             </Text>
@@ -381,9 +340,9 @@ export default function RecipeCookPage() {
             </Text>
             <NumberInput
               value={servings}
-              onChange={(val) => setServings(Number(val) || 1)}
+              onChange={(val) => setServings(typeof val === "number" ? val : recipe.servings)}
               min={1}
-              max={20}
+              max={1000}
               size="xs"
               style={{ width: 70 }}
             />
@@ -393,7 +352,7 @@ export default function RecipeCookPage() {
         {/* FREMDRIFTSLINJE */}
         <Progress value={progressPercent} color="sage" size="md" radius="xl" animated />
 
-        {/* GLOBALE AKTIVE TIMER-OVERSIKT */}
+        {/* GLOBAL OVERSIKT OVER AKTIVE TIMERE */}
         {activeTimerList.length > 0 && (
           <Paper
             p="md"
@@ -403,13 +362,11 @@ export default function RecipeCookPage() {
             style={{ borderColor: "var(--mantine-color-orange-3)" }}
           >
             <Stack gap="xs">
-              <Group justify="space-between">
-                <Group gap="xs">
-                  <IconClock size={18} color="var(--mantine-color-orange-7)" />
-                  <Text fw={700} size="sm" c="orange.9">
-                    Aktive timere i bakgrunnen ({activeTimerList.length})
-                  </Text>
-                </Group>
+              <Group gap="xs">
+                <IconClock size={18} color="var(--mantine-color-orange-7)" />
+                <Text fw={700} size="sm" c="orange.9">
+                  Aktive timere i bakgrunnen ({activeTimerList.length})
+                </Text>
               </Group>
 
               <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xs">
@@ -483,23 +440,23 @@ export default function RecipeCookPage() {
                 </Text>
               </ThemeIcon>
 
-              {currentStep.suggestedTimerMinutes && !currentStepTimer && (
+              {currentStep.timerMinutes !== null && !currentStepTimer && (
                 <Button
                   variant="light"
                   color="orange"
                   size="xs"
                   leftSection={<IconClock size={16} />}
                   onClick={() =>
-                    handleStartTimer(currentStep.stepNumber, currentStep.suggestedTimerMinutes!)
+                    handleStartTimer(currentStep.stepNumber, currentStep.timerMinutes!)
                   }
                 >
-                  Start timer ({currentStep.suggestedTimerMinutes} min)
+                  Start timer ({currentStep.timerMinutes} min)
                 </Button>
               )}
             </Group>
 
             <Text size="xl" lh={1.6} fw={500}>
-              {currentStep.instruction}
+              {currentStep.description}
             </Text>
 
             {/* DEDIKERT TIMERKORT FOR AKTUELT STEG */}
@@ -540,7 +497,7 @@ export default function RecipeCookPage() {
                     />
                     <div>
                       <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
-                        Timer for Steg {currentStep.stepNumber}
+                        Timer for steg {currentStep.stepNumber}
                       </Text>
                       <Text fw={800} size="xl" style={{ fontFamily: "monospace" }}>
                         {formatTimer(currentStepTimer.remainingSeconds)}
@@ -607,7 +564,7 @@ export default function RecipeCookPage() {
                 disabled={currentStepIndex === 0}
                 onClick={() => setCurrentStepIndex((prev) => prev - 1)}
               >
-                Forrige Steg
+                Forrige steg
               </Button>
 
               {currentStepIndex < totalSteps - 1 ? (
@@ -617,7 +574,7 @@ export default function RecipeCookPage() {
                   rightSection={<IconChevronRight size={20} />}
                   onClick={() => setCurrentStepIndex((prev) => prev + 1)}
                 >
-                  Neste Steg
+                  Neste steg
                 </Button>
               ) : (
                 <Button
@@ -627,14 +584,14 @@ export default function RecipeCookPage() {
                   onClick={() => {
                     notifications.show({
                       id: "cook-complete",
-                      title: "🎉 Måltidet er ferdig!",
-                      message: `God middag! "${recipe.title}" er klar til servering.`,
+                      title: "Måltidet er ferdig!",
+                      message: `God middag! "${capitalize(recipe.title)}" er klar til servering.`,
                       color: "sage",
                     });
-                    router.push(`/user/recipes/${recipeId}`);
+                    onFinish();
                   }}
                 >
-                  Fullfør Måltid
+                  Fullfør måltid
                 </Button>
               )}
             </Group>
@@ -656,15 +613,15 @@ export default function RecipeCookPage() {
           </Group>
 
           <Group gap="md">
-            {recipe.ingredients.map((ing) => {
-              const scaledAmount = Math.round(ing.amount * scaleRatio * 10) / 10;
-              const isChecked = checkedIngredients[ing.id];
+            {recipe.ingredients.map((ingredient) => {
+              const { amountText, name } = ingredientLabel(ingredient);
+              const isChecked = checkedIngredients[ingredient.id];
 
               return (
                 <Checkbox
-                  key={ing.id}
+                  key={ingredient.id}
                   checked={isChecked || false}
-                  onChange={() => toggleIngredient(ing.id)}
+                  onChange={() => toggleIngredient(ingredient.id)}
                   label={
                     <Text
                       size="xs"
@@ -673,10 +630,7 @@ export default function RecipeCookPage() {
                         color: isChecked ? "var(--mantine-color-dimmed)" : "inherit",
                       }}
                     >
-                      <b>
-                        {scaledAmount} {ing.unit}
-                      </b>{" "}
-                      {ing.name}
+                      <b>{amountText}</b> {name}
                     </Text>
                   }
                   color="sage"
@@ -688,11 +642,11 @@ export default function RecipeCookPage() {
         </Paper>
       </Stack>
 
-      {/* DRAWER FOR FULL INGREDIENSLISTE */}
+      {/* DRAWER MED FULL INGREDIENSLISTE */}
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
-        title="📝 Sjekkliste for Ingredienser"
+        title="Sjekkliste for ingredienser"
         position="right"
         size="md"
         padding="lg"
@@ -703,13 +657,13 @@ export default function RecipeCookPage() {
           </Alert>
 
           <Stack gap="sm">
-            {recipe.ingredients.map((ing) => {
-              const scaledAmount = Math.round(ing.amount * scaleRatio * 10) / 10;
-              const isChecked = checkedIngredients[ing.id];
+            {recipe.ingredients.map((ingredient) => {
+              const { amountText, name } = ingredientLabel(ingredient);
+              const isChecked = checkedIngredients[ingredient.id];
 
               return (
                 <Paper
-                  key={ing.id}
+                  key={ingredient.id}
                   p="xs"
                   radius="sm"
                   withBorder
@@ -717,7 +671,7 @@ export default function RecipeCookPage() {
                 >
                   <Checkbox
                     checked={isChecked || false}
-                    onChange={() => toggleIngredient(ing.id)}
+                    onChange={() => toggleIngredient(ingredient.id)}
                     label={
                       <Text
                         size="sm"
@@ -726,10 +680,13 @@ export default function RecipeCookPage() {
                           color: isChecked ? "var(--mantine-color-dimmed)" : "inherit",
                         }}
                       >
-                        <b>
-                          {scaledAmount} {ing.unit}
-                        </b>{" "}
-                        {ing.name}
+                        <b>{amountText}</b> {name}
+                        {ingredient.note && (
+                          <Text component="span" size="xs" c="dimmed">
+                            {" "}
+                            ({ingredient.note})
+                          </Text>
+                        )}
                       </Text>
                     }
                     color="sage"
@@ -744,6 +701,6 @@ export default function RecipeCookPage() {
           </Button>
         </Stack>
       </Drawer>
-    </AsyncMainContainer>
+    </>
   );
-}
+};

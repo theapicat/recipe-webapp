@@ -11,11 +11,7 @@ import { EditFormContainer } from "@/components/forms/common/EditFormContainer";
 import { FormField } from "@/components/forms/common/FormField";
 import { toWritable } from "@/components/admin/catalog/catalogPayload";
 import { validateAbbreviation, validateName } from "@/components/admin/catalog/catalogValidation";
-import {
-  BASE_UNIT_BY_TYPE,
-  COUNT_UNIT_TYPE,
-  formatRatio,
-} from "@/components/admin/catalog/unitTypeInfo";
+import { BASE_UNIT_BY_TYPE, COUNT_UNIT_TYPE, formatRatio } from "@/lib/units/unitTypeInfo";
 import { agentInternal } from "@/lib/agent/agentInternal";
 import { HttpResponse } from "@/lib/models/httpResponse";
 import { Unit } from "@/lib/models/units/Unit";

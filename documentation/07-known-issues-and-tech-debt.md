@@ -15,23 +15,23 @@ fungerende, best-effort kompenserende tiltak på plass.
 
 ## Store, monolittiske sider uten backend
 
-Kjernefunksjonaliteten appen faktisk er bygget for (oppskrifter, måltidsplan, handleliste) — og to av
-admin-sidene (whitelist, system) — er per nå UI-skisser med hardkodet mock-data, ikke koblet til `recipe-core-api`:
+Kjernefunksjonaliteten appen faktisk er bygget for (måltidsplan, handleliste) — og to av admin-sidene (whitelist,
+system) — er per nå UI-skisser med hardkodet mock-data, ikke koblet til `recipe-core-api`. **Oppskrifter er bygget**
+(`app/(user)/user/recipes/*`, se [09](./09-recipe-domain-and-planned-pages.md)): liste, opprettelse, redigering,
+detaljvisning (inkl. næringsfane), sletting, favorittmerking og **kokemodus** bruker nå alle ekte data via
+`components/recipes/*` og `app/api/user/recipes*` — ingen kjente mock-rester igjen i oppskriftsdelen.
 
-| Side                                      | Linjer | Mock-data-variabel                                     |
-| ----------------------------------------- | ------ | ------------------------------------------------------ |
-| `app/(user)/user/recipes/page.tsx`        | 555    | `mockRecipes`                                          |
-| `app/(user)/user/recipes/[id]/page.tsx`   | 581    | (lokal state, ingen fetch)                             |
-| `app/(user)/user/recipes/create/page.tsx` | 518    | `handleSubmit` gjør ingen `fetch`/`agentInternal`-kall |
-| `app/(user)/user/mealplan/page.tsx`       | 1063   | `MOCK_USER_RECIPES`                                    |
-| `app/(user)/user/shoppinglist/page.tsx`   | 329    | lokal state                                            |
-| `app/(user)/user/import/page.tsx`         | 312    | lokal state                                            |
-| `app/admin/whitelist/page.tsx`            | 297    | `mockDomainsData`                                      |
-| `app/admin/system/page.tsx`               | 361    | `mockServices`, `mockRecentLogs`                       |
+| Side                                    | Linjer | Mock-data-variabel               |
+| --------------------------------------- | ------ | -------------------------------- |
+| `app/(user)/user/mealplan/page.tsx`     | 1063   | `MOCK_USER_RECIPES`              |
+| `app/(user)/user/shoppinglist/page.tsx` | 329    | lokal state                      |
+| `app/(user)/user/import/page.tsx`       | 312    | lokal state                      |
+| `app/admin/whitelist/page.tsx`          | 297    | `mockDomainsData`                |
+| `app/admin/system/page.tsx`             | 361    | `mockServices`, `mockRecentLogs` |
 
-Linjetallene er målt 2026-09-21. Ingen av disse følger skjemaarkitekturen i [06](./06-forms-and-design-system.md). Modellene for
-oppskrifter/ingredienser finnes nå i `lib/models` (justert mot `recipe-core-api`), men sidene bruker dem ikke ennå,
-og det finnes fortsatt ingen modeller for måltidsplan/handleliste. Se
+Linjetallene er målt 2026-09-21. Ingen av disse følger skjemaarkitekturen i
+[06](./06-forms-and-design-system.md) (oppskriftssidene gjør det nå, se [09](./09-recipe-domain-and-planned-pages.md)).
+Det finnes fortsatt ingen modeller for måltidsplan/handleliste. Se
 [08 – Forslag til mappestruktur, seksjon 6](./08-model-and-component-structure-proposal.md) for anbefalt
 migreringsrekkefølge. `app/admin/dashboard/page.tsx` er et særtilfelle — en bevisst intern
 roadmap/sjekkliste for utviklerne selv, ikke et driftsdashboard.

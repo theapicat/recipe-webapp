@@ -2,7 +2,7 @@ import { RecipeIngredient } from "@/lib/models/recipes/RecipeIngredient";
 import { RecipeSource } from "@/lib/models/recipes/RecipeSource";
 import { RecipeStep } from "@/lib/models/recipes/RecipeStep";
 
-// Svaret fra GET /recipes/{id}, og fra 201/200 ved opprettelse/oppdatering.
+// Svaret fra GET /user/recipes/{id}, og fra 201/200 ved opprettelse/oppdatering.
 export interface Recipe {
   id: string;
   ownerUserId: string;
